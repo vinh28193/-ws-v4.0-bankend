@@ -271,10 +271,10 @@ class BoxMeClient
         $data['category_id'] = $product->category_id;
         $data['seller_sku'] = TextUtility::GenerateBSinBoxMe($product->id);
         $data['bsin'] = TextUtility::GenerateBSinBoxMe($product->id);
-        $data['name'] = $product->product_name;
-        $data['name_local'] = $product->product_name;
+        $data['name'] = $product->product_name ? $product->product_name : 'None';
+        $data['name_local'] = $product->product_name ? $product->product_name : 'None';
         $data['type_sku'] = 1;
-        $data['desc'] = $product->product_name;
+        $data['desc'] = $product->product_name ? $product->product_name : 'None';
         $data['link'] = $product->link_origin;
         $data['price'] = $product->total_price_amount_local;
         $data['price_sale'] = $product->price_amount_local;
@@ -350,7 +350,7 @@ class BoxMeClient
                 'sku' => TextUtility::GenerateBSinBoxMe($product->id),
                 'label_code' => '',
                 'origin_country' => 'US',
-                'name' => $product->product_name,
+                'name' => $product->product_name ? $product->product_name : 'None',
                 'desciption' => '',
                 'weight' => WeshopHelper::roundNumber(($product->total_weight_temporary * 1000 / $product->quantity_customer)),
                 'amount' => WeshopHelper::roundNumber($product->total_final_amount_local),
@@ -365,7 +365,7 @@ class BoxMeClient
             'ship_to' => $shipTo,
             'shipments' => [
                 'content' => '',
-                'total_parcel' => count($order->products),
+                'total_parcel' => 1,
                 'total_amount' => $order->total_final_amount_local,
                 'description' => '',
                 'amz_shipment_id' => '',
