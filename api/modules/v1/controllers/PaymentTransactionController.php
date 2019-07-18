@@ -60,12 +60,25 @@ class PaymentTransactionController extends BaseApiController
             if($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED){
                 return $this->response(false, 'Transaction status is not queued !');
             }
-            $order = Order::findOne(['ordercode' => $model->order_code]);
-            $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-            $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
-            $model->save(0);
-            $order->save(0);
-            ChatMongoWs::SendMessage("Update trạng thái success cho payment transaction: <b>".$model->transaction_code."</b>.",ChatMongoWs::TYPE_GROUP_WS);
+            $tran = Yii::$app->db->beginTransaction();
+            try{
+                $order = Order::findOne(['ordercode' => $model->order_code]);
+                $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
+                if(!$model->save(0)){
+                    $tran->rollBack();
+                    return $this->response(false, 'Không lưu được transaction');
+                }
+                if(!$order->save(0)){
+                    $tran->rollBack();
+                    return $this->response(false, 'Không lưu được order');
+                }
+                ChatMongoWs::SendMessage("Update trạng thái success cho payment transaction: <b>".$model->transaction_code."</b>.",ChatMongoWs::TYPE_GROUP_WS);
+                $tran->commit();
+            }catch (\Exception $exception){
+                $tran->rollBack();
+                return $this->response(false, 'Có lỗi sảy ra. Rollback');
+            }
         }elseif ($type == 'cancel'){
             $model = PaymentTransaction::findOne(['transaction_code' => $code]);
             if(!$model){
