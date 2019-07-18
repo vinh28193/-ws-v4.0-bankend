@@ -107,5 +107,8 @@ return [
         'my-weshop/<controller>/<action>.html' => 'account/<controller>/<action>',
         'my-weshop/api/<controller>/<action>.html' => 'account/api/<controller>/<action>',
 
+
+        'voucher.html' => 'cms/home/voucher',
+
     ]
 ];
