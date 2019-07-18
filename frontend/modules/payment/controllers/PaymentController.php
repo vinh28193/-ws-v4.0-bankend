@@ -143,21 +143,24 @@ class PaymentController extends BasePaymentController
         $payment->customer_district = $shippingForm->getBuyerDistrictName();
         $payment->customer_country = $this->storeManager->store->country_name;
 
+        $paymentTransaction = new PaymentTransaction();
+
         $parentTransaction = null;
-        if ($payment->transaction_code !== null) {
-            $parentTransaction = $payment->transaction_code;
+        if ($payment->transaction_code !== null && ($parentTransaction = PaymentService::findParentTransaction($payment->transaction_code)) !== null) {
+            $paymentTransaction = clone $parentTransaction;
+            $paymentTransaction->isNewRecord = true;
+            $paymentTransaction->id = null;
         }
 
         $payment->createTransactionCode();
 
-        $paymentTransaction = new PaymentTransaction();
         $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
         $paymentTransaction->store_id = $payment->storeManager->getId();
         $paymentTransaction->carts = implode(',', array_keys($payment->getOrders()));
         $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
         $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
         $paymentTransaction->transaction_code = $payment->transaction_code;
-        $paymentTransaction->parent_transaction_code = $parentTransaction;
+        $paymentTransaction->parent_transaction_code = $parentTransaction instanceof PaymentTransaction ? $paymentTransaction->transaction_code : null;
         $paymentTransaction->transaction_customer_name = $payment->customer_name;
         $paymentTransaction->transaction_customer_email = $payment->customer_email;
         $paymentTransaction->transaction_customer_phone = $payment->customer_phone;
@@ -309,7 +312,7 @@ class PaymentController extends BasePaymentController
             $paymentTransaction->support_id = $assign->id;
         }
         /** @var  $fOrder Order */
-        $fOrder = array_values($orders)[0];
+        $fOrder = array_values($payment->getOrders())[0];
         $paymentTransaction->courier_delivery_time = $fOrder->courier_delivery_time;
         $paymentTransaction->courier_name = $fOrder->courier_name;
         $paymentTransaction->third_party_transaction_code = $res->token;
@@ -340,6 +343,12 @@ class PaymentController extends BasePaymentController
             if ($shippingForm->receiver_address_id !== null) {
                 $order->receiver_address_id = $shippingForm->receiver_address_id;
             }
+            foreach ($shippingParams as $attr => $v) {
+                if (!WeshopHelper::compareValue($v, $order->$attr, WeshopHelper::isSubText($attr, '_id') ? 'integer' : 'string')) {
+                    $order->$attr = $v;
+                }
+            }
+            $order->setAttributes($shippingParams);
             $order->payment_transaction_code = $childTransaction->transaction_code;
 
             if (!empty($assign)) {
