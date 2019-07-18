@@ -102,6 +102,12 @@ class OrderUploadController extends OrderController
                         if(($q = ArrayHelper::getValue($row,'Quantity')) !== null){
                             $order->total_purchase_quantity = $q;
                         }
+                        if(($tranId = ArrayHelper::getValue($row,'TransID eBay'))){
+                            $order->purchase_order_id = $tranId;
+                        }
+                        if(($trackingCode = ArrayHelper::getValue($row,'Tracking Code'))){
+                            $order->tracking_codes = $trackingCode;
+                        }
                         $order->currency_purchase = 'USD';
 
                         $order->save(false);
