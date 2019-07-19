@@ -204,7 +204,7 @@ class BoxMeClient
         foreach ($arrTracking as $key => $trackingCode){
             $temp = [
                 'code' => $trackingCode,
-                'weight' => ($order->total_weight_temporary * 1000)/$order->total_quantity,
+                'weight' => ($order->total_weight_temporary * 1000)/$order->total_quantity > 0 ? ($order->total_weight_temporary * 1000)/$order->total_quantity : 500,
                 'quantity' => $order->total_quantity,
                 'width' => 5,
                 'length' => 5,
@@ -352,7 +352,7 @@ class BoxMeClient
                 'origin_country' => 'US',
                 'name' => $product->product_name ? $product->product_name : 'None',
                 'desciption' => '',
-                'weight' => WeshopHelper::roundNumber(($product->total_weight_temporary * 1000 / $product->quantity_customer)),
+                'weight' => WeshopHelper::roundNumber(($product->total_weight_temporary * 1000 / $product->quantity_customer)) > 0 ? WeshopHelper::roundNumber(($product->total_weight_temporary * 1000 / $product->quantity_customer)) : 0,
                 'amount' => WeshopHelper::roundNumber($product->total_final_amount_local),
                 'quantity' => $product->quantity_customer,
             ];
@@ -369,10 +369,10 @@ class BoxMeClient
                 'total_amount' => $order->total_final_amount_local,
                 'description' => '',
                 'amz_shipment_id' => '',
-                'chargeable_weight' => WeshopHelper::roundNumber($order->total_weight_temporary * 1000),
+                'chargeable_weight' => WeshopHelper::roundNumber($order->total_weight_temporary * 1000) > 0 ? WeshopHelper::roundNumber($order->total_weight_temporary * 1000) : 500,
                 'parcels' => [
                     [
-                        'weight' => WeshopHelper::roundNumber($order->total_weight_temporary * 1000),
+                        'weight' => WeshopHelper::roundNumber($order->total_weight_temporary * 1000) > 0 ? WeshopHelper::roundNumber($order->total_weight_temporary * 1000) : 500,
                         'amount' => $order->total_final_amount_local,
                         'description' => "Order Weshop ({$order->ordercode}) .Product {$order->portal}",
                         'items' => $item
