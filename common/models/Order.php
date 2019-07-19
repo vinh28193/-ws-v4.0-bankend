@@ -910,6 +910,122 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
     }
 
+    public function searchExport($params)
+    {
+        $query = Order::find()
+            ->leftJoin('product',['order_id' => 'id'])
+            ->limit(-1)
+            ->offset(-1);
+        if (isset($params['id'])) {
+            $query->andFilterWhere(['id' => $params['id']]);
+        }
+        if (isset($params['store'])) {
+            $query->andFilterWhere(['order.store_id' => $params['store']]);
+        }
+        if (isset($params['location'])) {
+            $query->andFilterWhere(['order.receiver_province_id' => $params['location']]);
+        }
+        if (isset($params['paymentStatus'])) {
+            if ($params['paymentStatus'] === 'PAID') {
+                $query->andFilterWhere(['>', 'order.total_paid_amount_local', 0]);
+            } elseif ($params['paymentStatus'] === 'UNPAID') {
+                $query->andFilterWhere(['=', 'order.total_paid_amount_local', 0]);
+            } elseif ($params['paymentStatus'] === 'REFUND_PARTIAL') {
+                $query->andFilterWhere(['>', 'order.total_paid_amount_local', new Expression('[[order.total_refund_amount_local]]')]);
+            } elseif ($params['paymentStatus'] === 'REFUND_FULL') {
+                $query->andFilterWhere(['=', 'order.total_paid_amount_local', new Expression('[[order.total_refund_amount_local]]')]);
+            }
+        }
+        if (isset($params['type'])) {
+            $query->andFilterWhere(['order.type_order' => $params['type']]);
+        }
+        if (isset($params['searchKeyword']) && isset($params['keyWord'])) {
+            if ($params['searchKeyword'] == 'ALL') {
+                $query->andFilterWhere(['or',
+                    ['order.ordercode' => $params['keyWord']],
+                    ['product.id' => $params['keyWord']],
+                    ['order.receiver_phone' => $params['keyWord']],
+                    ['order.buyer_email' => $params['keyWord']],
+                    ['order.buyer_phone' => $params['keyWord']],
+                    ['order.payment_transaction_code' => $params['keyWord']],
+                ]);
+            } elseif ($params['searchKeyword'] != 'ALL') {
+                if ($params['searchKeyword'] == 'email') {
+                    $query->andFilterWhere(['or',
+                        ['like', 'order.receiver_email', $params['keyWord']],
+//                        ['like', 'user.email', $params['keyWord']],
+                    ]);
+                } elseif ($params['searchKeyword'] == 'phone') {
+                    $query->andFilterWhere(['or',
+                        ['like', 'order.receiver_phone', $params['keyWord']],
+//                        ['like', 'user.phone', $params['keyWord']],
+                    ]);
+                }
+                $query->andFilterWhere([$params['searchKeyword'] => $params['keyWord']]);
+            }
+
+        }
+
+        if (isset($params['orderStatus'])) {
+            $query->andFilterWhere(['order.current_status' => $params['orderStatus']]);
+        }
+
+        if (isset($params['portal'])) {
+            $query->andFilterWhere(['order.portal' => $params['portal']]);
+        }
+        if (isset($params['paymentBank'])) {
+            $query->andFilterWhere(['payment_transaction.payment_bank_code' => $params['paymentBank']]);
+        }
+        if (isset($params['sale'])) {
+            $query->andFilterWhere(['order.sale_support_id' => $params['sale']]);
+        }
+
+        if (isset($params['timeKey']) && isset($params['startTime']) && isset($params['endTime'])) {
+            $start = (int)(Yii::$app->formatter->asTimestamp($params['startTime']));
+            $end = (int)(Yii::$app->formatter->asTimestamp($params['endTime']));
+            if ($params['timeKey'] == 'ALL') {
+                $query->andFilterWhere(['or',
+                    ['between', 'order.created_at', $start, $end],
+                    ['between', 'order.updated_at', $start, $end],
+                    ['between', 'order.new', $start, $end],
+                    ['between', 'order.purchased', $start, $end],
+                    ['between', 'order.seller_shipped', $start, $end],
+                    ['between', 'order.stockin_us', $start, $end],
+                    ['between', 'order.stockout_us', $start, $end],
+                    ['between', 'order.stockin_local', $start, $end],
+                    ['between', 'order.stockout_local', $start, $end],
+                    ['between', 'order.at_customer', $start, $end],
+                    ['between', 'order.returned', $start, $end],
+                    ['between', 'order.cancelled', $start, $end],
+                    ['between', 'order.supporting', $start, $end],
+                    ['between', 'order.supported', $start, $end],
+                    ['between', 'order.ready_purchase', $start, $end],
+//                    ['between', 'walletTransactions.ready_purchase', $start, $end],
+                ]);
+            } elseif ($params['timeKey'] != 'ALL') {
+                $query->andFilterWhere(['between', $params['timeKey'], $start, $end]);
+            }
+        }
+        if (isset($params['type_order'])) {
+            $query->andFilterWhere(['type_order' => $params['type_order']]);
+        }
+        if (isset($params['current_status'])) {
+            if ($params['current_status'] != 'POTENTIAL') {
+                $query->andFilterWhere(['current_status' => $params['current_status']]);
+            }
+            if ($params['current_status'] == 'POTENTIAL') {
+                $query->andFilterWhere(['potential' => 1]);
+            }
+        }
+        if (isset($params['time_start']) and isset($params['time_end'])) {
+            $query->andFilterWhere(['or',
+                ['>=', 'created_at', $params['time_start']],
+                ['<=', 'updated_at', $params['time_end']]
+            ]);
+        }
+        return $query->orderBy(['id' => SORT_DESC])->asArray()->all();
+    }
+
     public function updateSellerShipped($time = null, $updateNew = false)
     {
         $this->current_status = $this->seller_shipped ? $this->current_status : self::STATUS_SELLER_SHIPPED;

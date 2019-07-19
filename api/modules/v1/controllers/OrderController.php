@@ -12,6 +12,7 @@ namespace api\modules\v1\controllers;
 use api\controllers\BaseApiController;
 use common\components\StoreManager;
 use common\helpers\ChatHelper;
+use common\helpers\ExcelHelper;
 use common\helpers\WeshopHelper;
 use common\models\db\TargetAdditionalFee;
 use common\models\Order;
@@ -54,7 +55,7 @@ class OrderController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index', 'view', 'create', 'update'],
+                'actions' => ['index', 'view', 'create', 'update', 'export'],
                 'roles' => $this->getAllRoles(true, 'marketing'),
             ],
             [
@@ -89,7 +90,8 @@ class OrderController extends BaseApiController
             'create' => ['POST'],
             'update' => ['PATCH', 'PUT'],
             'view' => ['GET'],
-            'delete' => ['DELETE']
+            'delete' => ['DELETE'],
+            'export' => ['GET', 'POST']
         ];
     }
 
@@ -445,6 +447,16 @@ class OrderController extends BaseApiController
         $order->update(false);
         ChatHelper::push($messages, $order->ordercode, 'GROUP_WS', 'SYSTEM', null);
         return $this->response(true, implode(',', $token));
+    }
+
+    public function actionExport()
+    {
+        $params = Yii::$app->request->get();
+        $response = (new Order())->searchExport($params);
+        ArrayHelper::removeValue($response,'products');
+        $url = ExcelHelper::write($response);
+
+        return $this->response(true, "action not support", $url);
     }
 
     /**
