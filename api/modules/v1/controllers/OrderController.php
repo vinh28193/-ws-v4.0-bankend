@@ -399,19 +399,19 @@ class OrderController extends BaseApiController
 
         $updateIntl = false;
         if (($courier = Yii::$app->request->post('courier')) !== null && is_string($courier) && $courier !== '') {
-            $courier = json_encode($courier, true);
+            $courier = json_decode($courier, true);
             $intFee = TargetAdditionalFee::find()->where([
                 'AND',
                 ['name' => 'international_shipping_fee'],
                 ['target' => 'order'],
                 ['target_id' => $order->id]
             ]);
-            if (($intFee = $intFee->one()) === null) {
+            if (($intFee = $intFee->one()) === null && is_array($courier) &&  isset($courier['total_fee']) && $courier['total_fee'] > 0) {
                 $target = new TargetAdditionalFee();
                 $target->name = 'international_shipping_fee';
                 $target->type = 'local';
-                $target->amount = $packingWood;
-                $target->local_amount = $storeManager->roundMoney($packingWood * $storeManager->getExchangeRate());
+                $target->amount = $courier['total_fee'];
+                $target->local_amount = $storeManager->roundMoney($courier['total_fee']);
                 $target->discount_amount = 0;
                 $target->currency = $storeManager->getCurrencyName();
                 $target->label = $order->store_id === 1 ? 'Phí vận chuyển quốc tế' : 'International Shipping Fee';
@@ -446,16 +446,20 @@ class OrderController extends BaseApiController
                 $value = $order->total_insurance_fee_local ? $order->total_insurance_fee_local : 0;
                 $value += $orderFee->local_amount;
                 $order->total_insurance_fee_local = $value;
-            }elseif ($orderFee->name === 'insurance_fee' && $updateIntl){
+            } elseif ($orderFee->name === 'international_shipping_fee' && $updateIntl) {
                 $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
                 $order->total_intl_shipping_fee_local = $orderFee->local_amount;
-            }
-
-            elseif ($orderFee->name === 'product_price') {
+            } elseif ($orderFee->name === 'product_price') {
                 continue;
             }
             $totalFeeAmount += $orderFee->local_amount;
 
+        }
+
+        if ($courier !== null && is_array($courier) && !empty($courier)) {
+            $order->courier_service = isset($courier['service_code']) ? $courier['service_code'] : null;
+            $order->courier_name = implode(' ', [$courier['courier_name'], $courier['service_name']]);
+            $order->courier_delivery_time = implode(' ', [$courier['min_delivery_time'], $courier['max_delivery_time']]);
         }
         $order->total_fee_amount_local = $totalFeeAmount;
         $order->total_final_amount_local = $order->total_amount_local + $order->total_fee_amount_local;
