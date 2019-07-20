@@ -7,6 +7,7 @@
  */
 
 namespace api\modules\v1\controllers;
+
 use api\controllers\BaseApiController;
 use common\models\Order;
 use common\models\PaymentTransaction;
@@ -36,71 +37,75 @@ class PaymentTransactionController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index', 'view', 'update' , 'create'],
+                'actions' => ['index', 'view', 'update', 'create'],
                 'roles' => ['master_operation', 'tester', 'master_sale', 'sale', 'master_accountant', 'accountant', 'operation']
             ],
         ];
     }
-    public function actionIndex() {
+
+    public function actionIndex()
+    {
         $model = PaymentTransaction::find()->asArray()->all();
         return $this->response(true, 'success', $model);
     }
-    public function actionUpdate($code) {
+
+    public function actionUpdate($code)
+    {
         /** @var PaymentTransaction[] $models */
         $post = Yii::$app->request->post();
-        $type = ArrayHelper::getValue($post,'type');
-        if($type == 'success'){
+        $type = ArrayHelper::getValue($post, 'type');
+        if ($type == 'success') {
             $model = PaymentTransaction::findOne(['transaction_code' => $code]);
-            if(!$model){
+            if (!$model) {
                 return $this->response(false, 'Cannot found transaction code!');
             }
-            if($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE){
+            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE) {
                 return $this->response(false, 'Transaction is not addfee or continue payment!');
             }
-            if($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED){
+            if ($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED) {
                 return $this->response(false, 'Transaction status is not queued !');
             }
             $tran = Yii::$app->db->beginTransaction();
-            try{
+            try {
                 $order = Order::findOne(['ordercode' => $model->order_code]);
                 $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
                 $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
-                if(!$model->save(0)){
+                if (!$model->save(0)) {
                     $tran->rollBack();
                     return $this->response(false, 'Không lưu được transaction');
                 }
-                if(!$order->save(0)){
+                if (!$order->save(0)) {
                     $tran->rollBack();
                     return $this->response(false, 'Không lưu được order');
                 }
-                ChatMongoWs::SendMessage("Update trạng thái success cho payment transaction: <b>".$model->transaction_code."</b>.",ChatMongoWs::TYPE_GROUP_WS);
+                ChatMongoWs::SendMessage("Update trạng thái success cho payment transaction: <b>" . $model->transaction_code . "</b>.", ChatMongoWs::TYPE_GROUP_WS);
                 $tran->commit();
-            }catch (\Exception $exception){
+            } catch (\Exception $exception) {
                 $tran->rollBack();
                 return $this->response(false, 'Có lỗi sảy ra. Rollback');
             }
-        }elseif ($type == 'cancel'){
+        } elseif ($type == 'cancel') {
             $model = PaymentTransaction::findOne(['transaction_code' => $code]);
-            if(!$model){
+            if (!$model) {
                 return $this->response(false, 'Cannot found transaction code!');
             }
-            if($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE){
+            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE) {
                 return $this->response(false, 'Transaction is not addfee or continue payment!');
             }
-            if($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED){
+            if ($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED) {
                 return $this->response(false, 'Transaction status is not queued !');
             }
-            if($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment){
+            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment) {
                 $order = Order::findOne(['ordercode' => $model->order_code]);
                 $order->total_final_amount_local = $order->total_final_amount_local + $model->transaction_amount_local;
                 $order->save(0);
             }
             $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CANCEL;
             $model->save(0);
-            ChatMongoWs::SendMessage("Update trạng thái cancel cho payment transaction: <b>".$model->transaction_code."</b>.",ChatMongoWs::TYPE_GROUP_WS);
-        }else{
+            ChatMongoWs::SendMessage("Update trạng thái cancel cho payment transaction: <b>" . $model->transaction_code . "</b>.", ChatMongoWs::TYPE_GROUP_WS);
+        } else {
             $model = PaymentTransaction::findOne(['order_code' => $code]);
-            if(!$model){
+            if (!$model) {
                 return $this->response(false, 'Cannot found transaction code!');
             }
             $model->transaction_status = 'SUCCESS';
@@ -115,8 +120,11 @@ class PaymentTransactionController extends BaseApiController
         }
         return $this->response(true, 'success');
     }
-    public function actionView($code) {
-        $model = PaymentTransaction::find()->select([
+
+    public function actionView($code)
+    {
+
+        $q = PaymentTransaction::find()->select([
             'id',
             'order_code',
             'transaction_code',
@@ -130,10 +138,18 @@ class PaymentTransactionController extends BaseApiController
             'payment_bank_code',
             'created_at',
             'updated_at',
-        ])->where(['order_code' => $code])->asArray()->all();
+        ])->where(['order_code' => $code]);
+
+        $model = (clone $q)->andWhere(['transaction_status' => 'SUCCESS'])->one();
+        if ($model === null) {
+            $model = $q->orderBy(['id' => SORT_DESC])->limit(1)->one();
+        }
+
         return $this->response(true, 'success', $model);
     }
-    public function actionCreate() {
+
+    public function actionCreate()
+    {
         $order_code = Yii::$app->request->post('order_code');
         $to = Yii::$app->request->post('to');
         $type = Yii::$app->request->post('type');
@@ -141,8 +157,8 @@ class PaymentTransactionController extends BaseApiController
         $description = Yii::$app->request->post('description');
         $order_code = $type == 'transfer' ? Yii::$app->request->post('from') : $order_code;
         $order = Order::findOne(['ordercode' => $order_code]);
-        if($order){
-            if($type == PaymentTransaction::PAYMENT_TYPE_ADDFEE){
+        if ($order) {
+            if ($type == PaymentTransaction::PAYMENT_TYPE_ADDFEE) {
                 $order->total_final_amount_local += $amount;
                 $order->save(false);
                 $paymentTransaction = new PaymentTransaction();
@@ -170,9 +186,9 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->save(0);
                 $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                 $paymentTransaction->save(0);
-                ChatMongoWs::SendMessage('Tạo giao dịch thu thêm: <b>'.$paymentTransaction->transaction_code.'</b><br>Ghi chú: '.$description,$paymentTransaction->order_code,ChatMongoWs::TYPE_GROUP_WS);
-                return $this->response(true, "add payment ".$paymentTransaction->transaction_code." order code $order_code success");
-            }elseif($type == PaymentTransaction::PAYMENT_TYPE_continue_payment){
+                ChatMongoWs::SendMessage('Tạo giao dịch thu thêm: <b>' . $paymentTransaction->transaction_code . '</b><br>Ghi chú: ' . $description, $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
+                return $this->response(true, "add payment " . $paymentTransaction->transaction_code . " order code $order_code success");
+            } elseif ($type == PaymentTransaction::PAYMENT_TYPE_continue_payment) {
                 $paymentTransaction = new PaymentTransaction();
                 $paymentTransaction->store_id = $order->store_id;
                 $paymentTransaction->customer_id = $order->customer_id;
@@ -198,10 +214,10 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->save(0);
                 $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                 $paymentTransaction->save(0);
-                ChatMongoWs::SendMessage('Tạo giao dịch tiếp tục thanh toán: <b>'.$paymentTransaction->transaction_code.'</b><br>Ghi chú: '.$description,$paymentTransaction->order_code,ChatMongoWs::TYPE_GROUP_WS);
-                return $this->response(true, "add payment ".$paymentTransaction->transaction_code." order code $order_code success");
-            }elseif ($type == PaymentTransaction::PAYMENT_TYPE_REFUND){
-                if($order->total_paid_amount_local < $amount){
+                ChatMongoWs::SendMessage('Tạo giao dịch tiếp tục thanh toán: <b>' . $paymentTransaction->transaction_code . '</b><br>Ghi chú: ' . $description, $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
+                return $this->response(true, "add payment " . $paymentTransaction->transaction_code . " order code $order_code success");
+            } elseif ($type == PaymentTransaction::PAYMENT_TYPE_REFUND) {
+                if ($order->total_paid_amount_local < $amount) {
                     return $this->response(false, "The refund amount is greater than the amount paid.");
                 }
                 $order->total_refund_amount_local = $order->total_refund_amount_local ? $order->total_refund_amount_local + $amount : $amount;
@@ -234,15 +250,15 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->save(0);
                 $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                 $paymentTransaction->save(0);
-                ChatMongoWs::SendMessage('Tạo giao dịch hoàn tiền: <b>'.$paymentTransaction->transaction_code.'</b><br>Ghi chú: '.$description,$paymentTransaction->order_code,ChatMongoWs::TYPE_GROUP_WS);
-                return $this->response(true, "refund transaction ".$paymentTransaction->transaction_code." order code $order_code success");
-            }elseif ($type == 'transfer'){
-                if($order->total_paid_amount_local < 0){
+                ChatMongoWs::SendMessage('Tạo giao dịch hoàn tiền: <b>' . $paymentTransaction->transaction_code . '</b><br>Ghi chú: ' . $description, $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
+                return $this->response(true, "refund transaction " . $paymentTransaction->transaction_code . " order code $order_code success");
+            } elseif ($type == 'transfer') {
+                if ($order->total_paid_amount_local < 0) {
                     return $this->response(false, "The amount paid = 0.");
                 }
                 $orderTo = Order::findOne(['ordercode' => $to]);
-                if(!$orderTo){
-                    return $this->response(false, "Cannot find order target: ".$to);
+                if (!$orderTo) {
+                    return $this->response(false, "Cannot find order target: " . $to);
                 }
                 $amount = $order->total_paid_amount_local;
                 $orderTo->total_paid_amount_local += $amount;
@@ -269,7 +285,7 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->shipping = 0;
                 $paymentTransaction->payment_type = PaymentTransaction::TRANSACTION_TYPE_REFUND_TRANSFER;
                 $paymentTransaction->carts = '';
-                $paymentTransaction->transaction_description = "Chuyển tiền thanh toán cho order ".$to;
+                $paymentTransaction->transaction_description = "Chuyển tiền thanh toán cho order " . $to;
                 $paymentTransaction->total_discount_amount = 0;
                 $paymentTransaction->before_discount_amount_local = $amount;
                 $paymentTransaction->transaction_amount_local = $amount;
@@ -277,7 +293,7 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->save(0);
                 $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                 $paymentTransaction->save(0);
-                ChatMongoWs::SendMessage("Chuyển tiền thanh toán cho order <b>".$to.'</b>. Với mã giao dịch <b>'.$paymentTransaction->transaction_code.'</b>',$paymentTransaction->order_code,ChatMongoWs::TYPE_GROUP_WS);
+                ChatMongoWs::SendMessage("Chuyển tiền thanh toán cho order <b>" . $to . '</b>. Với mã giao dịch <b>' . $paymentTransaction->transaction_code . '</b>', $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
                 $paymentTransaction_2 = new PaymentTransaction();
                 $paymentTransaction_2->store_id = $orderTo->store_id;
                 $paymentTransaction_2->customer_id = $orderTo->customer_id;
@@ -295,7 +311,7 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction_2->shipping = 0;
                 $paymentTransaction_2->payment_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT_TRANSFER;
                 $paymentTransaction_2->carts = '';
-                $paymentTransaction_2->transaction_description = "Nhận tiền thanh toán từ order ".$order_code;
+                $paymentTransaction_2->transaction_description = "Nhận tiền thanh toán từ order " . $order_code;
                 $paymentTransaction_2->total_discount_amount = 0;
                 $paymentTransaction_2->before_discount_amount_local = $amount;
                 $paymentTransaction_2->transaction_amount_local = $amount;
@@ -303,10 +319,10 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction_2->save(0);
                 $paymentTransaction_2->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction_2->id);
                 $paymentTransaction_2->save(0);
-                ChatMongoWs::SendMessage("Nhận tiền thanh toán từ order <b>".$order_code.'</b>. Với mã giao dịch nhận <b>'.$paymentTransaction_2->transaction_code.'</b> và mã giao dịch chuyển là: <b>'.$paymentTransaction->transaction_code.'</b>',$paymentTransaction_2->order_code,ChatMongoWs::TYPE_GROUP_WS);
-                return $this->response(true, "transaction transfer : ".$paymentTransaction->transaction_code." - ".$paymentTransaction_2->transaction_code."  success");
+                ChatMongoWs::SendMessage("Nhận tiền thanh toán từ order <b>" . $order_code . '</b>. Với mã giao dịch nhận <b>' . $paymentTransaction_2->transaction_code . '</b> và mã giao dịch chuyển là: <b>' . $paymentTransaction->transaction_code . '</b>', $paymentTransaction_2->order_code, ChatMongoWs::TYPE_GROUP_WS);
+                return $this->response(true, "transaction transfer : " . $paymentTransaction->transaction_code . " - " . $paymentTransaction_2->transaction_code . "  success");
             }
-        }else{
+        } else {
             return $this->response(false, 'Order code not found!');
         }
     }

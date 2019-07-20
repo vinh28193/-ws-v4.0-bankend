@@ -113,6 +113,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     {
         return ArrayHelper::merge(parent::attributes(), [
             'target_name', 'target_id', 'store_id', 'customer_id', 'custom_fee', 'item_type', 'item_id', 'item_sku',
+            'province', 'district', 'post_code',
             'item_seller', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship', 'accept_insurance'
         ]);
     }
@@ -126,9 +127,10 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 return (integer)$value;
             }],
             [['us_amount', 'us_tax', 'us_ship', 'custom_fee'], 'number'],
-            [['target', 'item_type', 'item_id', 'item_sku', 'item_seller'], 'string'],
-            [['province', 'district'], 'safe'],
-            [['accept_insurance'], 'string']
+            [['target', 'item_type', 'item_id', 'item_sku', 'accept_insurance', 'item_seller', 'province', 'district', 'post_code'], 'string'],
+            [['province', 'district'], 'filter', 'filter' => function ($value) {
+                return (integer)$value;
+            }],
         ]);
     }
 
@@ -168,6 +170,17 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 if (($target = $class::findOne($condition)) !== null) {
                     ActiveRecordUpdateLog::register('beforeConfirm', $target);
                     $this->_target = $target;
+                }
+
+                if ($this->_target instanceof Order) {
+                    $this->store_id = $this->_target->store_id;
+                    $this->province = $this->_target->receiver_province_id;
+                    $this->district = $this->_target->receiver_district_id;
+                } else if ($this->_target instanceof Product) {
+                    $order = $this->_target->order;
+                    $this->store_id = $order->store_id;
+                    $this->province = $order->receiver_province_id;
+                    $this->district = $order->receiver_district_id;
                 }
             }
 
@@ -338,6 +351,8 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             if ($ok && is_array($couriers) && count($couriers) > 0) {
                 $this->_couriers = $couriers;
                 $firstCourier = $couriers[0];
+                $this->getAdditionalFees()->remove('international_shipping_fee');
+                $this->getAdditionalFees()->remove('insurance_fee');
                 $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', $firstCourier['total_fee']);
                 $this->getAdditionalFees()->withCondition($this, 'insurance_fee', $firstCourier['insurance_fee']);
                 if ($this->getIsSpecial()) {
@@ -505,6 +520,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             'ship_from' => $this->getPickUpWareHouse(),
             'ship_to' => $this->getDefaultTo($store),
             'additional_fees' => $this->getAdditionalFees()->toArray(),
+            'couriers' => $this->_couriers
         ];
     }
 }
