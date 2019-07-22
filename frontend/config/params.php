@@ -89,10 +89,10 @@ return [
             'enable' => 'product',
             'params' => [
                 'product' => [
-                    'iMid' => 'WESHOP1122',
-                    'iMidInstallment' => 'WESHOPINS2',
-                    'merchantKey' => 'vnMmWGv8+Ao7P9iI3G9IdwQ1cefHOrryIa4ELPBTd/uTCXdW4R+vTfABNuM6ofeiokxG976f9Mh9YywR7WLEJQ==',
-                    'merchantKeyInstallment' => 'p9tK0wDh/sodB9caI0eN/ZNNjgPw8qwBykqR7rlO/GAAxlLMY5EUbTvon6j83Iwwa5DDefC0V+kj//cS5Hikjw=='
+                    'iMid' => 'BOXMEASIA1',//'WESHOP1122',
+                    'iMidInstallment' => '',//'WESHOPINS2',
+                    'merchantKey' => 'ABHjzujwLlpNbd5kTo7AN+GHplSf41myS4Lcn+ULVNghhsKGEEbQDu//dJmRgFSbf5xEegiWUm+MV2M9TolAqA==',//'vnMmWGv8+Ao7P9iI3G9IdwQ1cefHOrryIa4ELPBTd/uTCXdW4R+vTfABNuM6ofeiokxG976f9Mh9YywR7WLEJQ==',
+                    'merchantKeyInstallment' => '',//'p9tK0wDh/sodB9caI0eN/ZNNjgPw8qwBykqR7rlO/GAAxlLMY5EUbTvon6j83Iwwa5DDefC0V+kj//cS5Hikjw=='
                 ]
             ]
         ],
