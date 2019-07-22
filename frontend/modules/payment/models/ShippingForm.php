@@ -261,7 +261,8 @@ class ShippingForm extends Model
 
     public function ensureReceiver()
     {
-        if ((int)$this->other_receiver === false) {
+
+        if ($this->other_receiver === 'false') {
             if ($this->buyer_address_id !== null) {
                 $this->receiver_address_id = $this->buyer_address_id;
             }
