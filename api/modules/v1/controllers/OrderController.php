@@ -335,10 +335,15 @@ class OrderController extends BaseApiController
         $inspection = Yii::$app->request->post('inspection', 0);
         $packingWood = Yii::$app->request->post('packingWood', 0);
         $packingWood = floatval($packingWood);
+
         /** @var $order Order */
         if (($order = $this->findModel(['ordercode' => $code], false)) === null) {
             return $this->response(false, "Not found order code $code");
         }
+
+        $allOrderFees = $order->targetFee;
+
+        $allOrderFees = ArrayHelper::index($allOrderFees, 'name');
 
         $timeTimestamp = Yii::$app->formatter->asTimestamp('now');
         /** @var $storeManager StoreManager */
@@ -347,66 +352,85 @@ class OrderController extends BaseApiController
         $token = ["Confirm order {$order->ordercode}"];
         $feeNew = [];
         if ($insurance !== 0) {
-            $target = new TargetAdditionalFee();
-            $target->name = 'insurance_fee';
-            $target->type = 'local';
-            $target->amount = $insurance;
-            $target->local_amount = $insurance;
-            $target->discount_amount = 0;
-            $target->currency = $storeManager->getCurrencyName();
-            $target->label = $order->store_id === 1 ? 'Phí bảo hiểm' : 'Insurance Fee';
-            $target->created_at = $timeTimestamp;
-            $target->remove = 0;
-            $target->target = 'order';
-            $target->target_id = $order->id;
-            $target->save(false);
-            $feeNew[$target->name] = $target;
+            if (!isset($allOrderFees['insurance_fee'])) {
+                $target = new TargetAdditionalFee();
+                $target->name = 'insurance_fee';
+                $target->type = 'local';
+                $target->discount_amount = 0;
+                $target->currency = $storeManager->getCurrencyName();
+                $target->label = $order->store_id === 1 ? 'Phí bảo hiểm' : 'Insurance Fee';
+                $target->created_at = $timeTimestamp;
+                $target->remove = 0;
+                $target->target = 'order';
+                $target->target_id = $order->id;
+                $target->save(false);
+                $allOrderFees['insurance_fee'] = $target;
+            } else if (($target = $allOrderFees['insurance_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $insurance, 'float')) {
+                $target->amount = $insurance;
+                $target->local_amount = $insurance;
+                $target->save(false);
+                $allOrderFees['insurance_fee'] = $target;
+            }
         }
 
         if ($inspection !== 0) {
-            $target = new TargetAdditionalFee();
-            $target->name = 'inspection_fee';
-            $target->type = 'addition';
-            $target->amount = $inspection;
-            $target->local_amount = $storeManager->roundMoney($inspection * $storeManager->getExchangeRate());
-            $target->discount_amount = 0;
-            $target->currency = $storeManager->getCurrencyName();
-            $target->label = $order->store_id === 1 ? 'Phí kiểm hàng' : 'Inspection Fee';
-            $target->created_at = $timeTimestamp;
-            $target->remove = 0;
-            $target->target = 'order';
-            $target->target_id = $order->id;
-            $target->save(false);
-            $feeNew[$target->name] = $target;
+            $localAmount = $storeManager->roundMoney($inspection * $storeManager->getExchangeRate());
+            if (!isset($allOrderFees['insurance_fee'])) {
+                $target = new TargetAdditionalFee();
+                $target->name = 'inspection_fee';
+                $target->type = 'addition';
+                $target->amount = $inspection;
+                $target->local_amount = $localAmount;
+                $target->discount_amount = 0;
+                $target->currency = $storeManager->getCurrencyName();
+                $target->label = $order->store_id === 1 ? 'Phí kiểm hàng' : 'Inspection Fee';
+                $target->created_at = $timeTimestamp;
+                $target->remove = 0;
+                $target->target = 'order';
+                $target->target_id = $order->id;
+                $target->save(false);
+                $allOrderFees['inspection_fee'] = $target;
+            } else if (($target = $allOrderFees['inspection_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $inspection, 'float')) {
+                $target->amount = $inspection;
+                $target->local_amount = $localAmount;
+                $target->save(false);
+                $allOrderFees['inspection_fee'] = $target;
+            }
+
         }
 
         if ($packingWood !== 0) {
-            $target = new TargetAdditionalFee();
-            $target->name = 'packing_fee';
-            $target->type = 'addition';
-            $target->amount = $packingWood;
-            $target->local_amount = $storeManager->roundMoney($packingWood * $storeManager->getExchangeRate());
-            $target->discount_amount = 0;
-            $target->currency = $storeManager->getCurrencyName();
-            $target->label = $order->store_id === 1 ? 'Phí đóng hàng' : 'Packing Fee';
-            $target->created_at = $timeTimestamp;
-            $target->remove = 0;
-            $target->target = 'order';
-            $target->target_id = $order->id;
-            $target->save(false);
-            $feeNew[$target->name] = $target;
+
+            $localAmount = $storeManager->roundMoney($inspection * $storeManager->getExchangeRate());
+            if (!isset($allOrderFees['packing_fee'])) {
+                $target = new TargetAdditionalFee();
+                $target->name = 'packing_fee';
+                $target->type = 'addition';
+                $target->amount = $packingWood;
+                $target->local_amount = $storeManager->roundMoney($packingWood * $storeManager->getExchangeRate());
+                $target->discount_amount = 0;
+                $target->currency = $storeManager->getCurrencyName();
+                $target->label = $order->store_id === 1 ? 'Phí đóng hàng' : 'Packing Fee';
+                $target->created_at = $timeTimestamp;
+                $target->remove = 0;
+                $target->target = 'order';
+                $target->target_id = $order->id;
+                $target->save(false);
+                $allOrderFees['packing_fee'] = $target;
+            } else if (($target = $allOrderFees['packing_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $inspection, 'float')) {
+                $target->amount = $inspection;
+                $target->local_amount = $localAmount;
+                $target->save(false);
+                $allOrderFees['packing_fee'] = $target;
+            }
+
+
         }
 
         $updateIntl = false;
         if (($courier = Yii::$app->request->post('courier')) !== null && is_string($courier) && $courier !== '') {
             $courier = json_decode($courier, true);
-            $intFee = TargetAdditionalFee::find()->where([
-                'AND',
-                ['name' => 'international_shipping_fee'],
-                ['target' => 'order'],
-                ['target_id' => $order->id]
-            ]);
-            if (($intFee = $intFee->one()) === null && is_array($courier) &&  isset($courier['total_fee']) && $courier['total_fee'] > 0) {
+            if ((!isset($allOrderFees['international_shipping_fee']) || ($intFee = $allOrderFees['international_shipping_fee']) === null) && is_array($courier) && isset($courier['total_fee']) && $courier['total_fee'] > 0) {
                 $target = new TargetAdditionalFee();
                 $target->name = 'international_shipping_fee';
                 $target->type = 'local';
@@ -425,27 +449,27 @@ class OrderController extends BaseApiController
             }
         }
 
-        $order->refresh();
-        $allOrderFees = $order->targetFee;
         $totalFeeAmount = 0;
         foreach ($allOrderFees as $orderFee) {
             /** @var $orderFee TargetAdditionalFee */
             if ($orderFee->name === 'packing_fee') {
                 $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
-                $value = $order->total_packing_fee_local ? $order->total_packing_fee_local : 0;
-                $value += $orderFee->local_amount;
-                $order->total_packing_fee_local = $value;
+//                $value = $order->total_packing_fee_local ? $order->total_packing_fee_local : 0;
+//                $value += $orderFee->local_amount;
+//                $order->total_packing_fee_local = $value;
                 $order->total_packing_fee_local = $orderFee->local_amount;
             } elseif ($orderFee->name === 'inspection_fee') {
                 $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
-                $value = $order->total_inspection_fee_local ? $order->total_inspection_fee_local : 0;
-                $value += $orderFee->local_amount;
-                $order->total_inspection_fee_local = $value;
+//                $value = $order->total_inspection_fee_local ? $order->total_inspection_fee_local : 0;
+//                $value += $orderFee->local_amount;
+//                $order->total_inspection_fee_local = $value;
+                $order->total_inspection_fee_local = $orderFee->local_amount;
             } elseif ($orderFee->name === 'insurance_fee') {
                 $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
-                $value = $order->total_insurance_fee_local ? $order->total_insurance_fee_local : 0;
-                $value += $orderFee->local_amount;
-                $order->total_insurance_fee_local = $value;
+//                $value = $order->total_insurance_fee_local ? $order->total_insurance_fee_local : 0;
+//                $value += $orderFee->local_amount;
+//                $order->total_insurance_fee_local = $value;
+                $order->total_insurance_fee_local = $orderFee->local_amount;
             } elseif ($orderFee->name === 'international_shipping_fee' && $updateIntl) {
                 $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
                 $order->total_intl_shipping_fee_local = $orderFee->local_amount;

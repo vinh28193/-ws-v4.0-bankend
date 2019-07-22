@@ -28,6 +28,7 @@ use yii\web\NotFoundHttpException;
  * @property string[] $trackingCodes
  * @property Seller $seller
  * @property PaymentTransaction $paymentTransaction
+ * @property TargetAdditionalFee[] $targetFee
  */
 class Order extends DbOrder implements RuleOwnerAccessInterface
 {
