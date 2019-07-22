@@ -669,7 +669,9 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 //                        ['like', 'user.phone', $params['keyWord']],
                     ]);
                 }
-                $query->andFilterWhere([$params['searchKeyword'] => $params['keyWord']]);
+                $query->andFilterWhere(['or',
+                    ['like', $params['searchKeyword'], $params['keyWord']],
+                ]);
             }
 
         }
