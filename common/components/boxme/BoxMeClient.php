@@ -279,7 +279,7 @@ class BoxMeClient
         $data['price'] = $product->total_price_amount_local;
         $data['price_sale'] = $product->price_amount_local;
         $data['active'] = 1;
-        $data['weight'] = $product->total_weight_temporary ? $product->total_weight_temporary * 1000 : 500;
+        $data['weight'] = $product->total_weight_temporary ? ($product->total_weight_temporary) / $product->quantity_customer * 1000 : 500/$product->quantity_customer;
         $data['unit_weight'] = 'g';
         $data['volume'] = '';
         $data['tag'] = '';
@@ -307,10 +307,10 @@ class BoxMeClient
             return true;
         }
         $trackingCodes = explode(',',$order->tracking_codes);
-        if(count($trackingCodes) > 1){
-            ThirdPartyLogs::setLog('gprc','create_order_BM', 'Cannot send tracking code multi', $order->ordercode,[]);
-            return [false,'Tracking code multi'];
-        }
+//        if(count($trackingCodes) > 1){
+//            ThirdPartyLogs::setLog('gprc','create_order_BM', 'Cannot send tracking code multi', $order->ordercode,[]);
+//            return [false,'Tracking code multi'];
+//        }
         $hostname = ArrayHelper::getValue(Yii::$app->params,'BOXME_GRPC_SERVICE_COURIER','10.130.111.53:50056');
         $service = new CourierClient($hostname, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
