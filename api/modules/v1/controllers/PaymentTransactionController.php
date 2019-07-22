@@ -59,8 +59,8 @@ class PaymentTransactionController extends BaseApiController
             if (!$model) {
                 return $this->response(false, 'Cannot found transaction code!');
             }
-            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE) {
-                return $this->response(false, 'Transaction is not addfee or continue payment!');
+            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE && $model->transaction_type != PaymentTransaction::TRANSACTION_TYPE_REFUND) {
+                return $this->response(false, 'Transaction is not addfee or continue payment or refund!');
             }
             if ($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED) {
                 return $this->response(false, 'Transaction status is not queued !');
@@ -69,7 +69,18 @@ class PaymentTransactionController extends BaseApiController
             try {
                 $order = Order::findOne(['ordercode' => $model->order_code]);
                 $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-                $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
+                if ($model->transaction_type == PaymentTransaction::TRANSACTION_continue_payment || $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE) {
+                    $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
+                }elseif ($model->transaction_type == PaymentTransaction::TRANSACTION_TYPE_REFUND){
+                    if ($order->total_paid_amount_local < $model->transaction_amount_local) {
+                        return $this->response(false, "The refund amount is greater than the amount paid.");
+                    }
+                    $order->total_refund_amount_local = $order->total_refund_amount_local ? $order->total_refund_amount_local + $model->transaction_amount_local : $model->transaction_amount_local;
+                    $order->refunded = Yii::$app->getFormatter()->asTimestamp('now');
+                    $order->total_paid_amount_local = $order->total_paid_amount_local - $model->transaction_amount_local;
+                    $order->current_status = $order->total_paid_amount_local > 0 ? Order::STATUS_REFUND_PART : Order::STATUS_REFUNDED;
+                    $order->save(false);
+                }
                 if (!$model->save(0)) {
                     $tran->rollBack();
                     return $this->response(false, 'Không lưu được transaction');
@@ -89,13 +100,13 @@ class PaymentTransactionController extends BaseApiController
             if (!$model) {
                 return $this->response(false, 'Cannot found transaction code!');
             }
-            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE) {
-                return $this->response(false, 'Transaction is not addfee or continue payment!');
+            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE && $model->transaction_type != PaymentTransaction::TRANSACTION_TYPE_REFUND) {
+                return $this->response(false, 'Transaction is not addfee or continue payment or refund!');
             }
             if ($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED) {
                 return $this->response(false, 'Transaction status is not queued !');
             }
-            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment) {
+            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type != PaymentTransaction::TRANSACTION_TYPE_REFUND) {
                 $order = Order::findOne(['ordercode' => $model->order_code]);
                 $order->total_final_amount_local = $order->total_final_amount_local + $model->transaction_amount_local;
                 $order->save(0);
@@ -140,12 +151,27 @@ class PaymentTransactionController extends BaseApiController
             'updated_at',
         ])->where(['order_code' => $code]);
 
-        $model = (clone $q)->andWhere(['transaction_status' => 'SUCCESS'])->one();
-        if ($model === null) {
-            $model = $q->orderBy(['id' => SORT_DESC])->limit(1)->one();
+//        $model = (clone $q)->andWhere(['transaction_status' => 'SUCCESS'])->one();
+//        if ($model === null) {
+//            $model = $q->orderBy(['id' => SORT_DESC])->limit(1)->one();
+//        }
+        $model = $q->orderBy(['id' => SORT_DESC])->asArray()->all();
+        $data = [];
+        $payment = [];
+        foreach ($model as $m){
+            if($m['transaction_type'] == PaymentTransaction::TRANSACTION_TYPE_PAYMENT){
+                if($m['transaction_status'] == 'SUCCESS'){
+                    $payment[] = $m;
+                }elseif (!$payment || count($payment) == 0){
+                    $payment[] = $m;
+                }
+            }else{
+                $data[] = $m;
+            }
         }
-
-        return $this->response(true, 'success', $model);
+        $data = ArrayHelper::merge($data,$payment);
+//        ArrayHelper::multisort($data,'id',SORT_DESC);
+        return $this->response(true, 'success', $data);
     }
 
     public function actionCreate()
@@ -217,19 +243,11 @@ class PaymentTransactionController extends BaseApiController
                 ChatMongoWs::SendMessage('Tạo giao dịch tiếp tục thanh toán: <b>' . $paymentTransaction->transaction_code . '</b><br>Ghi chú: ' . $description, $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
                 return $this->response(true, "add payment " . $paymentTransaction->transaction_code . " order code $order_code success");
             } elseif ($type == PaymentTransaction::PAYMENT_TYPE_REFUND) {
-                if ($order->total_paid_amount_local < $amount) {
-                    return $this->response(false, "The refund amount is greater than the amount paid.");
-                }
-                $order->total_refund_amount_local = $order->total_refund_amount_local ? $order->total_refund_amount_local + $amount : $amount;
-                $order->refunded = Yii::$app->getFormatter()->asTimestamp('now');
-                $order->total_paid_amount_local = $order->total_paid_amount_local - $amount;
-                $order->current_status = $order->total_paid_amount_local > 0 ? Order::STATUS_REFUND_PART : Order::STATUS_REFUNDED;
-                $order->save(false);
                 $paymentTransaction = new PaymentTransaction();
                 $paymentTransaction->store_id = $order->store_id;
                 $paymentTransaction->customer_id = $order->customer_id;
                 $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_REFUND;
-                $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_QUEUED;
                 $paymentTransaction->transaction_customer_name = $order->receiver_name;
                 $paymentTransaction->transaction_customer_email = $order->receiver_email;
                 $paymentTransaction->transaction_customer_phone = $order->receiver_phone;
