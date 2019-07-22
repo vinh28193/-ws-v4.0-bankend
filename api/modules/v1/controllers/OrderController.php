@@ -332,7 +332,9 @@ class OrderController extends BaseApiController
     public function actionConfirm($code)
     {
         $insurance = Yii::$app->request->post('insurance', 0);
+        $useInsurance = Yii::$app->request->post('useInsurance', 'Y');
         $inspection = Yii::$app->request->post('inspection', 0);
+        $useInspection = Yii::$app->request->post('useInspection', 'Y');
         $packingWood = Yii::$app->request->post('packingWood', 0);
         $packingWood = floatval($packingWood);
 
@@ -351,7 +353,7 @@ class OrderController extends BaseApiController
         $storeManager->setStore($order->store_id);
         $token = ["Confirm order {$order->ordercode}"];
         $feeNew = [];
-        if ($insurance !== 0) {
+        if ($insurance !== 0 && $useInspection === 'Y') {
             if (!isset($allOrderFees['insurance_fee'])) {
                 $target = new TargetAdditionalFee();
                 $target->name = 'insurance_fee';
@@ -371,11 +373,20 @@ class OrderController extends BaseApiController
                 $target->save(false);
                 $allOrderFees['insurance_fee'] = $target;
             }
+        } else {
+            if (!isset($allOrderFees['insurance_fee'])) {
+                $order->total_insurance_fee_local = null;
+            } elseif (($target = $allOrderFees['insurance_fee']) instanceof TargetAdditionalFee) {
+                $target->amount = 0;
+                $target->local_amount = 0;
+                $target->save(false);
+                $allOrderFees['insurance_fee'] = $target;
+            }
         }
 
-        if ($inspection !== 0) {
+        if ($inspection !== 0 && $useInspection === 'Y') {
             $localAmount = $storeManager->roundMoney($inspection * $storeManager->getExchangeRate());
-            if (!isset($allOrderFees['insurance_fee'])) {
+            if (!isset($allOrderFees['inspection_fee'])) {
                 $target = new TargetAdditionalFee();
                 $target->name = 'inspection_fee';
                 $target->type = 'addition';
@@ -397,10 +408,18 @@ class OrderController extends BaseApiController
                 $allOrderFees['inspection_fee'] = $target;
             }
 
+        } else {
+            if (!isset($allOrderFees['inspection_fee'])) {
+                $order->total_insurance_fee_local = null;
+            } elseif (($target = $allOrderFees['inspection_fee']) instanceof TargetAdditionalFee) {
+                $target->amount = 0;
+                $target->local_amount = 0;
+                $target->save(false);
+                $allOrderFees['inspection_fee'] = $target;
+            }
         }
 
         if ($packingWood !== 0) {
-
             $localAmount = $storeManager->roundMoney($inspection * $storeManager->getExchangeRate());
             if (!isset($allOrderFees['packing_fee'])) {
                 $target = new TargetAdditionalFee();
