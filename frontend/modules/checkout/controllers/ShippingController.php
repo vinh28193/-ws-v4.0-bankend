@@ -50,9 +50,8 @@ class ShippingController extends CheckoutController
 //        $request->setTransactionId('7778922')
 //            ->setAffiliation('THE ICONIC')
 //            ->setRevenue(250.0)
-//            ->setTax(25.0)
-//            ->setShipping(15.0)
-//            ->setCouponCode('MY_COUPON');
+//            ->setTax(0)
+//            ->setShipping(0);
 
         // Include a product, the only required fields are SKU and Name
         foreach ($payment->getOrders() as $order) {
@@ -63,7 +62,7 @@ class ShippingController extends CheckoutController
                     'brand' => $product->seller ? $product->seller->seller_name : 'N/A',
                     'category' => $product->portal.'/'.ArrayHelper::getValue(Category::getAlias($product->category_id) , $this->storeManager->isVN() ? 'name' : 'originName'),
                     'variant' => $product->variations,
-                    'price' => $product->price_amount_origin,
+                    'price' => $product->price_amount_local,
                     'quantity' => $product->quantity_customer,
                     'coupon_code' => '',
                     'position' => strtolower($product->portal) == 'ebay' ? 1 : (strtolower($product->portal) == 'amazon' ? 2 : 0)

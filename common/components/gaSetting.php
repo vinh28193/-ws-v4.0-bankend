@@ -24,19 +24,17 @@ class gaSetting
         $request = $ga->request();
         $request->setClientId(self::getGaClientId())->setUserId(self::getGaUserId());
         // Then, include the transaction data
-        $request->setTransactionId('7778956')
-            ->setAffiliation('THE ICONIC')
-            ->setRevenue(250.0)
-            ->setTax(25.0)
-            ->setShipping(15.0)
-            ->setCouponCode('MY_COUPON');
+        $request->setAffiliation($product->item_name)
+            ->setRevenue($product->getLocalizeTotalPrice())
+            ->setTax(0)
+            ->setShipping(0);
         $productData1 = [
             'sku' => $product->item_id,
             'name' => $product->item_name,
             'brand' => $product->provider ? $product->provider->name : ($product->providers && count($product->providers) > 0 ? $product->providers[0]->name : 'N/A'),
             'category' => $product->type . '/' . ArrayHelper::getValue(Category::getAlias($product->category_id), Yii::$app->storeManager->isVN() ? 'name' : 'originName'),
             'variant' => $product->getSpecific($product->item_id),
-            'price' => $product->getSellPrice(),
+            'price' => $product->getLocalizeTotalPrice(),
             'quantity' => 1,
             'coupon_code' => '',
             'position' => strtolower($product->type) == 'ebay' ? 1 : (strtolower($product->type) == 'amazon' ? 2 : 0)
