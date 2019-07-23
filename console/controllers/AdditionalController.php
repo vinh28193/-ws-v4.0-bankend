@@ -160,13 +160,13 @@ class AdditionalController extends Controller
             $storeManager->setStore($order->store_id);
             /** @var  $exRate ExchangeRate */
             $exRate = Yii::$app->exRate;
-            if ($order->customer_id !== null) {
+            if ($order->customer !== null) {
                 $exRate->usedIdentity = false;
-                $exRate->setUser($order->customer_id);
+                $exRate->setUser($order->customer);
                 $rate = $exRate->load('USD', $storeManager->store->currency);
                 $storeManager->setExchangeRate($rate);
             }
-            ActiveRecordUpdateLog::register('console update International Shipping Fee', $order);
+            ActiveRecordUpdateLog::register('console update International Shipping Fee', $order, 15);
             $pickUpWareHouse = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal');
             $current = $order->store_id === 1 ? 'ws_vn' : 'ws_id';
             $pickUpWareHouse = ArrayHelper::getValue($pickUpWareHouse, "warehouses.$current", false);
