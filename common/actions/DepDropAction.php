@@ -59,6 +59,15 @@ class DepDropAction extends \yii\base\Action
                 if (($params = ArrayHelper::getValue($_POST, $this->depdropParam)) !== null) {
                     $selected = isset($params[0]) ? $params[0] : $selected;
                 }
+                if ($selected !== '') {
+                    $filterSelected = array_filter($out, function ($element) use ($selected) {
+                        return (int)$element['id'] === (int)$selected;
+                    });
+                    if (count($filterSelected) === 0) {
+                        $selected = isset($out[0]['id']) ? $out[0]['id'] : $selected;
+                    }
+                }
+
                 return ['output' => $out, 'selected' => $selected];
             }
         }
