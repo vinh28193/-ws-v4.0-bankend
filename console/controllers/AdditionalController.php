@@ -256,11 +256,11 @@ class AdditionalController extends Controller
                 $internationalShipping->local_amount = $storeManager->roundMoney($firstCourier['total_fee']);
                 $internationalShipping->save(false);
 
-                $oldValue = $order->total_intl_shipping_fee_amount;
+                $oldValue = $order->total_intl_shipping_fee_local;
                 if ($oldValue === null) {
                     $oldValue = 0;
                 }
-                $order->total_intl_shipping_fee_amount = $internationalShipping->local_amount;
+                $order->total_intl_shipping_fee_local = $internationalShipping->local_amount;
                 $order->total_fee_amount_local = ($order->total_fee_amount_local - $oldValue) + $internationalShipping->local_amount;
                 $order->total_final_amount_local = ($order->total_final_amount_local - $oldValue) + $internationalShipping->local_amount;
                 $order->save(false);
