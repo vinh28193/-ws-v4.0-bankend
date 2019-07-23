@@ -60,8 +60,10 @@ class ChatHelper
      */
     private static function getPublicIdentity()
     {
-        $user = Yii::$app->getUser()->getIdentity();
-        if ($user instanceof \common\components\UserPublicIdentityInterface) {
+        if(!($app =  Yii::$app) instanceof \yii\web\Application){
+            return null;
+        }
+        if (($user = $app->getUser()->getIdentity()) !== null && $user instanceof \common\components\UserPublicIdentityInterface) {
             return $user->getPublicIdentity();
         }
         return null;
