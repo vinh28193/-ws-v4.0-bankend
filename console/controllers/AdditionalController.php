@@ -185,7 +185,7 @@ class AdditionalController extends Controller
                     'origin_country' => '',
                     'name' => $product->product_name,
                     'desciption' => '',
-                    'weight' => WeshopHelper::roundNumber(($weight / $product->quantity_customer)),
+                    'weight' => $product->total_weight_temporary,
                     'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
                     'quantity' => $product->quantity_customer,
                 ];
