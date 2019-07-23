@@ -618,6 +618,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
         $offset = ($page - 1) * $limit;
         $query = Order::find()
+            ->leftJoin('payment_transaction','payment_transaction.order_code=order.ordercode')
             ->addSelectColumn()
             ->withFullRelations()
             ->andWhere(['is not', 'product.id', null])// ToDo Test/Check Code Fee

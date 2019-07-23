@@ -394,7 +394,7 @@ class BoxMeClient
                 'include_special_goods' => 'N'
             ],
             'payment' => [
-                'cod_amount' => 0,
+                'cod_amount' => $order->total_final_amount_local > $order->total_paid_amount_local ? $order->total_final_amount_local - $order->total_paid_amount_local : 0,
                 'fee_paid_by' => 'sender'
             ],
             'referral' => [
