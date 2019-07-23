@@ -3,6 +3,7 @@
 
 namespace frontend\modules\ebay\controllers;
 
+use common\components\gaSetting;
 use common\helpers\WeshopHelper;
 use common\lib\EbayProductGate;
 use common\products\BaseProduct;
@@ -55,6 +56,7 @@ class ItemController extends EbayController
 //        $relate_product_rs = EbayProductGate::paserSugget($item->item_id, $category ? [$category->alias] : []);
 //        $relate_product = isset($relate_product_rs['data']) ? ArrayHelper::getValue($relate_product_rs['data'], 'item') : [];
 //        $item->relate_products = RelateProduct::setRelateProducts($relate_product);
+            gaSetting::gaDetail($item);
             return $this->render('index', [
                 'item' => $item
             ]);
@@ -103,6 +105,7 @@ class ItemController extends EbayController
                 'contentPrice' => $contentPrice,
             ];
         }
+        gaSetting::gaDetail($item);
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $response;
     }
