@@ -6,6 +6,7 @@ namespace console\controllers;
 use common\components\ExchangeRate;
 use common\components\InternationalShippingCalculator;
 use common\components\StoreManager;
+use common\components\ThirdPartyLogs;
 use common\models\User;
 use common\helpers\WeshopHelper;
 use common\models\db\TargetAdditionalFee;
@@ -238,6 +239,7 @@ class AdditionalController extends Controller
 
             $calculator = new InternationalShippingCalculator();
             list($ok, $couriers) = $calculator->CalculateFee($params, $userId, $order->store_id === 1 ? 'VN' : 'ID');
+            ThirdPartyLogs::setLog('Console', 'update', $code, $params, $couriers);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
                 $firstCourier = $couriers[0];
                 if ($internationalShipping === null) {
@@ -245,13 +247,14 @@ class AdditionalController extends Controller
                     $internationalShipping->name = 'international_shipping_fee';
                     $internationalShipping->type = 'local';
                     $internationalShipping->discount_amount = 0;
-                    $internationalShipping->currency = $order->store_id === 1 ? 'VND' : 'IDR';
+                    $internationalShipping->currency = $storeManager->getCurrencyName();
                     $internationalShipping->label = $order->store_id === 1 ? 'Phí vận chuyển quốc tế' : 'International Shipping Fee';
                     $internationalShipping->created_at = time();
                     $internationalShipping->remove = 0;
                     $internationalShipping->target = 'order';
                     $internationalShipping->target_id = $order->id;
                 }
+                $internationalShipping->currency = $storeManager->getCurrencyName();
                 $internationalShipping->amount = $firstCourier['total_fee'];
                 $internationalShipping->local_amount = $storeManager->roundMoney($firstCourier['total_fee']);
                 $internationalShipping->save(false);
