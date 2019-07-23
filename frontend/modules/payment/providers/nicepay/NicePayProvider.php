@@ -389,7 +389,8 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                'params' => 'referenceNo'
             ]), 'nicepay');
         }
-        if (($transaction = PaymentService::findParentTransaction($referenceNo)) === null) {
+        $transaction = PaymentService::findParentTransaction($referenceNo);
+        if ($transaction === null && ($transaction = PaymentService::findChildTransaction($referenceNo)) === null) {
             $logCallback->response_content = "Không tìm thấy transaction";
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);

@@ -141,7 +141,8 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
 <style type="text/css">
 
 </style>
-<?php if ($shippingForm->getUser() === null): ?>
+
+<?php if ($shippingForm->getUser() === null && $payment->page === Payment::PAGE_CHECKOUT): ?>
     <div class="card card-checkout card-information">
         <div class="card-body">
             <div class="row">
@@ -157,6 +158,9 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
         </div>
     </div>
 <?php endif; ?>
+<?php if ($payment->page === Payment::PAGE_ADDITION):?>
+<?php else: ?>
+
 <div class="card card-checkout card-shipping">
     <div class="card-body">
         <?php
@@ -584,6 +588,7 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
 
     </div>
 </div>
+<?php endif; ?>
 <div class="card card-checkout card-payment">
     <div class="card-body">
         <div class="row">

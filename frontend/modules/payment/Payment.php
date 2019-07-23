@@ -40,7 +40,7 @@ class Payment extends Model
 
     const PAGE_CHECKOUT = 'CHECKOUT';
     const PAGE_BILLING = 'BILLING';
-    const PAGE_TOP_UP = 'TOP_UP';
+    const PAGE_ADDITION = 'ADDITION';
 
     public $env = self::ENV_PRODUCT;
     public $uuid;
@@ -206,7 +206,7 @@ class Payment extends Model
 
     public function loadPaymentProviderFromCache()
     {
-        return PaymentService::loadPaymentByStoreFromDb($this->storeManager->storeId, $this->page === self::PAGE_TOP_UP ? $this->payment_provider : null);
+        return PaymentService::loadPaymentByStoreFromDb($this->storeManager->storeId, $this->payment_provider);
     }
 
     public function createTransactionCode()
@@ -347,7 +347,7 @@ class Payment extends Model
                 'courier_sort_mode' => 'best_rating',
                 'courierDetail' => $order->courierDetail,
                 'additionalFees' => $order->getAdditionalFees()->toArray(),
-                'totalAmountLocal' => $order->total_amount_local,
+                'totalAmountLocal' => $order->getTotalAmount(),
                 'couponCode' => $order->couponCode,
                 'discountDetail' => $order->discountDetail,
                 'discountAmount' => $order->discountAmount,

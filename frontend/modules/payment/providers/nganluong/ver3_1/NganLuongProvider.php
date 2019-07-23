@@ -134,7 +134,8 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK;
         $logPaymentGateway->url = $this->submitUrl;
         try {
-            if (($transaction = PaymentService::findParentTransaction($orderCode)) === null) {
+            $transaction = PaymentService::findParentTransaction($orderCode);
+            if ($transaction === null && ($transaction = PaymentService::findChildTransaction($orderCode)) === null) {
                 $logPaymentGateway->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logPaymentGateway->save(false);

@@ -342,9 +342,26 @@ class Order extends BaseOrder implements AdditionalFeeInterface
         return $this->getCart()->removeItem($this->checkoutType, $this->cartId, null, $this->uuid);
     }
 
+    private $_totalAmount;
+
+    public function getTotalAmount()
+    {
+        if ($this->_totalAmount === null) {
+            $this->_totalAmount = $this->total_amount_local;
+
+        }
+        return $this->_totalAmount;
+    }
+
+    public function setTotalAmount($amount)
+    {
+
+        $this->_totalAmount = $amount;
+    }
+
     public function getTotalFinalAmount()
     {
-        $totalAmount = $this->total_amount_local;
+        $totalAmount = $this->getTotalAmount();
         $totalAmount += $this->getAdditionalFees()->getTotalAdditionalFees()[1];
         if ($this->discountAmount > 0) {
             $totalAmount -= $this->discountAmount;

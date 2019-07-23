@@ -67,6 +67,11 @@ ws.payment = (function ($) {
         },
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
+
+            if (pub.payment.page.toUpperCase() === 'ADDITION') {
+
+            }
+
             ws.initEventHandler($('div#discountCoupon'), 'applyCouponCode', 'click', 'button#applyCouponCode', function (e) {
                 var button = $(this);
                 var key = button.data('key');
@@ -308,6 +313,9 @@ ws.payment = (function ($) {
         },
         calculatorShipping: function () {
             if (!pub.filterShippingAddress(false)) {
+                return;
+            }
+            if (pub.payment.page.toUpperCase() === 'ADDITION') {
                 return;
             }
 
@@ -628,11 +636,17 @@ ws.payment = (function ($) {
     };
     var processPaymment = function () {
 
-        if (!pub.filterShippingAddress()) {
-            return;
-        }
+        var isAdditionPage = pub.get('page').toUpperCase() === 'ADDITION';
+
         var handleUrl = '/payment/payment/process';
-        var data = {payment: pub.payment, shipping: pub.shipping};
+        var data = {payment: pub.payment};
+        if (!isAdditionPage) {
+            if (!pub.filterShippingAddress()) {
+                return;
+            }
+            data.shipping = pub.shipping
+        }
+
         ws.ajax(handleUrl, {
             dataType: 'json',
             type: 'post',

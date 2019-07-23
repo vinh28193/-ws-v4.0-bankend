@@ -91,20 +91,34 @@ class PaymentService
     }
 
     /**
-     * @param $orderCode
+     * @param $tractionCode
+     * @param null $orderCode
      * @return PaymentTransaction|null
      */
-    public static function findChildTransaction($orderCode)
+    public static function findChildTransaction($tractionCode, $orderCode = null)
+    {
+        $conditions = ['AND'];
+        $conditions[] = ['transaction_code' => $tractionCode];
+        if ($orderCode !== null) {
+            $conditions[] = ['order_code' => $orderCode];
+        } else {
+            $conditions[] = ['IS NOT', 'order_code', new Expression('NULL')];
+        }
+        $q = PaymentTransaction::find();
+        $q->where($conditions);
+        return $q->one();
+    }
+
+
+    public static function findChildTransactionByTransactionCode($code)
     {
         $q = PaymentTransaction::find();
         $q->where([
             'AND',
-            ['order_code' => $orderCode],
-            ['IS', 'transaction_code', new Expression('NULL')]
+
         ]);
         return $q->one();
     }
-
 
     public
     static function toNumber($value)
