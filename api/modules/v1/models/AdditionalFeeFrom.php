@@ -505,7 +505,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             'province' => $this->province !== null ? $this->province : ($store->country_code === 'ID' ? 3464 : 1),
             'district' => $this->district !== null ? $this->district : ($store->country_code === 'ID' ? 28444 : 8),
             'country' => $store->country_code,
-            'zipcode' => $store->country_code === 'ID' ? '14340' : '',
+            'zipcode' => $store->country_code === 'ID' ? ($this->post_code ? $this->post_code : '14340') : '',
         ];
     }
 
@@ -540,7 +540,10 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         if ($user !== null && method_exists($user, 'getPickupWarehouse') && ($wh = call_user_func([$user, 'getPickupWarehouse'])) !== null) {
             return $wh;
         } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
-            $current = $store !== null ? ($store === 1 ? 'ws_vn' : 'ws_id') : $params['default'];
+            $current = $params['default'];
+
+            $current = $store !== null ? ($store === 1 ?  (strpos($current,'sandbox') !== false ? 'sandbox_vn' : 'ws_vn') : (strpos($current,'sandbox') !== false ? 'sandbox_id' : 'ws_id')) : $current;
+
             return ArrayHelper::getValue($params, "warehouses.$current", false);
         }
         return null;
