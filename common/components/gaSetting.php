@@ -96,7 +96,7 @@ class gaSetting
             }
             $request->setDocumentPath(Url::base(true) . Url::current());
             $request->setDocumentTitle("Check out page");
-            $request->setProductActionToPurchase();
+//            $request->setProductActionToPurchase();
             $request->setTrackingId(1667);
             $request->setAsyncRequest(true);
             $request->sendPageview();
@@ -111,6 +111,50 @@ class gaSetting
 
     }
 
+    public static function gaPaymentProcess(Payment $payment)
+    {
+        try {
+            Yii::info("GA payment");
+            $ga = self::getGa();
+            $request = $ga->request();
+            $request->setClientId(self::getGaClientId())->setUserId(self::getGaUserId());
+            // Then, include the transaction data
+            $request->setAffiliation("Payment processing")
+                ->setRevenue($payment->getTotalAmountDisplay())
+                ->setTax(0)
+                ->setShipping(0);
+            foreach ($payment->getOrders() as $order) {
+                foreach ($order->products as $product) {
+                    $productData1 = [
+                        'sku' => strtolower($product->portal) == 'ebay' ? $product->parent_sku : $product->sku,
+                        'name' => $product->product_name,
+                        'brand' => $product->seller ? $product->seller->seller_name : 'N/A',
+                        'category' => $product->portal . '/' . ArrayHelper::getValue(Category::getAlias($product->category_id), Yii::$app->storeManager->isVN() ? 'name' : 'originName'),
+                        'variant' => $product->variations,
+                        'price' => $product->price_amount_local,
+                        'quantity' => $product->quantity_customer,
+                        'coupon_code' => '',
+                        'position' => strtolower($product->portal) == 'ebay' ? 1 : (strtolower($product->portal) == 'amazon' ? 2 : 0)
+                    ];
+                    $request->addProduct($productData1);
+                }
+            }
+            $request->setDocumentPath(Url::base(true) . Url::current());
+            $request->setDocumentTitle("Payment page");
+            $request->setProductActionToPurchase();
+            $request->setTrackingId(1667);
+            $request->setAsyncRequest(true);
+            $request->sendPageview();
+            $request->sendTransaction();
+            $request->sendItem();
+            $request->setEventCategory('Payment');
+            $request->setEventAction('processing');
+            $request->sendEvent();
+        } catch (\Exception $e) {
+            Yii::error($e);
+        }
+
+    }
     /**
      * @return MeasurementProtocol|mixed
      */
