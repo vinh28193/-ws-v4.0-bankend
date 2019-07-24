@@ -284,16 +284,16 @@ class FrontendController extends Controller
 
     public function gaWs()
     {
-        Yii::info("set Path : " . $this->setDocumentPath);
+       /* Yii::info("set Path : " . $this->setDocumentPath);
         Yii::info("this->_uuid : " . $this->_uuid);
         if ($this->setDocumentPath) {
             Yii::info("FrondEnd Pages GA WS");
             return $this->getGa()->request()
                 ->setClientId($this->_uuid)
-                ->setDocumentPath($this->setDocumentPath)
+                ->setDocumentPath(Url::base(true).$this->setDocumentPath)
                 ->setAsyncRequest(true)
                 ->sendPageview();
-        }
+        }*/
     }
 
     public $_uuid;
@@ -345,13 +345,7 @@ class FrontendController extends Controller
         }
         $this->setUuidCookie($this->_uuid);
         if ($this->_uuid) {
-            if ((YII_ENV == 'dev' and YII_DEBUG == true) || (Yii::$app->params['ENV'] == true)) {
-                // ENV DEV /  TEST
-                $this->gaWs();
-            } else if ((YII_ENV == 'prod' and YII_DEBUG == false) || (Yii::$app->params['ENV'] == false)) {
-
-                // ENV PROD
-            }
+            $this->gaWs();
         } else {
             return ['success' => false, 'message' => Yii::t('frontend', 'fingerprint is null'), 'data' => ['content' => '']];
         }

@@ -3,6 +3,7 @@
 
 namespace frontend\modules\amazon\controllers;
 
+use common\components\gaSetting;
 use common\lib\AmazonProductGate;
 use common\products\BaseProduct;
 use common\products\forms\ProductDetailFrom;
@@ -13,7 +14,6 @@ class ItemController extends AmazonController
 {
     public function actionDetail($id)
     {
-
         $form = new ProductDetailFrom();
         $form->load($this->request->getQueryParams(), '');
         $form->id = $id;
@@ -27,7 +27,7 @@ class ItemController extends AmazonController
         $this->site_title = Yii::t('frontend', '{name} | Product US Amazon', ['name' => $item->item_name]);
         $this->site_description = Yii::t('frontend', 'Buy the "{name}" product on US Amazon immediately via {store} to get the product within 7-15 days with many attractive offers. Shopping US Amazon, eBay easily.', ['name' => $item->item_name,'store' => $this->storeManager->store->name]);
         $this->site_image = isset($item->primary_images[0]) ? $item->primary_images[0]->main : Url::to('/img/no_image.png',true);
-
+        gaSetting::gaDetail($item);
         return $this->render('index', [
             'item' => $item
         ]);
@@ -87,6 +87,7 @@ class ItemController extends AmazonController
                 'contentPrice' => $contentPrice,
             ];
         }
+        gaSetting::gaDetail($item);
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $response;
     }

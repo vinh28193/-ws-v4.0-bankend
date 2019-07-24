@@ -4,6 +4,7 @@
 namespace frontend\modules\payment\controllers;
 
 
+use common\components\gaSetting;
 use frontend\modules\payment\models\Order;
 use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
@@ -418,7 +419,7 @@ class PaymentController extends BasePaymentController
 
         }
 
-
+    gaSetting::gaPaymentProcess($payment);
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res);

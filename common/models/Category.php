@@ -8,6 +8,7 @@
 
 namespace common\models;
 
+use common\components\Cache;
 use Yii;
 use common\additional\AdditionalFeeInterface;
 use common\models\db\Category as DbCategory;
@@ -88,5 +89,14 @@ class Category extends DbCategory
             return $this;
         }
         return $categorySafe;
+    }
+    public static function getAlias($alias)
+    {
+        $category = Cache::get('category-alias-' . $alias);
+        if (empty($category)) {
+            $category = Category::find()->andWhere(["alias" => $alias])->one();
+            Cache::set('category-alias-' . $alias, $category, 60 * 10);
+        }
+        return $category;
     }
 }

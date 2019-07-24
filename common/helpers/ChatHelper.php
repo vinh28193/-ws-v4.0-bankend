@@ -44,7 +44,7 @@ class ChatHelper
             'user_name' => $identity ? $identity['username'] : null,
             'user_app' => 'weshop 2019',
             'user_request_suorce' => $source,
-            'request_ip' => Yii::$app->getRequest()->getUserIP(),
+            'request_ip' => ($app = Yii::$app) instanceof \yii\web\Application ? $app->getRequest()->getUserIP() : null,
             'user_avatars' => null,
             'Order_path' => $path,
             'is_send_email_to_customer' => null,
@@ -60,8 +60,10 @@ class ChatHelper
      */
     private static function getPublicIdentity()
     {
-        $user = Yii::$app->getUser()->getIdentity();
-        if ($user instanceof \common\components\UserPublicIdentityInterface) {
+        if (!($app = Yii::$app) instanceof \yii\web\Application) {
+            return null;
+        }
+        if (($user = $app->getUser()->getIdentity()) !== null && $user instanceof \common\components\UserPublicIdentityInterface) {
             return $user->getPublicIdentity();
         }
         return null;
