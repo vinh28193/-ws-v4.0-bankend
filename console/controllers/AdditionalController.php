@@ -114,6 +114,7 @@ class AdditionalController extends Controller
                 $orderPurchaseAmount = 0;
                 $orderPurchaseLocal = 0;
                 foreach ($products as $product) {
+                    ActiveRecordUpdateLog::register('console update Purchase Fee', $product, 15);
                     /** @var  $purchaseFee TargetAdditionalFee */
                     $purchaseFee = TargetAdditionalFee::find()->where([
                         'AND',
@@ -149,9 +150,9 @@ class AdditionalController extends Controller
                 $order->total_weshop_fee_local = $orderPurchaseLocal;
                 $order->total_fee_amount_local = ($order->total_fee_amount_local - $oldLocalValue) + $orderPurchaseLocal;
                 $order->total_final_amount_local = ($order->total_final_amount_local - $oldLocalValue) + $orderPurchaseLocal;
-
+                $this->stdout("    > order changed purchase fee from $oldAmountValue -> $orderPurchaseAmount ($oldLocalValue -> $orderPurchaseLocal).\n", Console::FG_GREEN);
             } catch (Exception $exception) {
-
+                $this->stdout("    > {$exception->getMessage()} \n", Console::FG_RED);
             }
 
 
