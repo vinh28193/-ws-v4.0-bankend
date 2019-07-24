@@ -103,7 +103,7 @@ class AdditionalController extends Controller
             $exRate->setUser($customer);
             $rate = $exRate->load('USD', $storeManager->store->currency);
             $storeManager->setExchangeRate($rate);
-
+            ActiveRecordUpdateLog::register('console update Purchase Fee', $order, 15);
             $this->stdout("    > $purchasePercent will be apply to order `$code` .\n", Console::FG_GREEN);
             $products = $order->products;
             $countProduct = count($products);
@@ -134,7 +134,22 @@ class AdditionalController extends Controller
                     $purchaseFee->local_amount = $localAmount;
                     $orderPurchaseAmount += $newPurchaseFee;
                     $orderPurchaseLocal += $localAmount;
+                    $purchaseFee->save();
                 }
+                $oldAmountValue = $order->total_weshop_fee_amount;
+                $oldLocalValue = $order->total_weshop_fee_local;
+                if ($oldAmountValue === null) {
+                    $oldAmountValue = 0;
+                }
+                if ($oldLocalValue === null) {
+                    $oldLocalValue = 0;
+                }
+
+                $order->total_weshop_fee_amount = $orderPurchaseAmount;
+                $order->total_weshop_fee_local = $orderPurchaseLocal;
+                $order->total_fee_amount_local = ($order->total_fee_amount_local - $oldLocalValue) + $orderPurchaseLocal;
+                $order->total_final_amount_local = ($order->total_final_amount_local - $oldLocalValue) + $orderPurchaseLocal;
+
             } catch (Exception $exception) {
 
             }
@@ -178,17 +193,22 @@ class AdditionalController extends Controller
             $pickUpId = ArrayHelper::getValue($pickUpWareHouse, 'ref_pickup_id');
             $userId = ArrayHelper::getValue($pickUpWareHouse, 'ref_user_id');
 
-            $weight = $order->total_weight_temporary * 1000;
+            $weight = 0;
             $totalAmount = $order->total_amount_local;
             $items = [];
             foreach ($order->products as $product) {
+                $itemWeight = (int)$product->total_weight_temporary * 1000;
+                if ($itemWeight <= 0) {
+                    $itemWeight = $order->store_id === 1 ? 500 : 1000;
+                }
+                $weight += $itemWeight;
                 $items[] = [
                     'sku' => implode('|', [$product->parent_sku, $product->sku]),
                     'label_code' => '',
                     'origin_country' => '',
                     'name' => $product->product_name,
                     'desciption' => '',
-                    'weight' => WeshopHelper::roundNumber((((int)$product->total_weight_temporary) * 1000 / $product->quantity_customer)),
+                    'weight' => WeshopHelper::roundNumber($itemWeight / $product->quantity_customer),
                     'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
                     'quantity' => $product->quantity_customer,
                 ];
@@ -210,8 +230,8 @@ class AdditionalController extends Controller
                     'address2' => '',
                     'phone' => '0987654321',
                     'phone2' => '',
-                    'province' => ($order->receiver_province_id !== null || $order->receiver_district_id === null) ? $order->buyer_province_id : $order->receiver_province_id,
-                    'district' => ($order->receiver_province_id !== null || $order->receiver_district_id === null) ? $order->buyer_district_id : $order->receiver_district_id,
+                    'province' => ($order->receiver_province_id === null || $order->receiver_district_id === null) ? $order->buyer_province_id : $order->receiver_province_id,
+                    'district' => ($order->receiver_province_id === null || $order->receiver_district_id === null) ? $order->buyer_district_id : $order->receiver_district_id,
                     'country' => $order->store_id === 1 ? 'VN' : 'ID',
                     'zipcode' => $order->store_id === 1 ? '' : ($order->receiver_post_code === null ? $order->buyer_post_code : $order->receiver_post_code),
                 ],
@@ -278,9 +298,9 @@ class AdditionalController extends Controller
                 $now = Yii::$app->formatter->asDatetime('now');
                 $a = $storeManager->showMoney($internationalShipping->local_amount);
                 $note = "Console:updated international shipping information for courier `{$order->courier_name}($order->courier_service)` shipping fee:$a (rate:{$storeManager->getExchangeRate()})  at:{$now}";
-                if($orderNote === null){
+                if ($orderNote === null) {
                     $orderNote = $note;
-                }else {
+                } else {
                     $orderNote .= ', ';
                     $orderNote .= $note;
                 }
