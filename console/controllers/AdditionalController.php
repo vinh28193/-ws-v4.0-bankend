@@ -80,12 +80,11 @@ class AdditionalController extends Controller
                 $this->stdout("    > not found order code `$code`.\n", Console::FG_RED);
                 continue;
             }
-            if ($order->customer_id === null) {
+            /** @var  $customer User */
+            if ($order->customer_id === null || (($customer = $order->customer)) === null) {
                 $this->stdout("    > order `$code` not valid, cause customer guest .\n", Console::FG_RED);
                 continue;
             }
-            /** @var  $customer User */
-            $customer = $order->customer;
             $useLevel = $customer->getUserLevel();
             $this->stdout("    > customer `$customer->id`  level `$useLevel` detected.\n", Console::FG_GREEN);
             $purchasePercent = 0.12;
@@ -112,7 +111,8 @@ class AdditionalController extends Controller
             $this->stdout("    > transaction begin .\n", Console::FG_RED);
             $transaction = Order::getDb()->beginTransaction();
             try {
-                $orderFees = [];
+                $orderPurchaseAmount = 0;
+                $orderPurchaseLocal = 0;
                 foreach ($products as $product) {
                     /** @var  $purchaseFee TargetAdditionalFee */
                     $purchaseFee = TargetAdditionalFee::find()->where([
@@ -127,10 +127,13 @@ class AdditionalController extends Controller
                     }
                     $usAmount = $product->total_final_amount_origin;
                     $newPurchaseFee = $usAmount * $purchasePercent;
-                    $purchaseFee->amount = $newPurchaseFee;
-                    $localAmount = 0;
-                    $this->stdout("    > product `$product->id` update purchase fee ({$purchaseFee->id}) form  {$purchaseFee->amount} to `$newPurchaseFee`.\n", Console::FG_GREEN);
+                    $localAmount = $storeManager->roundMoney($newPurchaseFee * $storeManager->getExchangeRate());
 
+                    $this->stdout("    > product `$product->id` update purchase fee ({$purchaseFee->id}) form  {$storeManager->showMoney($purchaseFee->local_amount)} to `{$storeManager->showMoney($localAmount)}`.\n", Console::FG_GREEN);
+                    $purchaseFee->amount = $newPurchaseFee;
+                    $purchaseFee->local_amount = $localAmount;
+                    $orderPurchaseAmount += $newPurchaseFee;
+                    $orderPurchaseLocal += $localAmount;
                 }
             } catch (Exception $exception) {
 
@@ -185,7 +188,7 @@ class AdditionalController extends Controller
                     'origin_country' => '',
                     'name' => $product->product_name,
                     'desciption' => '',
-                    'weight' => WeshopHelper::roundNumber((((int)$product->total_weight_temporary)*1000 / $product->quantity_customer)),
+                    'weight' => WeshopHelper::roundNumber((((int)$product->total_weight_temporary) * 1000 / $product->quantity_customer)),
                     'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
                     'quantity' => $product->quantity_customer,
                 ];
@@ -266,6 +269,22 @@ class AdditionalController extends Controller
                 $order->total_intl_shipping_fee_local = $internationalShipping->local_amount;
                 $order->total_fee_amount_local = ($order->total_fee_amount_local - $oldValue) + $internationalShipping->local_amount;
                 $order->total_final_amount_local = ($order->total_final_amount_local - $oldValue) + $internationalShipping->local_amount;
+
+                $order->courier_name = implode(' ', [$firstCourier['courier_name'], $firstCourier['service_name']]);
+                $order->courier_service = $firstCourier['service_code'];
+                $order->courier_delivery_time = implode(' ', [$firstCourier['min_delivery_time'], $firstCourier['max_delivery_time']]);
+
+                $orderNote = $order->note;
+                $now = Yii::$app->formatter->asDatetime('now');
+                $a = $storeManager->showMoney($internationalShipping->local_amount);
+                $note = "Console:updated international shipping information for courier `{$order->courier_name}($order->courier_service)` shipping fee:$a (rate:{$storeManager->getExchangeRate()})  at:{$now}";
+                if($orderNote === null){
+                    $orderNote = $note;
+                }else {
+                    $orderNote .= ', ';
+                    $orderNote .= $note;
+                }
+                $order->note = $orderNote;
                 $order->save(false);
             } else {
                 $this->stdout("    > $couriers.\n", Console::FG_RED);
