@@ -505,7 +505,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             'province' => $this->province !== null ? $this->province : ($store->country_code === 'ID' ? 3464 : 1),
             'district' => $this->district !== null ? $this->district : ($store->country_code === 'ID' ? 28444 : 8),
             'country' => $store->country_code,
-            'zipcode' => $store->country_code === 'ID' ? ($this->post_code ? $this->post_code : '14340') : '',
+            'zipcode' => $store->country_code === 'ID' ? ($this->post_code !== null ? $this->post_code : '14340') : '',
         ];
     }
 
