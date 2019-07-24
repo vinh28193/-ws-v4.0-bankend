@@ -618,7 +618,6 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
 
         $offset = ($page - 1) * $limit;
         $query = Order::find()
-            ->leftJoin('payment_transaction','payment_transaction.order_code=order.ordercode')
             ->addSelectColumn()
             ->withFullRelations()
             ->andWhere(['is not', 'product.id', null])// ToDo Test/Check Code Fee
@@ -669,10 +668,17 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
                         ['like', 'order.receiver_phone', $params['keyWord']],
 //                        ['like', 'user.phone', $params['keyWord']],
                     ]);
+                }elseif ($params['searchKeyword'] == 'payment_transaction.transaction_code'){
+                    $query->innerJoin('payment_transaction','payment_transaction.order_code=order.ordercode');
+                    $query->andFilterWhere(['or',
+                        ['like', $params['searchKeyword'], $params['keyWord']],
+                    ]);
                 }
-                $query->andFilterWhere(['or',
-                    ['like', $params['searchKeyword'], $params['keyWord']],
-                ]);
+                else{
+                    $query->andFilterWhere(['or',
+                        ['like', $params['searchKeyword'], $params['keyWord']],
+                    ]);
+                }
             }
 
         }
