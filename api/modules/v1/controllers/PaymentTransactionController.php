@@ -71,7 +71,7 @@ class PaymentTransactionController extends BaseApiController
                 $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
                 if ($model->transaction_type == PaymentTransaction::TRANSACTION_continue_payment || $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE) {
                     $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
-                }elseif ($model->transaction_type == PaymentTransaction::TRANSACTION_TYPE_REFUND){
+                } elseif ($model->transaction_type == PaymentTransaction::TRANSACTION_TYPE_REFUND) {
                     if ($order->total_paid_amount_local < $model->transaction_amount_local) {
                         return $this->response(false, "The refund amount is greater than the amount paid.");
                     }
@@ -158,18 +158,18 @@ class PaymentTransactionController extends BaseApiController
         $model = $q->orderBy(['id' => SORT_DESC])->asArray()->all();
         $data = [];
         $payment = [];
-        foreach ($model as $m){
-            if($m['transaction_type'] == PaymentTransaction::TRANSACTION_TYPE_PAYMENT){
-                if($m['transaction_status'] == 'SUCCESS'){
+        foreach ($model as $m) {
+            if ($m['transaction_type'] == PaymentTransaction::TRANSACTION_TYPE_PAYMENT) {
+                if ($m['transaction_status'] == 'SUCCESS') {
                     $payment[] = $m;
-                }elseif (!$payment || count($payment) == 0){
+                } elseif (!$payment || count($payment) == 0) {
                     $payment[] = $m;
                 }
-            }else{
+            } else {
                 $data[] = $m;
             }
         }
-        $data = ArrayHelper::merge($data,$payment);
+        $data = ArrayHelper::merge($data, $payment);
 //        ArrayHelper::multisort($data,'id',SORT_DESC);
         return $this->response(true, 'success', $data);
     }
@@ -212,7 +212,8 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->save(0);
                 $paymentTransaction->transaction_code = PaymentService::generateTransactionCode('PM' . $paymentTransaction->id);
                 $paymentTransaction->save(0);
-                ChatMongoWs::SendMessage('Tạo giao dịch thu thêm: <b>' . $paymentTransaction->transaction_code . '</b><br>Ghi chú: ' . $description, $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
+                $link = 'https://' . ($order->store_id === 1 ? 'weshop.com.vn' : 'weshop.co.id') . '/checkout.html?code=' . $paymentTransaction->transaction_code;
+                ChatMongoWs::SendMessage('Added an addition, code: <b>' . $paymentTransaction->transaction_code . '</b><br>note: ' . $description . '</b>Link payment this addfee:' . $link, $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
                 return $this->response(true, "add payment " . $paymentTransaction->transaction_code . " order code $order_code success");
             } elseif ($type == PaymentTransaction::PAYMENT_TYPE_continue_payment) {
                 $paymentTransaction = new PaymentTransaction();
