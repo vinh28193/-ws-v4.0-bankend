@@ -24,7 +24,6 @@ use yii\helpers\ArrayHelper;
 
 class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
 {
-    use PickUpWareHouseTrait;
 
     /**
      * @var string target name order/product
@@ -527,5 +526,23 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             'additional_fees' => $this->getAdditionalFees()->toArray(),
             'couriers' => $this->_couriers
         ];
+    }
+
+    public function getPickUpWareHouse($store = null)
+    {
+        if ($store === null) {
+            $store = $this->store_id;
+            if ($store === null) {
+                $store = $this->getAdditionalFees()->storeId;
+            }
+        }
+        $user = $this->getUser();
+        if ($user !== null && method_exists($user, 'getPickupWarehouse') && ($wh = call_user_func([$user, 'getPickupWarehouse'])) !== null) {
+            return $wh;
+        } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
+            $current = $store !== null ? ($store === 1 ? 'ws_vn' : 'ws_id') : $params['default'];
+            return ArrayHelper::getValue($params, "warehouses.$current", false);
+        }
+        return null;
     }
 }
