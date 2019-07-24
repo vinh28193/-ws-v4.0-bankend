@@ -55,7 +55,12 @@ class OrderController extends BaseApiController
         return [
             [
                 'allow' => true,
-                'actions' => ['index', 'view', 'create', 'update', 'export'],
+                'actions' => ['index', 'view', 'export'],
+                'roles' => $this->getAllRoles(true),
+            ],
+            [
+                'allow' => true,
+                'actions' => ['create', 'update'],
                 'roles' => $this->getAllRoles(true, 'marketing'),
             ],
             [
