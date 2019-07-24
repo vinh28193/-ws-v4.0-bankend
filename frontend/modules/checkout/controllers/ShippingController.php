@@ -41,44 +41,7 @@ class ShippingController extends CheckoutController
 
     public function gaCheckout(Payment $payment)
     {
-        Yii::info("GA CHECKOUT");
-        $request = Yii::$app->ga->request();
-
-        $request->setClientId(gaSetting::getGaClientId())->setUserId(gaSetting::getGaUserId());
-
-//        // Then, include the transaction data
-//        $request->setTransactionId('7778922')
-//            ->setAffiliation('THE ICONIC')
-//            ->setRevenue(250.0)
-//            ->setTax(0)
-//            ->setShipping(0);
-
-        // Include a product, the only required fields are SKU and Name
-        foreach ($payment->getOrders() as $order) {
-            foreach ($order->products as $product) {
-                $productData1 = [
-                    'sku' => strtolower($product->portal) == 'ebay' ? $product->parent_sku : $product->sku,
-                    'name' => $product->product_name,
-                    'brand' => $product->seller ? $product->seller->seller_name : 'N/A',
-                    'category' => $product->portal.'/'.ArrayHelper::getValue(Category::getAlias($product->category_id) , $this->storeManager->isVN() ? 'name' : 'originName'),
-                    'variant' => $product->variations,
-                    'price' => $product->price_amount_local,
-                    'quantity' => $product->quantity_customer,
-                    'coupon_code' => '',
-                    'position' => strtolower($product->portal) == 'ebay' ? 1 : (strtolower($product->portal) == 'amazon' ? 2 : 0)
-                ];
-                $request->addProduct($productData1);
-            }
-        }
-        // Don't forget to set the product action, which is PURCHASE in the example below
-        $request->setProductActionToPurchase();
-
-        // Finally, you need to send a hit; in this example, we are sending an Event
-        $request->setEventCategory('Checkout')
-            ->setEventAction('Purchase')
-            ->setAsyncRequest(true)//  'asyncMode' => true,
-            ->sendEvent();
-
+        gaSetting::gaCheckout($payment);
     }
 
     public function actions()

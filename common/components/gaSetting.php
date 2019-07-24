@@ -7,18 +7,16 @@ namespace common\components;
 use baibaratsky\yii\google\analytics\MeasurementProtocol;
 use common\models\Category;
 use common\products\BaseProduct;
+use frontend\modules\payment\Payment;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 class gaSetting
 {
     public static function gaDetail(BaseProduct $product)
     {
-        \Yii::$app->ga->request()
-            ->setClientId('12345678')
-            ->setDocumentPath('/mypage')
-            ->sendPageview();
-//        try{
+        try {
         Yii::info("GA Detail");
         $ga = self::getGa();
         $request = $ga->request();
@@ -41,14 +39,75 @@ class gaSetting
         ];
         $request->addProduct($productData1);
         $request->setProductActionToDetail();
+            $request->setTransactionId(1667);
+            $request->setItemName($product->item_name);
+            $request->setItemCode($product->item_sku);
+            $request->setItemCategory($product->category_id);
+            $request->setItemPrice($product->getLocalizeTotalPrice());
+            $request->setItemQuantity(1);
+            $request->setRevenue($product->getLocalizeTotalPrice());
+            $request->setProductActionToAdd();
+            $request->setProductActionToCheckout();
+            $request->setProductActionToClick();
+            $request->setProductActionList('Detail product');
+            $request->setDocumentPath(Url::base(true) . Url::current());
+            $request->setDocumentTitle($product->item_name . " | " . $product->type . " page");
+            $request->setEventCategory('Detail');
+            $request->setEventAction('view');
+            $request->setEventLabel($product->item_name . " | " . $product->type . " page");
+            $request->setAsyncRequest(true);
         $request->sendPageview();
-        $request->setEventCategory('Detail')
-            ->setEventAction('view')
-                ->setAsyncRequest(true)//  'asyncMode' => true,
-            ->sendEvent();
-//        }catch (\Exception $e){
-//            Yii::error($e);
-//        }
+            $request->sendTransaction();
+            $request->sendItem();
+            $request->sendEvent();
+        } catch (\Exception $e) {
+            Yii::error($e);
+        }
+
+    }
+
+    public static function gaCheckout(Payment $payment)
+    {
+        try {
+            Yii::info("GA Checkout");
+            $ga = self::getGa();
+            $request = $ga->request();
+            $request->setClientId(self::getGaClientId())->setUserId(self::getGaUserId());
+            // Then, include the transaction data
+            $request->setAffiliation("Check out page")
+                ->setRevenue($payment->getTotalAmountDisplay())
+                ->setTax(0)
+                ->setShipping(0);
+            foreach ($payment->getOrders() as $order) {
+                foreach ($order->products as $product) {
+                    $productData1 = [
+                        'sku' => strtolower($product->portal) == 'ebay' ? $product->parent_sku : $product->sku,
+                        'name' => $product->product_name,
+                        'brand' => $product->seller ? $product->seller->seller_name : 'N/A',
+                        'category' => $product->portal . '/' . ArrayHelper::getValue(Category::getAlias($product->category_id), Yii::$app->storeManager->isVN() ? 'name' : 'originName'),
+                        'variant' => $product->variations,
+                        'price' => $product->price_amount_local,
+                        'quantity' => $product->quantity_customer,
+                        'coupon_code' => '',
+                        'position' => strtolower($product->portal) == 'ebay' ? 1 : (strtolower($product->portal) == 'amazon' ? 2 : 0)
+                    ];
+                    $request->addProduct($productData1);
+                }
+            }
+            $request->setDocumentPath(Url::base(true) . Url::current());
+            $request->setDocumentTitle("Check out page");
+            $request->setProductActionToPurchase();
+            $request->setTrackingId(1667);
+            $request->setAsyncRequest(true);
+            $request->sendPageview();
+            $request->sendTransaction();
+            $request->sendItem();
+            $request->setEventCategory('Checkout');
+            $request->setEventAction('Purchase');
+            $request->sendEvent();
+        } catch (\Exception $e) {
+            Yii::error($e);
+        }
 
     }
 
