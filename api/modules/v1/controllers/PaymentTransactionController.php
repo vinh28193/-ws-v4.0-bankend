@@ -55,21 +55,18 @@ class PaymentTransactionController extends BaseApiController
         $post = Yii::$app->request->post();
         $type = ArrayHelper::getValue($post, 'type');
         if ($type == 'success') {
-            $model = PaymentTransaction::findOne(['transaction_code' => $code]);
+            $model = PaymentService::findChildTransaction($code);
             if (!$model) {
                 return $this->response(false, 'Cannot found transaction code!');
             }
             if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE && $model->transaction_type != PaymentTransaction::TRANSACTION_TYPE_REFUND) {
                 return $this->response(false, 'Transaction is not addfee or continue payment or refund!');
             }
-            if ($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED) {
-                return $this->response(false, 'Transaction status is not queued !');
-            }
             $tran = Yii::$app->db->beginTransaction();
             try {
                 $order = Order::findOne(['ordercode' => $model->order_code]);
                 $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-                if ($model->transaction_type == PaymentTransaction::TRANSACTION_continue_payment || $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE) {
+                if ($model->transaction_type == PaymentTransaction::TRANSACTION_continue_payment || $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE || $model->transaction_type === PaymentTransaction::TRANSACTION_TYPE_PAYMENT) {
                     $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
                 } elseif ($model->transaction_type == PaymentTransaction::TRANSACTION_TYPE_REFUND) {
                     if ($order->total_paid_amount_local < $model->transaction_amount_local) {
@@ -89,7 +86,7 @@ class PaymentTransactionController extends BaseApiController
                     $tran->rollBack();
                     return $this->response(false, 'Không lưu được order');
                 }
-                ChatMongoWs::SendMessage("Update trạng thái success cho payment transaction: <b>" . $model->transaction_code . "</b>.", ChatMongoWs::TYPE_GROUP_WS);
+                ChatMongoWs::SendMessage("Update payment success for transaction: <b>" . $model->transaction_code . "</b>.", ChatMongoWs::TYPE_GROUP_WS);
                 $tran->commit();
             } catch (\Exception $exception) {
                 $tran->rollBack();
@@ -106,9 +103,9 @@ class PaymentTransactionController extends BaseApiController
             if ($model->transaction_status != PaymentTransaction::TRANSACTION_STATUS_QUEUED) {
                 return $this->response(false, 'Transaction status is not queued !');
             }
-            if ($model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type != PaymentTransaction::TRANSACTION_TYPE_REFUND) {
+            if ($model->transaction_type !== PaymentTransaction::TRANSACTION_TYPE_PAYMENT && $model->transaction_type != PaymentTransaction::TRANSACTION_continue_payment && $model->transaction_type != PaymentTransaction::TRANSACTION_TYPE_REFUND) {
                 $order = Order::findOne(['ordercode' => $model->order_code]);
-                $order->total_final_amount_local = $order->total_final_amount_local + $model->transaction_amount_local;
+                $order->total_final_amount_local = $order->total_final_amount_local - $model->transaction_amount_local;
                 $order->save(0);
             }
             $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CANCEL;
@@ -156,22 +153,7 @@ class PaymentTransactionController extends BaseApiController
 //            $model = $q->orderBy(['id' => SORT_DESC])->limit(1)->one();
 //        }
         $model = $q->orderBy(['id' => SORT_DESC])->asArray()->all();
-        $data = [];
-        $payment = [];
-        foreach ($model as $m) {
-            if ($m['transaction_type'] == PaymentTransaction::TRANSACTION_TYPE_PAYMENT) {
-                if ($m['transaction_status'] == 'SUCCESS') {
-                    $payment[] = $m;
-                } elseif (!$payment || count($payment) == 0) {
-                    $payment[] = $m;
-                }
-            } else {
-                $data[] = $m;
-            }
-        }
-        $data = ArrayHelper::merge($data, $payment);
-//        ArrayHelper::multisort($data,'id',SORT_DESC);
-        return $this->response(true, 'success', $data);
+        return $this->response(true, 'success', $model);
     }
 
     public function actionCreate()
