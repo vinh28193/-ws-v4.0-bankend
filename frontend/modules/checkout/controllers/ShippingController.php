@@ -121,6 +121,7 @@ class ShippingController extends CheckoutController
                 $shippingForm->loadAddressFormOrder($order);
             }
         } else if ($code !== null && ($order = Order::findOne(['ordercode' => $code])) !== null) {
+            $payment->page = Payment::PAGE_BILLING;
             $payment->transaction_code = $order->payment_transaction_code;
             $order = new Order($order->getAttributes());
             $order->getAdditionalFees()->loadFormActiveRecord($order, 'order');
