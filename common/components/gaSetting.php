@@ -39,7 +39,7 @@ class gaSetting
         ];
         $request->addProduct($productData1);
         $request->setProductActionToDetail();
-            $request->setTransactionId(1667);
+//            $request->setTransactionId(1667);
             $request->setItemName($product->item_name);
             $request->setItemCode($product->item_sku);
             $request->setItemCategory($product->category_id);
@@ -47,7 +47,7 @@ class gaSetting
             $request->setItemQuantity(1);
             $request->setRevenue($product->getLocalizeTotalPrice());
             $request->setProductActionToAdd();
-            $request->setProductActionToCheckout();
+//            $request->setProductActionToCheckout();
             $request->setProductActionToClick();
             $request->setProductActionList('Detail product');
             $request->setDocumentPath(Url::base(true) . Url::current());
@@ -97,7 +97,7 @@ class gaSetting
             $request->setDocumentPath(Url::base(true) . Url::current());
             $request->setDocumentTitle("Check out page");
 //            $request->setProductActionToPurchase();
-            $request->setTrackingId(1667);
+//            $request->setTrackingId(1667);
             $request->setAsyncRequest(true);
             $request->sendPageview();
             $request->sendTransaction();
@@ -138,14 +138,16 @@ class gaSetting
                     ];
                     $request->addProduct($productData1);
                 }
+                $request->setTrackingId($order->ordercode);
+                $request->setAsyncRequest(true);
+                $request->sendTransaction();
             }
             $request->setDocumentPath(Url::base(true) . Url::current());
             $request->setDocumentTitle("Payment page");
+            $request->setProductActionToCheckout();
             $request->setProductActionToPurchase();
-            $request->setTrackingId(1667);
             $request->setAsyncRequest(true);
             $request->sendPageview();
-            $request->sendTransaction();
             $request->sendItem();
             $request->setEventCategory('Payment');
             $request->setEventAction('processing');
