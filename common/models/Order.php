@@ -613,17 +613,19 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
             $params = $search;
         }
 
-        $limit = isset($limit) ? $limit : 10;
-        $page = isset($page) ? $page : 1;
-
-        $offset = ($page - 1) * $limit;
         $query = Order::find()
             ->addSelectColumn()
             ->withFullRelations()
             ->andWhere(['is not', 'product.id', null])// ToDo Test/Check Code Fee
-            ->filter($params)
-            ->limit($limit)
-            ->offset($offset);
+            ->filter($params);
+        if(strtolower($limit) != 'all'){
+            $limit = isset($limit) ? $limit : 10;
+            $page = isset($page) ? $page : 1;
+
+            $offset = ($page - 1) * $limit;
+            $query->limit($limit)
+                ->offset($offset);
+        }
         if (isset($params['id'])) {
             $query->andFilterWhere(['id' => $params['id']]);
         }
