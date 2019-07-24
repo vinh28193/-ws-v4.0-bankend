@@ -181,6 +181,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                     $this->store_id = $order->store_id;
                     $this->province = $order->receiver_province_id;
                     $this->district = $order->receiver_district_id;
+                    $this->post_code = $order->receiver_post_code ? $order->receiver_post_code : '';
                 }
             }
 
@@ -381,17 +382,21 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         $weight = 0;
         $totalAmount = 0;
         if ($target instanceof Order) {
-            $weight = $target->total_weight_temporary * 1000;
             $totalAmount = $target->total_amount_local;
             $items = [];
             foreach ($target->products as $product) {
+                $itemWeight = (int)$product->total_weight_temporary * 1000;
+                if ($itemWeight <= 0) {
+                    $itemWeight = $target->store_id === 1 ? 500 : 1000;
+                }
+                $weight += $itemWeight;
                 $items[] = [
                     'sku' => implode('|', [$product->parent_sku, $product->sku]),
                     'label_code' => '',
                     'origin_country' => '',
                     'name' => $product->product_name,
                     'desciption' => '',
-                    'weight' => WeshopHelper::roundNumber(($weight / $product->quantity_customer)),
+                    'weight' => WeshopHelper::roundNumber(($itemWeight / $product->quantity_customer)),
                     'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
                     'quantity' => $product->quantity_customer,
                 ];
