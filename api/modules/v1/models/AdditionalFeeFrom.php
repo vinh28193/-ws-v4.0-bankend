@@ -175,6 +175,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                     $this->store_id = $this->_target->store_id;
                     $this->province = $this->_target->receiver_province_id;
                     $this->district = $this->_target->receiver_district_id;
+                    $this->post_code =  $this->_target->receiver_post_code ?  $this->_target->receiver_post_code : '';
                 } else if ($this->_target instanceof Product) {
                     $order = $this->_target->order;
                     $this->store_id = $order->store_id;
