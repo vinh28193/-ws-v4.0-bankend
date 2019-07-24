@@ -199,7 +199,14 @@ class ShippingController extends CheckoutController
         } elseif ($payment->type === CartSelection::TYPE_SHOPPING) {
             $siteName = Yii::t('frontend', 'Shopping');
         }
+
+        if($payment->page === Payment::PAGE_ADDITION){
+            $siteName = Yii::t('frontend', 'Addition');
+        }
         $titleCollection[] = $siteName;
+        if($code !== null && $payment->page === Payment::PAGE_ADDITION){
+            $titleCollection[] = $code;
+        }
         $titleCollection[] = $shippingForm->getStoreManager()->store->name;
 
         foreach ($payment->getOrders() as $order) {
