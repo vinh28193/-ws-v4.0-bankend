@@ -76,7 +76,7 @@ class AdditionalController extends Controller
         foreach ($codes as $code) {
             $this->stdout("    > filter order code `$code`.\n", Console::FG_GREEN);
             /** @var  $order Order */
-            if ($order = $this->findOrder($code) === null) {
+            if (($order = $this->findOrder($code)) === null) {
                 $this->stdout("    > not found order code `$code`.\n", Console::FG_RED);
                 continue;
             }
