@@ -424,7 +424,7 @@ class OrderController extends BaseApiController
         }
 
         if ($packingWood !== 0) {
-            $localAmount = $storeManager->roundMoney($inspection * $storeManager->getExchangeRate());
+            $localAmount = $storeManager->roundMoney($packingWood * $storeManager->getExchangeRate());
             if (!isset($allOrderFees['packing_fee'])) {
                 $target = new TargetAdditionalFee();
                 $target->name = 'packing_fee';
@@ -440,7 +440,7 @@ class OrderController extends BaseApiController
                 $target->target_id = $order->id;
                 $target->save(false);
                 $allOrderFees['packing_fee'] = $target;
-            } else if (($target = $allOrderFees['packing_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $inspection, 'float')) {
+            } else if (($target = $allOrderFees['packing_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $packingWood, 'float')) {
                 $target->amount = $inspection;
                 $target->local_amount = $localAmount;
                 $target->save(false);

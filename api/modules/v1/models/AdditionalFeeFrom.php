@@ -108,12 +108,14 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     public $accept_insurance = 'N';
 
 
+    public $is_special = 'no';
+
     public function attributes()
     {
         return ArrayHelper::merge(parent::attributes(), [
             'target_name', 'target_id', 'store_id', 'customer_id', 'custom_fee', 'item_type', 'item_id', 'item_sku',
             'province', 'district', 'post_code',
-            'item_seller', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship', 'accept_insurance'
+            'item_seller', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship', 'accept_insurance','is_special'
         ]);
     }
 
@@ -126,7 +128,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 return (integer)$value;
             }],
             [['us_amount', 'us_tax', 'us_ship', 'custom_fee'], 'number'],
-            [['target', 'item_type', 'item_id', 'item_sku', 'accept_insurance', 'item_seller', 'province', 'district', 'post_code'], 'string'],
+            [['target', 'item_type', 'item_id', 'item_sku', 'accept_insurance', 'item_seller', 'province', 'district', 'post_code','is_special'], 'string'],
             [['province', 'district'], 'filter', 'filter' => function ($value) {
                 return (integer)$value;
             }],
@@ -176,12 +178,14 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                     $this->province = $this->_target->receiver_province_id;
                     $this->district = $this->_target->receiver_district_id;
                     $this->post_code =  $this->_target->receiver_post_code ?  $this->_target->receiver_post_code : '';
+                    $this->is_special = $this->_target->is_special ? 'yes' : 'no';
                 } else if ($this->_target instanceof Product) {
                     $order = $this->_target->order;
                     $this->store_id = $order->store_id;
                     $this->province = $order->receiver_province_id;
                     $this->district = $order->receiver_district_id;
                     $this->post_code = $order->receiver_post_code ? $order->receiver_post_code : '';
+                    $this->is_special = $order->is_special ? 'yes' : 'no';
                 }
             }
 
@@ -314,6 +318,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
      */
     public function getIsSpecial()
     {
+
         return false;
     }
 

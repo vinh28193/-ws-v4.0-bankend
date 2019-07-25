@@ -156,7 +156,7 @@ class PaymentController extends BasePaymentController
         $payment->customer_district = $shippingForm->getBuyerDistrictName();
         $payment->customer_country = $this->storeManager->store->country_name;
 
-        if($payment->transaction_code !== null){
+        if ($payment->transaction_code !== null) {
             $payment->return_url = PaymentService::createReturnUrl($payment->transaction_code);
             $payment->cancel_url = PaymentService::createCheckoutUrl(null, $payment->transaction_code);
         }
@@ -318,6 +318,9 @@ class PaymentController extends BasePaymentController
                 Yii::error($exception, __METHOD__);
                 return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
             }
+        } elseif ($payment->page === Payment::PAGE_BILLING) {
+            // check phi van chuyen quoc te;
+
         }
 
         // ToDo Push GA Checkout @Phuchc 15/7/2019
@@ -419,7 +422,7 @@ class PaymentController extends BasePaymentController
 
         }
 
-    gaSetting::gaPaymentProcess($payment);
+        gaSetting::gaPaymentProcess($payment);
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res);
@@ -497,11 +500,11 @@ class PaymentController extends BasePaymentController
             $redirectUrl = $res->checkoutUrl;
         }
         if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
-            if($paymentTransaction->transaction_type !== PaymentTransaction::TRANSACTION_continue_payment){
+            if ($paymentTransaction->transaction_type !== PaymentTransaction::TRANSACTION_continue_payment) {
                 $order = $paymentTransaction->order;
                 $order->total_paid_amount_local += $paymentTransaction->transaction_amount_local;
                 $order->save(false);
-            }else {
+            } else {
                 foreach ($paymentTransaction->childPaymentTransaction as $child) {
                     $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
 
