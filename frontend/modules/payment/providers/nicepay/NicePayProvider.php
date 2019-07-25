@@ -220,6 +220,10 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
         $this->getClient()->getData()->set('referenceNo', $payment->transaction_code);
         $this->getClient()->getData()->set('callBackUrl', $payment->cancel_url);
         $decs = 'Payment of orders ' . $payment->getOrderCodes();
+
+        if($payment->page === Payment::PAGE_ADDITION){
+            $decs = 'Addition fee of orders ' . $payment->getOrderCodes();
+        }
         $this->getClient()->getData()->set('description', $decs); // Transaction description
         $this->getClient()->getData()->set('goodsNm', $decs);
 
@@ -389,7 +393,8 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                'params' => 'referenceNo'
             ]), 'nicepay');
         }
-        if (($transaction = PaymentService::findParentTransaction($referenceNo)) === null) {
+        $transaction = PaymentService::findParentTransaction($referenceNo);
+        if ($transaction === null && ($transaction = PaymentService::findChildTransaction($referenceNo)) === null) {
             $logCallback->response_content = "Không tìm thấy transaction";
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);

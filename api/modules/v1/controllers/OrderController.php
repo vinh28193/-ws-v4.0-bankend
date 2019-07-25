@@ -357,8 +357,7 @@ class OrderController extends BaseApiController
         $storeManager = Yii::$app->storeManager;
         $storeManager->setStore($order->store_id);
         $token = ["Confirm order {$order->ordercode}"];
-        $feeNew = [];
-        if ($insurance !== 0 && $useInspection === 'Y') {
+        if ($insurance !== 0 && $useInsurance === 'Y') {
             if (!isset($allOrderFees['insurance_fee'])) {
                 $target = new TargetAdditionalFee();
                 $target->name = 'insurance_fee';
@@ -425,7 +424,7 @@ class OrderController extends BaseApiController
         }
 
         if ($packingWood !== 0) {
-            $localAmount = $storeManager->roundMoney($inspection * $storeManager->getExchangeRate());
+            $localAmount = $storeManager->roundMoney($packingWood * $storeManager->getExchangeRate());
             if (!isset($allOrderFees['packing_fee'])) {
                 $target = new TargetAdditionalFee();
                 $target->name = 'packing_fee';
@@ -441,7 +440,7 @@ class OrderController extends BaseApiController
                 $target->target_id = $order->id;
                 $target->save(false);
                 $allOrderFees['packing_fee'] = $target;
-            } else if (($target = $allOrderFees['packing_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $inspection, 'float')) {
+            } else if (($target = $allOrderFees['packing_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $packingWood, 'float')) {
                 $target->amount = $inspection;
                 $target->local_amount = $localAmount;
                 $target->save(false);
@@ -451,7 +450,6 @@ class OrderController extends BaseApiController
 
         }
 
-        $updateIntl = false;
         if (($courier = Yii::$app->request->post('courier')) !== null && is_string($courier) && $courier !== '') {
             $courier = json_decode($courier, true);
             if ((!isset($allOrderFees['international_shipping_fee']) || ($intFee = $allOrderFees['international_shipping_fee']) === null) && is_array($courier) && isset($courier['total_fee']) && $courier['total_fee'] > 0) {
@@ -468,8 +466,7 @@ class OrderController extends BaseApiController
                 $target->target = 'order';
                 $target->target_id = $order->id;
                 $target->save(false);
-                $feeNew[$target->name] = $target;
-                $updateIntl = true;
+                $allOrderFees[$target->name] = $target;
             }
         }
 
@@ -494,7 +491,7 @@ class OrderController extends BaseApiController
 //                $value += $orderFee->local_amount;
 //                $order->total_insurance_fee_local = $value;
                 $order->total_insurance_fee_local = $orderFee->local_amount;
-            } elseif ($orderFee->name === 'international_shipping_fee' && $updateIntl) {
+            } elseif ($orderFee->name === 'international_shipping_fee') {
                 $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
                 $order->total_intl_shipping_fee_local = $orderFee->local_amount;
             } elseif ($orderFee->name === 'product_price') {

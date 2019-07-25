@@ -24,7 +24,6 @@ use yii\helpers\ArrayHelper;
 
 class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
 {
-    use PickUpWareHouseTrait;
 
     /**
      * @var string target name order/product
@@ -109,12 +108,14 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     public $accept_insurance = 'N';
 
 
+    public $is_special = 'no';
+
     public function attributes()
     {
         return ArrayHelper::merge(parent::attributes(), [
             'target_name', 'target_id', 'store_id', 'customer_id', 'custom_fee', 'item_type', 'item_id', 'item_sku',
             'province', 'district', 'post_code',
-            'item_seller', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship', 'accept_insurance'
+            'item_seller', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship', 'accept_insurance','is_special'
         ]);
     }
 
@@ -127,7 +128,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 return (integer)$value;
             }],
             [['us_amount', 'us_tax', 'us_ship', 'custom_fee'], 'number'],
-            [['target', 'item_type', 'item_id', 'item_sku', 'accept_insurance', 'item_seller', 'province', 'district', 'post_code'], 'string'],
+            [['target', 'item_type', 'item_id', 'item_sku', 'accept_insurance', 'item_seller', 'province', 'district', 'post_code','is_special'], 'string'],
             [['province', 'district'], 'filter', 'filter' => function ($value) {
                 return (integer)$value;
             }],
@@ -176,11 +177,15 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                     $this->store_id = $this->_target->store_id;
                     $this->province = $this->_target->receiver_province_id;
                     $this->district = $this->_target->receiver_district_id;
+                    $this->post_code =  $this->_target->receiver_post_code ?  $this->_target->receiver_post_code : '';
+                    $this->is_special = $this->_target->is_special ? 'yes' : 'no';
                 } else if ($this->_target instanceof Product) {
                     $order = $this->_target->order;
                     $this->store_id = $order->store_id;
                     $this->province = $order->receiver_province_id;
                     $this->district = $order->receiver_district_id;
+                    $this->post_code = $order->receiver_post_code ? $order->receiver_post_code : '';
+                    $this->is_special = $order->is_special ? 'yes' : 'no';
                 }
             }
 
@@ -313,6 +318,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
      */
     public function getIsSpecial()
     {
+
         return false;
     }
 
@@ -381,17 +387,21 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         $weight = 0;
         $totalAmount = 0;
         if ($target instanceof Order) {
-            $weight = $target->total_weight_temporary * 1000;
             $totalAmount = $target->total_amount_local;
             $items = [];
             foreach ($target->products as $product) {
+                $itemWeight = (int)$product->total_weight_temporary * 1000;
+                if ($itemWeight <= 0) {
+                    $itemWeight = $target->store_id === 1 ? 500 : 1000;
+                }
+                $weight += $itemWeight;
                 $items[] = [
                     'sku' => implode('|', [$product->parent_sku, $product->sku]),
                     'label_code' => '',
                     'origin_country' => '',
                     'name' => $product->product_name,
                     'desciption' => '',
-                    'weight' => WeshopHelper::roundNumber(($weight / $product->quantity_customer)),
+                    'weight' => WeshopHelper::roundNumber(($itemWeight / $product->quantity_customer)),
                     'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
                     'quantity' => $product->quantity_customer,
                 ];
@@ -501,7 +511,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             'province' => $this->province !== null ? $this->province : ($store->country_code === 'ID' ? 3464 : 1),
             'district' => $this->district !== null ? $this->district : ($store->country_code === 'ID' ? 28444 : 8),
             'country' => $store->country_code,
-            'zipcode' => $store->country_code === 'ID' ? '14340' : '',
+            'zipcode' => $store->country_code === 'ID' ? ($this->post_code !== null ? $this->post_code : '14340') : '',
         ];
     }
 
@@ -522,5 +532,26 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             'additional_fees' => $this->getAdditionalFees()->toArray(),
             'couriers' => $this->_couriers
         ];
+    }
+
+    public function getPickUpWareHouse($store = null)
+    {
+        if ($store === null) {
+            $store = $this->store_id;
+            if ($store === null) {
+                $store = $this->getAdditionalFees()->storeId;
+            }
+        }
+        $user = $this->getUser();
+        if ($user !== null && method_exists($user, 'getPickupWarehouse') && ($wh = call_user_func([$user, 'getPickupWarehouse'])) !== null) {
+            return $wh;
+        } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
+            $current = $params['default'];
+
+            $current = $store !== null ? ($store === 1 ?  (strpos($current,'sandbox') !== false ? 'sandbox_vn' : 'ws_vn') : (strpos($current,'sandbox') !== false ? 'sandbox_id' : 'ws_id')) : $current;
+
+            return ArrayHelper::getValue($params, "warehouses.$current", false);
+        }
+        return null;
     }
 }

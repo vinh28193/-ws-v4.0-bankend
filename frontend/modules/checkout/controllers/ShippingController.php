@@ -8,6 +8,7 @@ use common\components\cart\CartManager;
 use common\components\cart\storage\MongodbCartStorage;
 use common\components\gaSetting;
 use common\components\UserCookies;
+use common\models\PaymentTransaction;
 use common\models\Category;
 use common\models\SystemCountry;
 use common\models\SystemDistrict;
@@ -98,9 +99,9 @@ class ShippingController extends CheckoutController
                 $orders[$order->cartId] = $order;
             }
             $shippingForm->setDefaultValues();
-        } elseif ($code !== null) {
+        } elseif ($code !== null && strpos($code, 'PM', 0) !== false) {
             $payment->page = Payment::PAGE_BILLING;
-            if (strpos($code, 'PM', 0) !== false && ($parent = PaymentService::findParentTransaction($code))) {
+            if (($parent = PaymentService::findParentTransaction($code))) {
                 $payment->transaction_code = $code;
                 foreach ($parent->childPaymentTransaction as $childPaymentTransaction) {
                     if (($orderParam = $childPaymentTransaction->order) !== null) {
@@ -111,15 +112,22 @@ class ShippingController extends CheckoutController
                         $shippingForm->loadAddressFormOrder($order);
                     }
                 }
-
-            } else if (($order = Order::findOne(['ordercode' => $code])) !== null) {
-                $payment->transaction_code = $order->payment_transaction_code;
-                $order = new Order($order->getAttributes());
-                $order->getAdditionalFees()->loadFormActiveRecord($order, 'order');
-                $order->getAdditionalFees()->remove('international_shipping_fee');
+            } elseif ($parent === null && ($child = PaymentService::findChildTransaction($code))) {
+                $payment->page = Payment::PAGE_ADDITION;
+                $payment->transaction_code = $code;
+                $order = new Order($child->order->getAttributes());
+                $order->setTotalAmount($child->transaction_amount_local);
                 $orders[$order->ordercode] = $order;
                 $shippingForm->loadAddressFormOrder($order);
             }
+        } else if ($code !== null && ($order = Order::findOne(['ordercode' => $code])) !== null) {
+            $payment->page = Payment::PAGE_BILLING;
+            $payment->transaction_code = $order->payment_transaction_code;
+            $order = new Order($order->getAttributes());
+            $order->getAdditionalFees()->loadFormActiveRecord($order, 'order');
+            $order->getAdditionalFees()->remove('international_shipping_fee');
+            $orders[$order->ordercode] = $order;
+            $shippingForm->loadAddressFormOrder($order);
         }
 
         if (count($orders) === 0) {
@@ -137,7 +145,14 @@ class ShippingController extends CheckoutController
         } elseif ($payment->type === CartSelection::TYPE_SHOPPING) {
             $siteName = Yii::t('frontend', 'Shopping');
         }
+
+        if($payment->page === Payment::PAGE_ADDITION){
+            $siteName = Yii::t('frontend', 'Addition');
+        }
         $titleCollection[] = $siteName;
+        if($code !== null && $payment->page === Payment::PAGE_ADDITION){
+            $titleCollection[] = $code;
+        }
         $titleCollection[] = $shippingForm->getStoreManager()->store->name;
 
         foreach ($payment->getOrders() as $order) {
@@ -278,7 +293,6 @@ class ShippingController extends CheckoutController
     {
         return Yii::$app->cart;
     }
-
 
 
 }

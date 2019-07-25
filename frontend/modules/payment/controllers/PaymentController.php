@@ -31,9 +31,7 @@ class PaymentController extends BasePaymentController
         $now = Yii::$app->getFormatter()->asDatetime('now');
         $bodyParams = $this->request->bodyParams;
         $paymentParams = $bodyParams['payment'];
-
-        $shippingForm = new ShippingForm($bodyParams['shipping']);
-        $shippingForm->ensureReceiver();
+        $shipping = ArrayHelper::getValue($bodyParams, 'shipping', []);
 
         if (($orderParams = ArrayHelper::remove($paymentParams, 'orders')) === null) {
             return $this->response(false, "can not get form null orders");
@@ -41,13 +39,22 @@ class PaymentController extends BasePaymentController
 
         $payment = new Payment($paymentParams);
 
+        if ($payment->page === Payment::PAGE_CHECKOUT && empty($shipping)) {
+            return $this->response(false, Yii::t('frontend', 'Can not create payment from unknown information'));
+        }
+
+        if ($payment->page === Payment::PAGE_ADDITION && ($payment->transaction_code === null || $payment->transaction_code === '')) {
+            return $this->response(false, Yii::t('frontend', 'Can not create payment invalid transaction code'));
+        }
+
+        $shippingForm = new ShippingForm($shipping);
+        $shippingForm->ensureReceiver();
+
         $orders = [];
         foreach ($orderParams as $orderParam) {
+            $totalAmountLocal = ArrayHelper::remove($orderParam, 'totalAmountLocal', 0);
             if (isset($orderParam['totalFinalAmount'])) {
                 unset($orderParam['totalFinalAmount']);
-            }
-            if (isset($orderParam['totalAmountLocal'])) {
-                unset($orderParam['totalAmountLocal']);
             }
             $orderPayment = new Order($orderParam);
             if ($orderPayment->cartId !== null && $orderPayment->createOrderFromCart() !== false) {
@@ -55,6 +62,11 @@ class PaymentController extends BasePaymentController
             } else if ($orderPayment->ordercode !== null && ($order = Order::findOne(['ordercode' => $orderPayment->ordercode])) !== null) {
                 $order->getAdditionalFees()->removeAll();
                 $order->getAdditionalFees()->fromArray($orderPayment->getAdditionalFees()->toArray());
+                if ($payment->page === Payment::PAGE_ADDITION && $totalAmountLocal > 0) {
+                    $order->setTotalAmount($totalAmountLocal);
+                    $order->getAdditionalFees()->removeAll();
+                }
+                $shippingForm->loadAddressFormOrder($order);
                 $orders[$order->ordercode] = $order;
             }
         }
@@ -144,42 +156,50 @@ class PaymentController extends BasePaymentController
         $payment->customer_district = $shippingForm->getBuyerDistrictName();
         $payment->customer_country = $this->storeManager->store->country_name;
 
-        $paymentTransaction = new PaymentTransaction();
-
-        $parentTransaction = null;
-        if ($payment->transaction_code !== null && ($parentTransaction = PaymentService::findParentTransaction($payment->transaction_code)) !== null) {
-            $paymentTransaction = clone $parentTransaction;
-            $paymentTransaction->isNewRecord = true;
-            $paymentTransaction->id = null;
+        if ($payment->transaction_code !== null) {
+            $payment->return_url = PaymentService::createReturnUrl($payment->transaction_code);
+            $payment->cancel_url = PaymentService::createCheckoutUrl(null, $payment->transaction_code);
         }
 
-        $payment->createTransactionCode();
+        if ($payment->page !== Payment::PAGE_ADDITION) {
+            $paymentTransaction = new PaymentTransaction();
 
-        $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
-        $paymentTransaction->store_id = $payment->storeManager->getId();
-        $paymentTransaction->carts = implode(',', array_keys($payment->getOrders()));
-        $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
-        $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
-        $paymentTransaction->transaction_code = $payment->transaction_code;
-        $paymentTransaction->parent_transaction_code = $parentTransaction instanceof PaymentTransaction ? $paymentTransaction->transaction_code : null;
-        $paymentTransaction->transaction_customer_name = $payment->customer_name;
-        $paymentTransaction->transaction_customer_email = $payment->customer_email;
-        $paymentTransaction->transaction_customer_phone = $payment->customer_phone;
-        $paymentTransaction->transaction_customer_address = $payment->customer_address;
-        $paymentTransaction->transaction_customer_postcode = $payment->customer_postcode;
-        $paymentTransaction->transaction_customer_address = $payment->customer_address;
-        $paymentTransaction->transaction_customer_district = $payment->customer_district;
-        $paymentTransaction->transaction_customer_city = $payment->customer_city;
-        $paymentTransaction->transaction_customer_country = $payment->customer_country;
-        $paymentTransaction->payment_provider = $payment->payment_provider;
-        $paymentTransaction->payment_method = $payment->payment_method;
-        $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
-        $paymentTransaction->total_discount_amount = 0;
-        $paymentTransaction->before_discount_amount_local = $payment->getTotalAmountDisplay();
-        $paymentTransaction->transaction_amount_local = $payment->getTotalAmountDisplay();
-        $paymentTransaction->payment_type = $payment->type;
-        $paymentTransaction->save(false);
-        /* @var $results PromotionResponse */
+            $parentTransaction = null;
+            if ($payment->transaction_code !== null && ($parentTransaction = PaymentService::findParentTransaction($payment->transaction_code)) !== null) {
+                $paymentTransaction = clone $parentTransaction;
+                $paymentTransaction->isNewRecord = true;
+                $paymentTransaction->id = null;
+            }
+
+            $payment->createTransactionCode();
+
+            $paymentTransaction->customer_id = $this->user ? $this->user->getId() : null;
+            $paymentTransaction->store_id = $payment->storeManager->getId();
+            $paymentTransaction->carts = implode(',', array_keys($payment->getOrders()));
+            $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
+            $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
+            $paymentTransaction->transaction_code = $payment->transaction_code;
+            $paymentTransaction->parent_transaction_code = $parentTransaction instanceof PaymentTransaction ? $paymentTransaction->transaction_code : null;
+            $paymentTransaction->transaction_customer_name = $payment->customer_name;
+            $paymentTransaction->transaction_customer_email = $payment->customer_email;
+            $paymentTransaction->transaction_customer_phone = $payment->customer_phone;
+            $paymentTransaction->transaction_customer_address = $payment->customer_address;
+            $paymentTransaction->transaction_customer_postcode = $payment->customer_postcode;
+            $paymentTransaction->transaction_customer_address = $payment->customer_address;
+            $paymentTransaction->transaction_customer_district = $payment->customer_district;
+            $paymentTransaction->transaction_customer_city = $payment->customer_city;
+            $paymentTransaction->transaction_customer_country = $payment->customer_country;
+            $paymentTransaction->payment_provider = $payment->payment_provider;
+            $paymentTransaction->payment_method = $payment->payment_method;
+            $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
+            $paymentTransaction->total_discount_amount = 0;
+            $paymentTransaction->before_discount_amount_local = $payment->getTotalAmountDisplay();
+            $paymentTransaction->transaction_amount_local = $payment->getTotalAmountDisplay();
+            $paymentTransaction->payment_type = $payment->type;
+            $paymentTransaction->save(false);
+            /* @var $results PromotionResponse */
+        }
+        $payment->getPaymentMethodProviderName();
         $payment->checkPromotion();
         if ($payment->page === Payment::PAGE_CHECKOUT) {
             $transaction = Order::getDb()->beginTransaction();
@@ -210,6 +230,9 @@ class PaymentController extends BasePaymentController
 
                     $order->total_fee_amount_local = $orderPayment->getAdditionalFees()->getTotalAdditionalFees()[1];
 
+                    $order->payment_provider = $payment->payment_provider_name;
+                    $order->payment_method = $payment->payment_method_name;
+                    $order->payment_bank = $payment->payment_bank_code;
 
                     $order->total_final_amount_local = $orderPayment->getTotalFinalAmount();
 
@@ -295,96 +318,111 @@ class PaymentController extends BasePaymentController
                 Yii::error($exception, __METHOD__);
                 return $this->response(false, Yii::t('yii', 'An internal server error occurred.'));
             }
+        } elseif ($payment->page === Payment::PAGE_BILLING) {
+            // check phi van chuyen quoc te;
+
         }
 
         // ToDo Push GA Checkout @Phuchc 15/7/2019
 
         $res = $payment->processPayment();
-        $employee = new Employee();
-        $assign = $payment->page === Payment::PAGE_CHECKOUT ? $employee->getAssign($payment->getOrders()) : [];
-        if (!empty($assign) && isset($assign[0])) {
-            $assign = array_shift($assign);
-        }
-        $onFailedUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
         if ($res->success === false) {
             return $this->response(false, $res->message);
         }
-        if (!empty($assign)) {
-            $paymentTransaction->support_id = $assign->id;
-        }
-        /** @var  $fOrder Order */
-        $fOrder = array_values($payment->getOrders())[0];
-        $paymentTransaction->courier_delivery_time = $fOrder->courier_delivery_time;
-        $paymentTransaction->courier_name = $fOrder->courier_name;
-        $paymentTransaction->third_party_transaction_code = $res->token;
-        $paymentTransaction->third_party_transaction_status = $res->status;
-        $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
-        $paymentTransaction->save(false);
-        // Todo remove cart after create payment success
 
-        foreach ($payment->getOrders() as $key => $order) {
-            /** @var  $order Order */
-            $childTransaction = clone $paymentTransaction;
-            $childTransaction->id = null;
-            $childTransaction->isNewRecord = true;
-            $childTransaction->carts = $key;
-            $childTransaction->transaction_amount_local = $order->total_final_amount_local;
-            $childTransaction->total_discount_amount = $order->total_promotion_amount_local;
-            $childTransaction->before_discount_amount_local = $childTransaction->transaction_amount_local - $order->total_promotion_amount_local;
-            $childTransaction->order_code = $order->ordercode;
-            $childTransaction->courier_name = $order->courier_name;
-            $childTransaction->service_code = $order->courier_service;
-            $childTransaction->courier_delivery_time = $order->courier_delivery_time;
-            $childTransaction->save(false);
-
-            $order->payment_provider = $payment->payment_provider_name;
-            $order->payment_method = $payment->payment_method_name;
-            $order->payment_bank = $payment->payment_bank_code;
-
-            if ($shippingForm->receiver_address_id !== null) {
-                $order->receiver_address_id = $shippingForm->receiver_address_id;
+        if ($payment->page === Payment::PAGE_CHECKOUT) {
+            $employee = new Employee();
+            $assign = $employee->getAssign($payment->getOrders());
+            if (!empty($assign) && isset($assign[0])) {
+                $assign = array_shift($assign);
             }
-            foreach ($shippingParams as $attr => $v) {
-                if (!WeshopHelper::compareValue($v, $order->$attr, WeshopHelper::isSubText($attr, '_id') ? 'integer' : 'string')) {
-                    $order->$attr = $v;
+
+            if (isset($paymentTransaction) && $paymentTransaction instanceof PaymentTransaction) {
+                if (!empty($assign)) {
+                    $paymentTransaction->support_id = $assign->id;
+                }
+                $fOrder = array_values($payment->getOrders())[0];
+                $paymentTransaction->courier_delivery_time = $fOrder->courier_delivery_time;
+                $paymentTransaction->courier_name = $fOrder->courier_name;
+                $paymentTransaction->third_party_transaction_code = $res->token;
+                $paymentTransaction->third_party_transaction_status = $res->status;
+                $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
+                $paymentTransaction->save(false);
+                foreach ($payment->getOrders() as $key => $order) {
+                    /** @var  $order Order */
+                    $childTransaction = clone $paymentTransaction;
+                    $childTransaction->id = null;
+                    $childTransaction->isNewRecord = true;
+                    $childTransaction->carts = $key;
+                    $childTransaction->transaction_amount_local = $order->total_final_amount_local;
+                    $childTransaction->total_discount_amount = $order->total_promotion_amount_local;
+                    $childTransaction->before_discount_amount_local = $childTransaction->transaction_amount_local - $order->total_promotion_amount_local;
+                    $childTransaction->order_code = $order->ordercode;
+                    $childTransaction->courier_name = $order->courier_name;
+                    $childTransaction->service_code = $order->courier_service;
+                    $childTransaction->courier_delivery_time = $order->courier_delivery_time;
+                    $childTransaction->save(false);
+
+                    $order->payment_provider = $payment->payment_provider_name;
+                    $order->payment_method = $payment->payment_method_name;
+                    $order->payment_bank = $payment->payment_bank_code;
+
+                    if ($shippingForm->receiver_address_id !== null) {
+                        $order->receiver_address_id = $shippingForm->receiver_address_id;
+                    }
+
+                    $order->setAttributes($shippingParams);
+                    $order->payment_transaction_code = $childTransaction->transaction_code;
+
+                    if (!empty($assign)) {
+                        $order->sale_support_id = $assign->id;
+                        $order->support_email = $assign->email;
+                    }
+                    $order->save(false);
+                    if ($order->cartId !== null) {
+                        $order->removeCart();
+                    }
+                    try {
+
+                        // ToDo @Phuchc gửi lên Mongodb nếu bị lỗi để gửi lại  9/7/2019
+
+                        /** @var  $mailer yii\mail\BaseMailer */
+                        $mailer = Yii::$app->mandrillMailer;
+                        $mailer->viewPath = '@common/views/mail';
+                        $mail = $mailer->compose(['html' => 'orderCreate-html'], [
+                            'paymentTransaction' => $paymentTransaction,
+                            'storeManager' => $this->storeManager
+                        ]);
+                        $from = [$this->storeManager->store->country_code === 'ID' ? 'no-reply@weshop.co.id' : 'no-reply@weshop.com.vn' => $this->storeManager->store->name];
+                        $mail->setFrom($from);
+                        $mail->setTo($payment->customer_email);
+                        $mail->setSubject('Create Order Success');
+                        $mail->send();
+
+                    } catch (\Exception $exception) {
+                        Yii::error($exception);
+                    }
+
                 }
             }
-            $order->setAttributes($shippingParams);
-            $order->payment_transaction_code = $childTransaction->transaction_code;
 
-            if (!empty($assign)) {
-                $order->sale_support_id = $assign->id;
-                $order->support_email = $assign->email;
-            }
-            $order->save(false);
-            if ($order->cartId !== null) {
-                $order->removeCart();
+            /** @var  $fOrder Order */
+
+        } elseif ($payment->page === Payment::PAGE_BILLING) {
+            foreach ($payment->getOrders() as $key => $order) {
+                $order->payment_provider = $payment->payment_provider_name;
+                $order->payment_method = $payment->payment_method_name;
+                $order->payment_bank = $payment->payment_bank_code;
+                foreach ($shippingParams as $attr => $v) {
+                    if (!WeshopHelper::compareValue($v, $order->$attr, WeshopHelper::isSubText($attr, '_id') ? 'integer' : 'string')) {
+                        $order->$attr = $v;
+                    }
+                }
             }
 
         }
 
-        try {
-
-            // ToDo @Phuchc gửi lên Mongodb nếu bị lỗi để gửi lại  9/7/2019
-
-            /** @var  $mailer yii\mail\BaseMailer */
-            $mailer = Yii::$app->mandrillMailer;
-            $mailer->viewPath = '@common/views/mail';
-            $mail = $mailer->compose(['html' => 'orderCreate-html'], [
-                'paymentTransaction' => $paymentTransaction,
-                'storeManager' => $this->storeManager
-            ]);
-            $from = [$this->storeManager->store->country_code === 'ID' ? 'no-reply@weshop.co.id' : 'no-reply@weshop.com.vn' => $this->storeManager->store->name];
-            $mail->setFrom($from);
-            $mail->setTo($payment->customer_email);
-            $mail->setSubject('Create Order Success');
-            $mail->send();
-
-        } catch (\Exception $exception) {
-            Yii::error($exception);
-        }
-
-    gaSetting::gaPaymentProcess($payment);
+        gaSetting::gaPaymentProcess($payment);
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res);
@@ -462,18 +500,25 @@ class PaymentController extends BasePaymentController
             $redirectUrl = $res->checkoutUrl;
         }
         if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
-            foreach ($paymentTransaction->childPaymentTransaction as $child) {
-                $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+            if ($paymentTransaction->transaction_type !== PaymentTransaction::TRANSACTION_continue_payment) {
+                $order = $paymentTransaction->order;
+                $order->total_paid_amount_local += $paymentTransaction->transaction_amount_local;
+                $order->save(false);
+            } else {
+                foreach ($paymentTransaction->childPaymentTransaction as $child) {
+                    $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
 
-                if (($order = $child->order) !== null) {
-                    $order->total_paid_amount_local = $child->transaction_amount_local;
-                    if ($order->current_status == Order::STATUS_SUPPORTED) {
-                        $order->current_status = Order::STATUS_READY2PURCHASE;
+                    if (($order = $child->order) !== null) {
+                        $order->total_paid_amount_local = $child->transaction_amount_local;
+                        if ($order->current_status == Order::STATUS_SUPPORTED) {
+                            $order->current_status = Order::STATUS_READY2PURCHASE;
+                        }
+                        $order->save(false);
                     }
-                    $order->save(false);
+                    $child->save(false);
                 }
-                $child->save(false);
             }
+
 
         }
         return $this->redirect($redirectUrl);

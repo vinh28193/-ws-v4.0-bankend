@@ -139,11 +139,12 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         $logPaymentGateway->url = $this->getClient()->getAPIUrl();
 
         try {
-            if (($transaction = $transaction = PaymentService::findParentTransaction($orderCode)) === null) {
+            $transaction = PaymentService::findParentTransaction($orderCode);
+            if ($transaction === null && ($transaction = PaymentService::findChildTransaction($orderCode)) === null) {
                 $logPaymentGateway->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
                 $logPaymentGateway->save(false);
-                return new PaymentResponse(false, 'Transaction không tồn tại');
+                return new PaymentResponse(false, 'Transaction không tồn tại','nganluong');
             }
             $resp = $this->getClient()->GetTransactionDetail($token);
 
