@@ -137,6 +137,7 @@ class PaymentTransactionController extends BaseApiController
 
         $q = PaymentTransaction::find()->select([
             'id',
+            'store_id',
             'order_code',
             'transaction_code',
             'transaction_amount_local',
