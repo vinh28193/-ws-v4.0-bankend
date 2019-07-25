@@ -79,15 +79,15 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             $logPaymentGateway->save(false);
 
             if ($resp['success'] === false) {
-                return new PaymentResponse(false, "Lỗi thanh toán trả về Alepay" . $resp['code'],'alepay');
+                return new PaymentResponse(false, "Lỗi thanh toán trả về Alepay" . $resp['code'], 'alepay');
             }
             $data = Json::decode($resp['data'], true);
-            return new PaymentResponse(true, $mess, 'alepay',$payment->transaction_code, $payment->getOrderCodes(),PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, ArrayHelper::getValue($data, 'token'), $resp['code'], ArrayHelper::getValue($data, 'checkoutUrl'));
+            return new PaymentResponse(true, $mess, 'alepay', $payment->transaction_code, $payment->getOrderCodes(), PaymentResponse::TYPE_NORMAL, PaymentResponse::METHOD_GET, ArrayHelper::getValue($data, 'token'), $resp['code'], ArrayHelper::getValue($data, 'checkoutUrl'));
         } catch (\Exception $exception) {
             $logPaymentGateway->response_content = $exception->getMessage() . " \n " . $exception->getFile() . " \n " . $exception->getTraceAsString();
             $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;
             $logPaymentGateway->save(false);
-            return new PaymentResponse(false, $exception->getMessage(),'alepay');
+            return new PaymentResponse(false, $exception->getMessage(), 'alepay');
         }
 
     }
@@ -112,11 +112,14 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             $transactionInfo = Json::decode($transactionInfo, true);
 
             $orderCode = $transactionInfo['orderCode'];
-            if (($transaction = PaymentService::findParentTransaction($orderCode)) === null) {
-                $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
-                $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
-                $logCallback->save(false);
-                return new PaymentResponse(false, 'Transaction không tồn tại','alepay');
+            $transaction = PaymentService::findParentTransaction($orderCode);
+            if ($transaction === null) {
+                if (($transaction = PaymentService::findChildTransaction($orderCode)) === null) {
+                    $logCallback->request_content = "Không tìm thấy transaction ở cả 2 bảng transaction!";
+                    $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+                    $logCallback->save(false);
+                    return new PaymentResponse(false, 'Transaction không tồn tại', 'alepay');
+                }
             }
             $success = false;
             $mess = "Giao dịch thanh toán không thành công!";
@@ -133,12 +136,12 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             }
             $logCallback->response_content = $transactionInfo;
             $logCallback->save();
-            return new PaymentResponse(true, $mess,'alepay', $transaction);
+            return new PaymentResponse(true, $mess, 'alepay', $transaction);
         } catch (Exception $e) {
             $logCallback->request_content = $e->getMessage() . " \n " . $e->getFile() . " \n " . $e->getTraceAsString();
             $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
             $logCallback->save(false);
-            return new PaymentResponse(false, 'alepay','Call back thất bại');
+            return new PaymentResponse(false, 'alepay', 'Call back thất bại');
         }
 
 

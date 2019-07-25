@@ -31,8 +31,10 @@ class WSVNOffice extends BaseObject implements PaymentProviderInterface
     {
         /** @var $transaction  PaymentTransaction */
         $transaction = PaymentService::findParentTransaction($data['code']);
-        if ($transaction === null && ($transaction = PaymentService::findChildTransaction($data['code'])) === null) {
-            return new PaymentResponse(false, 'Transaction không tồn tại','vnoffice');
+        if ($transaction === null) {
+            if(($transaction = PaymentService::findChildTransaction($data['code'])) === null){
+                return new PaymentResponse(false, 'Transaction không tồn tại','vnoffice');
+            }
         }
         $checkoutUrl = Url::to("/checkout/office/{$transaction->transaction_code}/success.html", true);
         return new PaymentResponse(true, 'check payment success','vnoffice', $transaction, PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $data['code'], 'ok', $checkoutUrl);

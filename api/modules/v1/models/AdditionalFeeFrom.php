@@ -107,28 +107,28 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
      */
     public $accept_insurance = 'N';
 
-
-    public $is_special = 'no';
+    public $is_special;
 
     public function attributes()
     {
         return ArrayHelper::merge(parent::attributes(), [
             'target_name', 'target_id', 'store_id', 'customer_id', 'custom_fee', 'item_type', 'item_id', 'item_sku',
             'province', 'district', 'post_code',
-            'item_seller', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship', 'accept_insurance','is_special'
+            'item_seller', 'shipping_weight', 'shipping_quantity', 'us_amount', 'us_tax', 'us_ship',
+            'accept_insurance', 'is_special'
         ]);
     }
 
     public function rules()
     {
         return ArrayHelper::merge(parent::rules(), [
-            [['target_name', 'target_id', 'store_id',], 'required'],
+            [['target_name', 'target_id', 'store_id'], 'required'],
             [['target_id', 'store_id', 'customer_id', 'shipping_weight', 'shipping_quantity'], 'integer'],
             [['target_id', 'store_id', 'customer_id', 'shipping_weight', 'shipping_quantity'], 'filter', 'filter' => function ($value) {
                 return (integer)$value;
             }],
             [['us_amount', 'us_tax', 'us_ship', 'custom_fee'], 'number'],
-            [['target', 'item_type', 'item_id', 'item_sku', 'accept_insurance', 'item_seller', 'province', 'district', 'post_code','is_special'], 'string'],
+            [['target', 'item_type', 'item_id', 'item_sku', 'accept_insurance', 'item_seller', 'province', 'district', 'post_code', 'is_special'], 'string'],
             [['province', 'district'], 'filter', 'filter' => function ($value) {
                 return (integer)$value;
             }],
@@ -177,15 +177,13 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                     $this->store_id = $this->_target->store_id;
                     $this->province = $this->_target->receiver_province_id;
                     $this->district = $this->_target->receiver_district_id;
-                    $this->post_code =  $this->_target->receiver_post_code ?  $this->_target->receiver_post_code : '';
-                    $this->is_special = $this->_target->is_special ? 'yes' : 'no';
+                    $this->post_code = $this->_target->receiver_post_code ? $this->_target->receiver_post_code : '';
                 } else if ($this->_target instanceof Product) {
                     $order = $this->_target->order;
                     $this->store_id = $order->store_id;
                     $this->province = $order->receiver_province_id;
                     $this->district = $order->receiver_district_id;
                     $this->post_code = $order->receiver_post_code ? $order->receiver_post_code : '';
-                    $this->is_special = $order->is_special ? 'yes' : 'no';
                 }
             }
 
@@ -244,6 +242,23 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 $this->_additionalFees->remove('purchase_fee');
                 $this->_additionalFees->withCondition($this, 'purchase_fee', null);
             }
+
+            if ($this->is_special === 'yes' && ($couriers = $this->getCalculateFee($this->_additionalFees->storeManager->store, true)) !== []) {
+                $firstCourier = $couriers[0];
+                Yii::info($couriers,'$couriers');
+                $this->getAdditionalFees()->remove('special_fee');
+                $this->getAdditionalFees()->withCondition($this, 'special_fee', $firstCourier['special_fee']);
+            } elseif ($this->is_special === 'no' && $this->_additionalFees->has('special_fee')) {
+                $specialFees = $this->_additionalFees->get('special_fee');
+                $this->_additionalFees->remove('special_fee');
+                foreach ($specialFees as $specialFee) {
+                    $specialFee['amount'] = 0;
+                    $specialFee['local_amount'] = 0;
+                    $this->_additionalFees->add('special_fee', $specialFee);
+                }
+
+            }
+
 
         }
         return $this->_additionalFees;
@@ -319,7 +334,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     public function getIsSpecial()
     {
 
-        return false;
+        return $this->is_special === 'yes';
     }
 
     /**
@@ -353,17 +368,10 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 }
             }
             $calculator = new InternationalShippingCalculator();
+            $calculator->action_log = __METHOD__;
             list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $store->country_code, $store->currency, $location);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
                 $this->_couriers = $couriers;
-                $firstCourier = $couriers[0];
-                $this->getAdditionalFees()->remove('international_shipping_fee');
-                $this->getAdditionalFees()->remove('insurance_fee');
-                $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', $firstCourier['total_fee']);
-                $this->getAdditionalFees()->withCondition($this, 'insurance_fee', $firstCourier['insurance_fee']);
-                if ($this->getIsSpecial()) {
-                    Yii::info($firstCourier['special_fee'], 'special_fee');
-                }
             }
 
         }
@@ -518,7 +526,17 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
     public function calculator()
     {
         $store = $this->getAdditionalFees()->getStoreManager()->store;
-        $this->getCalculateFee($store, true);
+        if (($couriers = $this->getCalculateFee($store, true)) !== null) {
+            $firstCourier = $couriers[0];
+            $this->getAdditionalFees()->remove('international_shipping_fee');
+            $this->getAdditionalFees()->remove('insurance_fee');
+            $this->getAdditionalFees()->withCondition($this, 'international_shipping_fee', $firstCourier['total_fee']);
+            $this->getAdditionalFees()->withCondition($this, 'insurance_fee', $firstCourier['insurance_fee']);
+            if ($this->getIsSpecial()) {
+                $this->getAdditionalFees()->remove('special_fee');
+                $this->getAdditionalFees()->withCondition($this, 'special_fee', $firstCourier['special_fee']);
+            }
+        }
 
         return [
             'store' => $store->name,
@@ -548,7 +566,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
             $current = $params['default'];
 
-            $current = $store !== null ? ($store === 1 ?  (strpos($current,'sandbox') !== false ? 'sandbox_vn' : 'ws_vn') : (strpos($current,'sandbox') !== false ? 'sandbox_id' : 'ws_id')) : $current;
+            $current = $store !== null ? ($store === 1 ? (strpos($current, 'sandbox') !== false ? 'sandbox_vn' : 'ws_vn') : (strpos($current, 'sandbox') !== false ? 'sandbox_id' : 'ws_id')) : $current;
 
             return ArrayHelper::getValue($params, "warehouses.$current", false);
         }

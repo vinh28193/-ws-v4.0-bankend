@@ -52,6 +52,11 @@ class AdditionalController extends BaseApiController
             if ($form->shipping_quantity !== null && $form->shipping_quantity !== '' && (int)$form->shipping_quantity > 0 && !WeshopHelper::compareValue($product->quantity_customer, $form->shipping_quantity)) {
                 $product->quantity_customer = $form->shipping_quantity;
             }
+            if($form->is_special === 'yes' && $form->getAdditionalFees()->getTotalAdditionalFees('special_fee')[0] > 0){
+                $product->is_special = 1;
+            }else if($form->is_special === 'no'){
+                $product->is_special = 0;
+            }
             $productFees = $product->productFees;
             if (empty($productFees)) {
                 return $this->response(false, "can not resolved empty fee for product {$form->target_id}");
@@ -111,11 +116,14 @@ class AdditionalController extends BaseApiController
             $totalOrderQuantity = 0;
             $totalOrderAmount = 0;
             $totalOrderAmountLocal = 0;
-
+            $orderIsSpecial = false;
             foreach ($order->products as $product) {
                 $totalOrderQuantity += $product->quantity_customer;
                 $totalOrderAmount += $product->total_price_amount_origin;
                 $totalOrderAmountLocal += $product->total_price_amount_local;
+                if(!$orderIsSpecial && $product->is_special === 1){
+                    $orderIsSpecial = true;
+                }
                 $totalProductFee = 0;
                 foreach ($product->productFees as $productFee) {
                     if ($productFee->name !== 'product_price' && $productFee->name !== 'purchase_fee') {
@@ -139,11 +147,13 @@ class AdditionalController extends BaseApiController
                 }
                 $product->total_fee_product_local = $totalProductFee;
             }
+
             $orderUpdateAttribute = [
                 'total_amount_local' => $totalOrderAmountLocal,
                 'total_origin_fee_local' => $totalOrderAmountLocal,
                 'total_price_amount_origin' => $totalOrderAmount,
-                'total_quantity' => $totalOrderQuantity
+                'total_quantity' => $totalOrderQuantity,
+                'is_special' => $orderIsSpecial ? 1 : 0
             ];
             $allOrderFees = $order->targetFee;
             $totalOrderFeeAmountLocal = 0;
