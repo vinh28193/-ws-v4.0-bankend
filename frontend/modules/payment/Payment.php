@@ -217,7 +217,6 @@ class Payment extends Model
         $this->transaction_fee = 0;
         $this->return_url = PaymentService::createReturnUrl($this->payment_provider);
         $this->cancel_url = PaymentService::createCheckoutUrl(null, $code);
-        $this->getPaymentMethodProviderName();
     }
 
     public function processPayment()

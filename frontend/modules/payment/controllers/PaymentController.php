@@ -199,7 +199,7 @@ class PaymentController extends BasePaymentController
             $paymentTransaction->save(false);
             /* @var $results PromotionResponse */
         }
-
+        $payment->getPaymentMethodProviderName();
         $payment->checkPromotion();
         if ($payment->page === Payment::PAGE_CHECKOUT) {
             $transaction = Order::getDb()->beginTransaction();
