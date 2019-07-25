@@ -318,14 +318,6 @@ ws.payment = (function ($) {
             if (pub.payment.page.toUpperCase() === 'ADDITION') {
                 return;
             }
-
-            if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
-                return false;
-            } else if (pub.shipping.other_receiver === true && Number(pub.shipping.enable_receiver) === 1) {
-                if (pub.shipping.other_receiver === true && (!pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id)) {
-                    return false;
-                }
-            }
             ws.ajax('/payment/courier/calculator', {
                 dataType: 'json',
                 type: 'post',
@@ -579,18 +571,30 @@ ws.payment = (function ($) {
         },
         filterShippingAddress: function (isSafe = true) {
 
-            $(document).on("beforeSubmit", "#shippingForm", function () {
-                return false; // Cancel form submitting.
-            });
+
+            var $form = $('#shippingForm');
 
 
-            $('#shippingForm').yiiActiveForm('validate', true);
+            // $form.yiiActiveForm('validate', true);
+            $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_name');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_phone');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_email');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_province_id');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_address');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_post_code');
 
+            $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_name');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_phone');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_email');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_province_id');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_address');
+            $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_post_code');
             // return false if form still have some validation errors
-            if ($('#shippingForm').find('.has-error').length) {
+
+            if ($form.find('.is-invalid').length) {
+                window.scrollTo(0, 0);
                 return false;
             }
-
 
             // var formDataArray = $('#shippingForm').serializeArray();
             // var values = formDataArray.reduce(function (result, item) {

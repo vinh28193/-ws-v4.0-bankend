@@ -92,38 +92,20 @@ $js = <<< JS
         newElement.addClass(close === 1 ? 'open' :'close');
         ws.payment.calculatorShipping();
     };
-    $(document).on("beforeSubmit", "form.payment-form", function (e) {
-        e.preventDefault();
-        var form = $(this);
-        // return false if form still have some validation errors
-        if (form.find('.has-error').length) 
-        {
-            return false;
-        }
-        window.scrollTo(0, 0);
-        // send data to actionSave by ajax request.
-        return false; // Cancel form submitting.
-    });
-    $(document).on("beforeSubmit", "form.payment-form", function (e) {
-        e.preventDefault();
-        var form = $(this);
-        // return false if form still have some validation errors
-        if (form.find('.has-error').length) 
-        {
-            return false;
-        }
-        window.scrollTo(0, 0);
-        // send data to actionSave by ajax request.
-        return false; // Cancel form submitting.
-    });
     
 
 JS;
 $this->registerJs($js);
 
 $urlAjaxUrl = Url::toRoute(['/data/get-zip-code']);
-
+$readyIs = <<<JS
+ $(document).on('beforeSubmit', 'beforeSubmit', function (event, messages, deferreds) {
+     console.log('beforeSubmit');
+ });
+JS;
+$this->registerJs($readyIs,\yii\web\View::POS_READY);
 $zipJs = <<<JS
+
     var suggestAddress = function(event) {
     
         var params = event.params;
