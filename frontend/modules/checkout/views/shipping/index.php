@@ -104,7 +104,20 @@ $js = <<< JS
         // send data to actionSave by ajax request.
         return false; // Cancel form submitting.
     });
-  
+    $(document).on("beforeSubmit", "form.payment-form", function (e) {
+        e.preventDefault();
+        var form = $(this);
+        // return false if form still have some validation errors
+        if (form.find('.has-error').length) 
+        {
+            return false;
+        }
+        window.scrollTo(0, 0);
+        // send data to actionSave by ajax request.
+        return false; // Cancel form submitting.
+    });
+    
+
 JS;
 $this->registerJs($js);
 
@@ -123,6 +136,7 @@ $zipJs = <<<JS
             province.prop('disabled',false);
             data.province = '';
         }
+        
         wsAddress.select2ChangeSelect(province,data.province);
         var depdropDistrict = $('#shippingform-'+target+'_district_id');
         
@@ -308,11 +322,11 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                 ],
                 'enableAjaxValidation' => true,
                 'enableClientValidation' => false,
-                'validateOnSubmit' => true,
-                'validateOnChange' => false,
+                'validateOnSubmit' => false,
+                'validateOnChange' => true,
                 'validateOnBlur' => false,
-                'validateOnType' => false,
-//            'validationUrl' => '/checkout/shipping/validate',
+                'validateOnType' => true,
+                'validationUrl' => '/checkout/shipping/validate',
             ]);
             echo Html::activeHiddenInput($shippingForm, 'customer_id');
             echo Html::activeHiddenInput($shippingForm, 'enable_buyer');

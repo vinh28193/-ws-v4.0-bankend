@@ -43,17 +43,18 @@ var wsAddress = (function ($) {
         select2Params: function (params) {
             return {q: params.term, p: params.page};
         },
-        select2ChangeSelect: function ($select2Element, selectValue) {
+        select2ChangeSelect: function ($select2Element, selectValue,validate = false) {
+            selectValue = String(selectValue);
             // $select2Element = $($select2Element);
             var activeOption = $select2Element.find('option[value="' + selectValue + '"]');
             console.log('option[value="' + selectValue + '"] length = ' + activeOption.length + 'selected' + activeOption.is(':selected'));
             if (activeOption.length && !activeOption.is(':selected')) {
-
+                $select2Element.val(selectValue);
+                $select2Element.trigger('change');
+                $select2Element.trigger('select2:select');
+                $select2Element.trigger('done');
             }
-            $select2Element.val(selectValue);
-            $select2Element.trigger('change');
-            $select2Element.trigger('select2:select');
-            $select2Element.trigger('done');
+
         },
         select2RemoveSelect: function ($select2Element) {
             $select2Element.trigger('select2:unselect');

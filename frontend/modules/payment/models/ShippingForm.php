@@ -66,7 +66,7 @@ class ShippingForm extends Model
     {
         return [
             'buyer_address_id', 'buyer_name', 'buyer_email', 'buyer_phone', 'buyer_address', 'buyer_post_code', 'buyer_country_id', 'buyer_province_id', 'buyer_district_id',
-            'receiver_address_id', 'receiver_name', 'receiver_email', 'receiver_phone', 'receiver_address', 'receiver_post_cod', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id',
+            'receiver_address_id', 'receiver_name', 'receiver_email', 'receiver_phone', 'receiver_address', 'receiver_post_code', 'receiver_country_id', 'receiver_province_id', 'receiver_district_id',
         ];
     }
 
@@ -74,18 +74,38 @@ class ShippingForm extends Model
     {
 
         return [
-            [['buyer_name', 'buyer_phone', 'buyer_email', 'buyer_address', 'buyer_province_id', 'buyer_district_id'], 'required'],
+            [['buyer_name', 'buyer_phone', 'buyer_email', 'buyer_address'], 'required'],
+            [['buyer_province_id'], 'required', 'when' => function ($self) {
+                return $this->getStoreManager()->store->country_code === 'VN';
+            }],
             [['buyer_post_code'], 'required', 'when' => function ($self) {
                 return $this->getStoreManager()->store->country_code === 'ID';
             }],
-            [['receiver_name', 'receiver_phone', 'receiver_address', 'receiver_province_id', 'receiver_district_id'], 'required', 'when' => function ($self) {
+            [['buyer_phone'], '\common\validators\PhoneValidator'],
+
+            [['other_receiver'], 'filter', 'filter' => function ($v) {
+                return (int)$v;
+            }],
+
+            [['receiver_phone'], '\common\validators\PhoneValidator', 'when' => function ($self) {
                 /** @var $self self */
                 return $self->other_receiver === self::YES;
             }],
+            [['buyer_name', 'buyer_phone', 'buyer_email', 'buyer_address', 'receiver_name', 'receiver_phone', 'receiver_address',], 'filter', 'filter' => 'trim'],
+            [['buyer_name', 'buyer_phone', 'buyer_email', 'buyer_address', 'receiver_name', 'receiver_phone', 'receiver_address',], 'filter', 'filter' => '\yii\helpers\Html::encode'],
+
+            [['receiver_name', 'receiver_phone', 'receiver_address'], 'required', 'when' => function ($self) {
+                /** @var $self self */
+                return $self->other_receiver === self::YES;
+            }],
+            [['receiver_province_id'], 'required', 'when' => function ($self) {
+                return $self->other_receiver === self::YES && $this->getStoreManager()->store->country_code === 'VN';
+            }],
+
             [['receiver_post_code'], 'required', 'when' => function ($self) {
                 return $self->other_receiver === self::YES && $this->getStoreManager()->store->country_code === 'ID';
             }],
-            [['buyer_address_id', 'receiver_address_id', 'customer_id', 'other_receiver', 'enable_buyer', 'enable_receiver', 'save_buyer_address', 'save_receiver_address'], 'safe']
+            [['buyer_address_id', 'receiver_address_id', 'customer_id', 'enable_buyer', 'enable_receiver', 'save_buyer_address', 'save_receiver_address'], 'safe']
         ];
     }
 
