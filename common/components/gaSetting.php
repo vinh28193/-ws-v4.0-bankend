@@ -119,11 +119,11 @@ class gaSetting
             $request = $ga->request();
             $request->setClientId(self::getGaClientId())->setUserId(self::getGaUserId());
             // Then, include the transaction data
-            $request->setAffiliation("Payment processing")
-                ->setRevenue($payment->getTotalAmountDisplay())
-                ->setTax(0)
-                ->setShipping(0);
             foreach ($payment->getOrders() as $order) {
+                $request->setAffiliation("Payment processing")
+                    ->setRevenue($order->total_final_amount_local)
+                    ->setTax(0)
+                    ->setShipping(0);
                 foreach ($order->products as $product) {
                     $productData1 = [
                         'sku' => strtolower($product->portal) == 'ebay' ? $product->parent_sku : $product->sku,
@@ -138,22 +138,28 @@ class gaSetting
                     ];
                     $request->addProduct($productData1);
                 }
-                $request->setTrackingId($order->ordercode);
+                Yii::debug($order->ordercode,'Order code: ');
+                $request->setProductActionToDetail();
+                $request->setTransactionId($order->ordercode);
+//                $request->setTransactionId(1667);
+                $request->setProductActionToAdd();
+                $request->setProductActionToCheckout();
+                $request->setProductActionToClick();
+                $request->setDocumentTitle("Payment page");
+                $request->setDocumentPath(Url::base(true) . Url::current());
+                $request->setEventCategory('Payment');
+                $request->setEventAction('processing');
+                $request->setEventLabel("Payment Processing");
                 $request->setAsyncRequest(true);
+                $request->sendPageview();
                 $request->sendTransaction();
+                $request->sendItem();
+                $request->sendEvent();
             }
-            $request->setDocumentPath(Url::base(true) . Url::current());
-            $request->setDocumentTitle("Payment page");
-            $request->setProductActionToCheckout();
-            $request->setProductActionToPurchase();
-            $request->setAsyncRequest(true);
-            $request->sendPageview();
-            $request->sendItem();
-            $request->setEventCategory('Payment');
-            $request->setEventAction('processing');
-            $request->sendEvent();
+            Yii::info("GA payment Done");
         } catch (\Exception $e) {
             Yii::error($e);
+            Yii::info("GA payment Fail");
         }
 
     }
