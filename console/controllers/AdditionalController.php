@@ -81,11 +81,13 @@ class AdditionalController extends Controller
             /** @var  $order Order */
             if (($order = $this->findOrder($code)) === null) {
                 $this->stdout("    > not found order code `$code`.\n", Console::FG_RED);
+                $this->stdout("    > aborted order code `$code`.\n", Console::FG_RED);
                 continue;
             }
             /** @var  $customer User */
             if ($order->customer_id === null || (($customer = $order->customer)) === null) {
                 $this->stdout("    > order `$code` not valid, cause customer is guest .\n", Console::FG_RED);
+                $this->stdout("    > aborted order code `$code`.\n", Console::FG_RED);
                 continue;
             }
             $useLevel = $customer->getUserLevel();
@@ -127,6 +129,7 @@ class AdditionalController extends Controller
                     ])->one();
                     if ($purchaseFee === null) {
                         $this->stdout("    > product `{$product->id}` in `$code` not have purchase, roll back transaction .\n", Console::FG_RED);
+                        $this->stdout("    > transaction roll back.\n", Console::FG_RED);
                         $transaction->rollBack();
                     }
                     $usAmount = $product->total_final_amount_origin;
@@ -152,9 +155,13 @@ class AdditionalController extends Controller
                 $order->total_weshop_fee_local = $orderPurchaseLocal;
                 $order->total_fee_amount_local = ($order->total_fee_amount_local - $oldLocalValue) + $orderPurchaseLocal;
                 $order->total_final_amount_local = ($order->total_final_amount_local - $oldLocalValue) + $orderPurchaseLocal;
-                $this->stdout("    > order changed purchase fee from {$oldAmountValue}USD -> {$orderPurchaseAmount}USD ({$storeManager->showMoney($oldLocalValue)} -> {$storeManager->showMoney($orderPurchaseLocal)}.\n", Console::FG_GREEN);
+                $this->stdout("    > order changed purchase fee from {$oldAmountValue}$ -> {$orderPurchaseAmount}$ ({$storeManager->showMoney($oldLocalValue)} -> {$storeManager->showMoney($orderPurchaseLocal)}.\n", Console::FG_GREEN);
+                $transaction->commit();
+                $this->stdout("    > transaction committed.\n", Console::FG_GREEN);
             } catch (Exception $exception) {
                 $this->stdout("    > {$exception->getMessage()} \n", Console::FG_RED);
+                $this->stdout("    > transaction roll back.\n", Console::FG_RED);
+                $transaction->rollBack();
             }
 
 
