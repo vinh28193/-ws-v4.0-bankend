@@ -357,8 +357,7 @@ class OrderController extends BaseApiController
         $storeManager = Yii::$app->storeManager;
         $storeManager->setStore($order->store_id);
         $token = ["Confirm order {$order->ordercode}"];
-        $feeNew = [];
-        if ($insurance !== 0 && $useInspection === 'Y') {
+        if ($insurance !== 0 && $useInsurance === 'Y') {
             if (!isset($allOrderFees['insurance_fee'])) {
                 $target = new TargetAdditionalFee();
                 $target->name = 'insurance_fee';
