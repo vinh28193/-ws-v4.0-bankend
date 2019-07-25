@@ -144,14 +144,15 @@ class FrontendController extends Controller
         if ($this->filterUuid(false) === null && ($onHead = $this->request->getHeaders()->get(self::UUID_HEADER_TOKEN, null)) !== null) {
             $this->setUuidCookie($onHead);
         }
-        if (parent::beforeAction($action)) {
-            if ($this->request->isAjax) {
+        //#Todo check callback gateway nicepay method POST
+//        if (parent::beforeAction($action)) {
+//            if ($this->request->isAjax) {
+//
+//            }
+//            return true;
+//        }
 
-            }
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
 
