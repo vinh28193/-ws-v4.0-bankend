@@ -394,11 +394,14 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
             ]), 'nicepay');
         }
         $transaction = PaymentService::findParentTransaction($referenceNo);
-        if ($transaction === null && ($transaction = PaymentService::findChildTransaction($referenceNo)) === null) {
-            $logCallback->response_content = "Không tìm thấy transaction";
-            $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
-            $logCallback->save(false);
-            return new PaymentResponse(false, Yii::t('frontend','Transaction not found'), 'nicepay');
+        if ($transaction === null) {
+            if(($transaction = PaymentService::findChildTransaction($referenceNo)) === null){
+                $logCallback->response_content = "Không tìm thấy transaction";
+                $logCallback->type = PaymentGatewayLogs::TYPE_CALLBACK_FAIL;
+                $logCallback->save(false);
+                return new PaymentResponse(false, Yii::t('frontend','Transaction not found'), 'nicepay');
+            }
+
         }
         try {
 

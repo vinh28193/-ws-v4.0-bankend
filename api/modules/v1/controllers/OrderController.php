@@ -371,15 +371,18 @@ class OrderController extends BaseApiController
                 $target->target_id = $order->id;
                 $target->save(false);
                 $allOrderFees['insurance_fee'] = $target;
+                $token[] = "set {$target->label}:{$storeManager->showMoney($target->local_amount)}";
             } else if (($target = $allOrderFees['insurance_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $insurance, 'float')) {
                 $target->amount = $insurance;
                 $target->local_amount = $insurance;
                 $target->save(false);
+                $token[] = "update {$target->label}:{$storeManager->showMoney($target->local_amount)}";
                 $allOrderFees['insurance_fee'] = $target;
             }
         } else {
             if (!isset($allOrderFees['insurance_fee'])) {
                 $order->total_insurance_fee_local = null;
+                $token[] = "remove order `total insurance fee`";
             } elseif (($target = $allOrderFees['insurance_fee']) instanceof TargetAdditionalFee) {
                 $target->amount = 0;
                 $target->local_amount = 0;
@@ -405,20 +408,24 @@ class OrderController extends BaseApiController
                 $target->target_id = $order->id;
                 $target->save(false);
                 $allOrderFees['inspection_fee'] = $target;
+                $token[] = "set {$target->label}:{$storeManager->showMoney($target->local_amount)}";
             } else if (($target = $allOrderFees['inspection_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $inspection, 'float')) {
                 $target->amount = $inspection;
                 $target->local_amount = $localAmount;
                 $target->save(false);
+                $token[] = "update {$target->label}:{$storeManager->showMoney($target->local_amount)}";
                 $allOrderFees['inspection_fee'] = $target;
             }
 
         } else {
             if (!isset($allOrderFees['inspection_fee'])) {
-                $order->total_insurance_fee_local = null;
+                $order->total_inspection_fee_local = null;
+                $token[] = "remove order `total inspection fee`";
             } elseif (($target = $allOrderFees['inspection_fee']) instanceof TargetAdditionalFee) {
                 $target->amount = 0;
                 $target->local_amount = 0;
                 $target->save(false);
+                $token[] = "remove {$target->label}:{$storeManager->showMoney($target->local_amount)}";
                 $allOrderFees['inspection_fee'] = $target;
             }
         }
@@ -439,10 +446,12 @@ class OrderController extends BaseApiController
                 $target->target = 'order';
                 $target->target_id = $order->id;
                 $target->save(false);
+                $token[] = "set {$target->label}:{$storeManager->showMoney($target->local_amount)}";
                 $allOrderFees['packing_fee'] = $target;
             } else if (($target = $allOrderFees['packing_fee']) instanceof TargetAdditionalFee && !WeshopHelper::compareValue($target->amount, $packingWood, 'float')) {
                 $target->amount = $inspection;
                 $target->local_amount = $localAmount;
+                $token[] = "update {$target->label}:{$storeManager->showMoney($target->local_amount)}";
                 $target->save(false);
                 $allOrderFees['packing_fee'] = $target;
             }
@@ -474,13 +483,11 @@ class OrderController extends BaseApiController
         foreach ($allOrderFees as $orderFee) {
             /** @var $orderFee TargetAdditionalFee */
             if ($orderFee->name === 'packing_fee') {
-                $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
 //                $value = $order->total_packing_fee_local ? $order->total_packing_fee_local : 0;
 //                $value += $orderFee->local_amount;
 //                $order->total_packing_fee_local = $value;
                 $order->total_packing_fee_local = $orderFee->local_amount;
             } elseif ($orderFee->name === 'inspection_fee') {
-                $token[] = "set {$orderFee->label}:{$storeManager->showMoney($orderFee->local_amount)}";
 //                $value = $order->total_inspection_fee_local ? $order->total_inspection_fee_local : 0;
 //                $value += $orderFee->local_amount;
 //                $order->total_inspection_fee_local = $value;
