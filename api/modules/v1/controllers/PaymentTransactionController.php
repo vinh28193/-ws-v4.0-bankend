@@ -54,8 +54,13 @@ class PaymentTransactionController extends BaseApiController
         /** @var PaymentTransaction[] $models */
         $post = Yii::$app->request->post();
         $type = ArrayHelper::getValue($post, 'type');
+        $order_code = ArrayHelper::getValue($post, 'order_code');
+        $form_update = ArrayHelper::getValue($post, 'form_update');
+        $amount = ArrayHelper::getValue($form_update, 'total_paid_amount_local');
+        $note_update = ArrayHelper::getValue($form_update, 'note_update_payment');
+        $link_image = ArrayHelper::getValue($form_update, 'link_image');
         if ($type == 'success') {
-            $model = PaymentService::findChildTransaction($code);
+            $model = PaymentService::findChildTransaction($code, $order_code);
             if (!$model) {
                 return $this->response(false, 'Cannot found transaction code!');
             }
@@ -66,18 +71,21 @@ class PaymentTransactionController extends BaseApiController
             try {
                 $order = Order::findOne(['ordercode' => $model->order_code]);
                 $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                $amount = $amount ? $amount : $model->transaction_amount_local;
                 if ($model->transaction_type == PaymentTransaction::TRANSACTION_continue_payment || $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE || $model->transaction_type === PaymentTransaction::TRANSACTION_TYPE_PAYMENT) {
-                    $order->total_paid_amount_local = $order->total_paid_amount_local + $model->transaction_amount_local;
+                    $order->total_paid_amount_local = $order->total_paid_amount_local + $amount;
                 } elseif ($model->transaction_type == PaymentTransaction::TRANSACTION_TYPE_REFUND) {
-                    if ($order->total_paid_amount_local < $model->transaction_amount_local) {
+                    if ($order->total_paid_amount_local < $amount) {
                         return $this->response(false, "The refund amount is greater than the amount paid.");
                     }
-                    $order->total_refund_amount_local = $order->total_refund_amount_local ? $order->total_refund_amount_local + $model->transaction_amount_local : $model->transaction_amount_local;
+                    $order->total_refund_amount_local = $order->total_refund_amount_local ? $order->total_refund_amount_local + $amount : $amount;
                     $order->refunded = Yii::$app->getFormatter()->asTimestamp('now');
-                    $order->total_paid_amount_local = $order->total_paid_amount_local - $model->transaction_amount_local;
+                    $order->total_paid_amount_local = $order->total_paid_amount_local - $amount;
                     $order->current_status = $order->total_paid_amount_local > 0 ? Order::STATUS_REFUND_PART : Order::STATUS_REFUNDED;
                     $order->save(false);
                 }
+                $model->link_image = $link_image;
+                $model->note = $note_update;
                 if (!$model->save(0)) {
                     $tran->rollBack();
                     return $this->response(false, 'Không lưu được transaction');
@@ -86,7 +94,8 @@ class PaymentTransactionController extends BaseApiController
                     $tran->rollBack();
                     return $this->response(false, 'Không lưu được order');
                 }
-                ChatMongoWs::SendMessage("Update payment success for transaction: <b>" . $model->transaction_code . "</b>.", ChatMongoWs::TYPE_GROUP_WS);
+                ChatMongoWs::SendMessage("Update payment success for transaction: <b>" . $model->transaction_code . "</b>." .
+                    "<br>Note: ".$note_update."<br>Amount: ".$amount."<br>Image: <a target='_blank' href='".($link_image ? $link_image : '#')."'>".($link_image ? 'Link' : 'Not have link')."</a>",$model->order_code, ChatMongoWs::TYPE_GROUP_WS);
                 $tran->commit();
             } catch (\Exception $exception) {
                 $tran->rollBack();
@@ -110,7 +119,7 @@ class PaymentTransactionController extends BaseApiController
             }
             $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CANCEL;
             $model->save(0);
-            ChatMongoWs::SendMessage("Update trạng thái cancel cho payment transaction: <b>" . $model->transaction_code . "</b>.", ChatMongoWs::TYPE_GROUP_WS);
+            ChatMongoWs::SendMessage("Update trạng thái cancel cho payment transaction: <b>" . $model->transaction_code . "</b>.",$model->order_code, ChatMongoWs::TYPE_GROUP_WS);
         } else {
             $model = PaymentTransaction::findOne(['order_code' => $code]);
             if (!$model) {
