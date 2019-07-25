@@ -578,16 +578,21 @@ ws.payment = (function ($) {
             processPaymment();
         },
         filterShippingAddress: function (isSafe = true) {
-            var form = $('form.shipping-form');
-            if (!form.length > 0) {
-                return false;
-            }
+
+            $(document).on("beforeSubmit", "#shippingForm", function () {
+                return false; // Cancel form submitting.
+            });
+
+
+            $('#shippingForm').yiiActiveForm('validate', true);
+
             // return false if form still have some validation errors
-            if (form.find('.has-error').length) {
+            if ($('#shippingForm').find('.has-error').length) {
                 return false;
             }
 
-            // var formDataArray = form.serializeArray();
+
+            // var formDataArray = $('#shippingForm').serializeArray();
             // var values = formDataArray.reduce(function (result, item) {
             //     result[item.name] = item.value;
             //     return result;
@@ -616,21 +621,6 @@ ws.payment = (function ($) {
             pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
             pub.shipping.receiver_post_code = $('#shippingform-receiver_post_code').val();
             pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
-            // case 1 //
-            if (isSafe) {
-                if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_name || !pub.shipping.buyer_phone || !pub.shipping.buyer_email || !pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
-                    ws.notifyError('Vui lòng nhập đầy đủ thông tin người mua');
-                    return false;
-                }
-
-                if (pub.shipping.other_receiver === true && Number(pub.shipping.enable_receiver) === 1) {
-                    if (pub.shipping.other_receiver === true && (!pub.shipping.receiver_name || !pub.shipping.receiver_phone || !pub.shipping.receiver_province_id || !pub.shipping.receiver_district_id)) {
-                        ws.notifyError('Vui lòng nhập đầy đủ thông tin người nhận');
-                        return false;
-                    }
-                }
-            }
-
             return true;
         },
     };
@@ -652,7 +642,9 @@ ws.payment = (function ($) {
 
         var handleUrl = '/payment/payment/process';
         var data = {payment: pub.payment};
+
         if (!isAdditionPage) {
+            console.log(isAdditionPage);
             if (!pub.filterShippingAddress()) {
                 return;
             }
@@ -662,7 +654,6 @@ ws.payment = (function ($) {
             }
             data.shipping = pub.shipping
         }
-
         ws.ajax(handleUrl, {
             dataType: 'json',
             type: 'post',

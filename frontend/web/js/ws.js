@@ -18,6 +18,12 @@
         init: function (options) {
             pub.options = $.extend({}, defaultOptions, options || {});
             pub.reloadCartBadge();
+            $.fn.serializeIncludeDisabled = function () {
+                let disabled = this.find(":input:disabled").removeAttr("disabled");
+                let serialized = this.serialize();
+                disabled.attr("disabled", "disabled");
+                return serialized;
+            };
             $.ajaxPrefilter('html', function (options, originalOptions, jqXHR) {
                 var orgBeforeSendHandler = options.beforeSend;
                 options.beforeSend = function (xhr, settings) {

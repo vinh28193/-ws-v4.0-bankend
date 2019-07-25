@@ -206,7 +206,7 @@ class Payment extends Model
 
     public function loadPaymentProviderFromCache()
     {
-        return PaymentService::loadPaymentByStoreFromDb($this->storeManager->storeId, $this->payment_provider);
+        return PaymentService::loadPaymentByStoreFromDb($this->storeManager->storeId, null);
     }
 
     public function createTransactionCode()
