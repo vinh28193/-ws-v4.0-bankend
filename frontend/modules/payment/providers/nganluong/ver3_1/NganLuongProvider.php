@@ -2,6 +2,7 @@
 
 namespace frontend\modules\payment\providers\nganluong\ver3_1;
 
+use common\components\ThirdPartyLogs;
 use common\models\logs\PaymentGatewayLogs;
 use common\models\PaymentTransaction;
 use frontend\modules\payment\PaymentResponse;
@@ -187,6 +188,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
 
     public function callApi($url, $params)
     {
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -198,6 +200,7 @@ class NganLuongProvider extends BaseObject implements PaymentProviderInterface
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->buildParams($params));
         $result = curl_exec($ch);
         curl_close($ch);
+        ThirdPartyLogs::setLog('NL_API_3.1','call_api',$url,$params,$result);
         return XmlUtility::xmlToArray($result);
     }
 

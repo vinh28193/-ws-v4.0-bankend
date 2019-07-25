@@ -9,6 +9,7 @@ use common\components\PickUpWareHouseTrait;
 use common\components\ThirdPartyLogs;
 use common\helpers\WeshopHelper;
 use common\models\Address;
+use common\modelsMongo\GrpcClientLog;
 use common\products\BaseProduct;
 use frontend\modules\payment\models\Order;
 use frontend\modules\payment\models\ShippingForm;
@@ -173,9 +174,10 @@ class AdditionalFeeServiceController extends BasePaymentController
                 }
             }
             $calculator = new InternationalShippingCalculator();
+            $calculator->action_log = strtolower($payment->page) .' calculated';
             $response = $calculator->CalculateFee($params, $userId, $store->country_code, $store->currency, $location);
             $response = array_combine(['success', 'couriers'], $response);
-            ThirdPartyLogs::setLog('Checkout Calculator', strtolower($payment->page), $uniq, $params, $response);
+
             $results[$uniq] = $response;
         }
         $time = sprintf('%.3f', microtime(true) - $start);

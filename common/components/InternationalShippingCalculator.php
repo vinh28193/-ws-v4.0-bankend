@@ -3,6 +3,7 @@
 
 namespace common\components;
 
+use common\modelsMongo\GrpcClientLog;
 use Yii;
 use common\helpers\WeshopHelper;
 use Courier\CalculateFeeRequest;
@@ -19,6 +20,8 @@ class InternationalShippingCalculator extends BaseObject
     const LOCATION_AMAZON = 'AMAZON';
     const LOCATION_EBAY = 'EBAY';
     const LOCATION_EBAY_US = 'EBAY_US';
+
+    public $action_log = 'internal';
 
     public $hostname;
     private $_grpcClient;
@@ -95,7 +98,21 @@ class InternationalShippingCalculator extends BaseObject
             $message = $status->details;
         }
         $rs = !$success ? (WeshopHelper::isEmpty($message) ? ($data->count() > 0 ? Yii::t('frontend', 'Empty courier assigment') : Yii::t('frontend', 'Unknown error')) : $message) : $this->parserCalculateFeeResponse($data, $sellerContry);
-        ThirdPartyLogs::setLog('gprc', 'CalculateFee', "Calculate with user {$request->getUserId()} in country {$request->getCountryCode()} seller Location {$sellerContry}", $params, $rs);
+
+        $formatter = Yii::$app->formatter;
+        $log = new GrpcClientLog;
+        $log->date = $formatter->asDate('now');
+        $log->action = $this->action_log;
+        $log->client_name = 'CourierClient';
+        $log->client_action = 'CalculateFee';
+        $log->host_name = $this->hostname;
+        $log->user_id = $userId;
+        $log->country = $countryCode;
+        $log->create_at = $formatter->asDatetime('now');
+        $log->request = $params;
+        $log->response = $rs;
+        $log->save(false);
+
         return [$success, $rs];
 //        return [true,json_decode('[{"courier_logo":"https:\/\/oms.boxme.asia\/assets\/images\/courier\/boxme.svg","courier_name":"Boxme","service_name":"International Express","service_code":"BM_DEX","shipping_fee":597168,"return_fee":0,"tax_fee":0,"total_fee":597168,"currency":"VND","min_delivery_time":6,"max_delivery_time":8}]',true)];
     }
@@ -155,5 +172,6 @@ class InternationalShippingCalculator extends BaseObject
             default:
                 return false;
         }
+
     }
 }

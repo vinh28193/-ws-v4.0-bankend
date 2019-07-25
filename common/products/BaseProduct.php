@@ -308,7 +308,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
 
     public function getIsSpecial()
     {
-        if($this->getStoreManager()->store->country_code === 'VN'){
+        if ($this->getStoreManager()->store->country_code === 'VN') {
             return false;
         }
         if (($category = $this->getCategory()) !== null) {
@@ -413,6 +413,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
                 }
             }
             $calculator = new InternationalShippingCalculator();
+            $calculator->action_log = 'BaseProduct';
             list($ok, $couriers) = $calculator->CalculateFee($this->getShippingParams(), ArrayHelper::getValue($this->getPickUpWareHouse(), 'ref_user_id'), $this->getStoreManager()->store->country_code, $this->getStoreManager()->store->currency, $location);
             ThirdPartyLogs::setLog('BaseProduct', 'getInternationalShipping', $this->getUniqueCode(), $this->getShippingParams(), $couriers);
             if ($ok && is_array($couriers) && count($couriers) > 0) {
