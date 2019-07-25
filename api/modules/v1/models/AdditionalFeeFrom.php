@@ -24,7 +24,6 @@ use yii\helpers\ArrayHelper;
 
 class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
 {
-    use PickUpWareHouseTrait;
 
     /**
      * @var string target name order/product
@@ -176,11 +175,13 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                     $this->store_id = $this->_target->store_id;
                     $this->province = $this->_target->receiver_province_id;
                     $this->district = $this->_target->receiver_district_id;
+                    $this->post_code =  $this->_target->receiver_post_code ?  $this->_target->receiver_post_code : '';
                 } else if ($this->_target instanceof Product) {
                     $order = $this->_target->order;
                     $this->store_id = $order->store_id;
                     $this->province = $order->receiver_province_id;
                     $this->district = $order->receiver_district_id;
+                    $this->post_code = $order->receiver_post_code ? $order->receiver_post_code : '';
                 }
             }
 
@@ -381,17 +382,21 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
         $weight = 0;
         $totalAmount = 0;
         if ($target instanceof Order) {
-            $weight = $target->total_weight_temporary * 1000;
             $totalAmount = $target->total_amount_local;
             $items = [];
             foreach ($target->products as $product) {
+                $itemWeight = (int)$product->total_weight_temporary * 1000;
+                if ($itemWeight <= 0) {
+                    $itemWeight = $target->store_id === 1 ? 500 : 1000;
+                }
+                $weight += $itemWeight;
                 $items[] = [
                     'sku' => implode('|', [$product->parent_sku, $product->sku]),
                     'label_code' => '',
                     'origin_country' => '',
                     'name' => $product->product_name,
                     'desciption' => '',
-                    'weight' => WeshopHelper::roundNumber(($weight / $product->quantity_customer)),
+                    'weight' => WeshopHelper::roundNumber(($itemWeight / $product->quantity_customer)),
                     'amount' => WeshopHelper::roundNumber($product->total_price_amount_local),
                     'quantity' => $product->quantity_customer,
                 ];
@@ -501,7 +506,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             'province' => $this->province !== null ? $this->province : ($store->country_code === 'ID' ? 3464 : 1),
             'district' => $this->district !== null ? $this->district : ($store->country_code === 'ID' ? 28444 : 8),
             'country' => $store->country_code,
-            'zipcode' => $store->country_code === 'ID' ? '14340' : '',
+            'zipcode' => $store->country_code === 'ID' ? ($this->post_code !== null ? $this->post_code : '14340') : '',
         ];
     }
 
@@ -522,5 +527,26 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             'additional_fees' => $this->getAdditionalFees()->toArray(),
             'couriers' => $this->_couriers
         ];
+    }
+
+    public function getPickUpWareHouse($store = null)
+    {
+        if ($store === null) {
+            $store = $this->store_id;
+            if ($store === null) {
+                $store = $this->getAdditionalFees()->storeId;
+            }
+        }
+        $user = $this->getUser();
+        if ($user !== null && method_exists($user, 'getPickupWarehouse') && ($wh = call_user_func([$user, 'getPickupWarehouse'])) !== null) {
+            return $wh;
+        } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
+            $current = $params['default'];
+
+            $current = $store !== null ? ($store === 1 ?  (strpos($current,'sandbox') !== false ? 'sandbox_vn' : 'ws_vn') : (strpos($current,'sandbox') !== false ? 'sandbox_id' : 'ws_id')) : $current;
+
+            return ArrayHelper::getValue($params, "warehouses.$current", false);
+        }
+        return null;
     }
 }

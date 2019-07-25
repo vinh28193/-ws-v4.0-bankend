@@ -67,6 +67,11 @@ ws.payment = (function ($) {
         },
         init: function (options) {
             pub.payment = $.extend({}, defaults, options || {});
+
+            if (pub.payment.page.toUpperCase() === 'ADDITION') {
+
+            }
+
             ws.initEventHandler($('div#discountCoupon'), 'applyCouponCode', 'click', 'button#applyCouponCode', function (e) {
                 var button = $(this);
                 var key = button.data('key');
@@ -310,6 +315,9 @@ ws.payment = (function ($) {
             if (!pub.filterShippingAddress(false)) {
                 return;
             }
+            if (pub.payment.page.toUpperCase() === 'ADDITION') {
+                return;
+            }
 
             if (Number(pub.shipping.enable_buyer) === 1 && (!pub.shipping.buyer_province_id || !pub.shipping.buyer_district_id)) {
                 return false;
@@ -337,6 +345,18 @@ ws.payment = (function ($) {
                     }
                 }
             }, true);
+        },
+        validateInternationalShippingFee: function () {
+            var orders = pub.get('orders');
+            var exist = true;
+            $.each(orders, function (key, order) {
+                exist = orderValidateInternationalShippingFee(order);
+                if (!exist) {
+                    return exist;
+                }
+            });
+            return exist;
+
         },
         calculateInstallment: function () {
             ws.ajax('/payment/' + pub.payment.payment_provider + '/calc', {
@@ -628,11 +648,21 @@ ws.payment = (function ($) {
     };
     var processPaymment = function () {
 
-        if (!pub.filterShippingAddress()) {
-            return;
-        }
+        var isAdditionPage = pub.get('page').toUpperCase() === 'ADDITION';
+
         var handleUrl = '/payment/payment/process';
-        var data = {payment: pub.payment, shipping: pub.shipping};
+        var data = {payment: pub.payment};
+        if (!isAdditionPage) {
+            if (!pub.filterShippingAddress()) {
+                return;
+            }
+            if (!pub.validateInternationalShippingFee()) {
+                ws.notifyError(ws.t('Can not checkout with no courier assigner to your orders, please recheck your address'));
+                return;
+            }
+            data.shipping = pub.shipping
+        }
+
         ws.ajax(handleUrl, {
             dataType: 'json',
             type: 'post',
@@ -861,6 +891,14 @@ ws.payment = (function ($) {
         btnCheckout.find('span').html(ws.showMoney(totalAmountDisplay));
 
         return totalAmountDisplay
+    };
+    var orderValidateInternationalShippingFee = function ($order) {
+        var additionalFees = $order.additionalFees;
+        if (additionalFees.length === 0) {
+            return false;
+        }
+        return 'international_shipping_fee' in additionalFees;
+
     };
     return pub;
 })(jQuery);
