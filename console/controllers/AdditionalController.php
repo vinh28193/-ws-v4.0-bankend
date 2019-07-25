@@ -23,6 +23,8 @@ class AdditionalController extends Controller
 
     public $orderCode;
 
+    public $color = true;
+
     public function options($actionID)
     {
         return array_merge(parent::options($actionID), ['orderCode']);
@@ -32,6 +34,7 @@ class AdditionalController extends Controller
     {
         return array_merge(parent::optionAliases(), [
             'bin' => 'orderCode',
+            'c' => 'color'
         ]);
     }
 
@@ -82,7 +85,7 @@ class AdditionalController extends Controller
             }
             /** @var  $customer User */
             if ($order->customer_id === null || (($customer = $order->customer)) === null) {
-                $this->stdout("    > order `$code` not valid, cause customer guest .\n", Console::FG_RED);
+                $this->stdout("    > order `$code` not valid, cause customer is guest .\n", Console::FG_RED);
                 continue;
             }
             $useLevel = $customer->getUserLevel();
@@ -107,8 +110,8 @@ class AdditionalController extends Controller
             $this->stdout("    > $purchasePercent will be apply to order `$code` .\n", Console::FG_GREEN);
             $products = $order->products;
             $countProduct = count($products);
-            $this->stdout("    > order `$code` have $countProduct product .\n", Console::FG_RED);
-            $this->stdout("    > transaction begin .\n", Console::FG_RED);
+            $this->stdout("    > order `$code` have $countProduct product .\n", Console::FG_GREEN);
+            $this->stdout("    > transaction begin .\n", Console::FG_GREEN);
             $transaction = Order::getDb()->beginTransaction();
             try {
                 $orderPurchaseAmount = 0;
@@ -145,12 +148,11 @@ class AdditionalController extends Controller
                 if ($oldLocalValue === null) {
                     $oldLocalValue = 0;
                 }
-
                 $order->total_weshop_fee_amount = $orderPurchaseAmount;
                 $order->total_weshop_fee_local = $orderPurchaseLocal;
                 $order->total_fee_amount_local = ($order->total_fee_amount_local - $oldLocalValue) + $orderPurchaseLocal;
                 $order->total_final_amount_local = ($order->total_final_amount_local - $oldLocalValue) + $orderPurchaseLocal;
-                $this->stdout("    > order changed purchase fee from $oldAmountValue -> $orderPurchaseAmount ($oldLocalValue -> $orderPurchaseLocal).\n", Console::FG_GREEN);
+                $this->stdout("    > order changed purchase fee from {$oldAmountValue}USD -> {$orderPurchaseAmount}USD ({$storeManager->showMoney($oldLocalValue)} -> {$storeManager->showMoney($orderPurchaseLocal)}.\n", Console::FG_GREEN);
             } catch (Exception $exception) {
                 $this->stdout("    > {$exception->getMessage()} \n", Console::FG_RED);
             }
