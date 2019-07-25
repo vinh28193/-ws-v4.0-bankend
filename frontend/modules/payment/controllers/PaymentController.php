@@ -500,7 +500,7 @@ class PaymentController extends BasePaymentController
             $redirectUrl = $res->checkoutUrl;
         }
         if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
-            if ($paymentTransaction->transaction_type !== PaymentTransaction::TRANSACTION_continue_payment) {
+            if ($paymentTransaction->transaction_type === PaymentTransaction::TRANSACTION_continue_payment) {
                 $order = $paymentTransaction->order;
                 $order->total_paid_amount_local += $paymentTransaction->transaction_amount_local;
                 $order->save(false);
