@@ -75,6 +75,8 @@ class ShippingForm extends Model
 
         return [
             [['buyer_name', 'buyer_phone', 'buyer_email', 'buyer_address'], 'required'],
+            [['buyer_name', 'receiver_name'], 'string','min' => 3],
+            [['buyer_email'], 'email'],
             [['buyer_province_id'], 'required', 'when' => function ($self) {
                 return $this->getStoreManager()->store->country_code === 'VN';
             }],
