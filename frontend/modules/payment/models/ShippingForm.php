@@ -75,6 +75,8 @@ class ShippingForm extends Model
 
         return [
             [['buyer_name', 'buyer_phone', 'buyer_email', 'buyer_address'], 'required'],
+            [['buyer_name'], 'string', 'min' => 3],
+            [['buyer_email'], 'email'],
             [['buyer_province_id'], 'required', 'when' => function ($self) {
                 return $this->getStoreManager()->store->country_code === 'VN';
             }],
@@ -86,7 +88,10 @@ class ShippingForm extends Model
             [['other_receiver'], 'filter', 'filter' => function ($v) {
                 return (int)$v;
             }],
-
+            [['receiver_name'], 'string', 'min' => 3, 'when' => function ($self) {
+                /** @var $self self */
+                return $self->other_receiver === self::YES;
+            }],
             [['receiver_phone'], '\common\validators\PhoneValidator', 'when' => function ($self) {
                 /** @var $self self */
                 return $self->other_receiver === self::YES;
