@@ -537,8 +537,11 @@ class PaymentController extends BasePaymentController
 
 
         }
-        return $this->redirect($redirectUrl,200);
-
+        if($merchant == 48){
+            return $this->redirect($redirectUrl, 200);
+        }else{
+            return $this->redirect($redirectUrl);
+        }
     }
 
 
