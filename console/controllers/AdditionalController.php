@@ -7,6 +7,7 @@ use common\components\ExchangeRate;
 use common\components\InternationalShippingCalculator;
 use common\components\StoreManager;
 use common\components\ThirdPartyLogs;
+use common\helpers\ChatHelper;
 use common\models\User;
 use common\helpers\WeshopHelper;
 use common\models\db\TargetAdditionalFee;
@@ -155,8 +156,22 @@ class AdditionalController extends Controller
                 $order->total_weshop_fee_local = $orderPurchaseLocal;
                 $order->total_fee_amount_local = ($order->total_fee_amount_local - $oldLocalValue) + $orderPurchaseLocal;
                 $order->total_final_amount_local = ($order->total_final_amount_local - $oldLocalValue) + $orderPurchaseLocal;
-                $this->stdout("    > order changed purchase fee from {$oldAmountValue}$ -> {$orderPurchaseAmount}$ ({$storeManager->showMoney($oldLocalValue)} -> {$storeManager->showMoney($orderPurchaseLocal)}.\n", Console::FG_GREEN);
+
+                $now = Yii::$app->formatter->asDatetime('now');
+                $orderNote = $order->note;
+                $convert = $purchasePercent*100;
+                $note = "purchase fee, applied rate {$convert}% for customer $useLevel, changed from {$oldAmountValue}$ -> {$orderPurchaseAmount}$ ({$storeManager->showMoney($oldLocalValue)} -> {$storeManager->showMoney($orderPurchaseLocal)}) (rate:$rate)  at:{$now}";
+
+                if ($orderNote === null) {
+                    $orderNote = "Console: updated $note";
+                } else {
+                    $orderNote .=  ", Console: updated $note";
+                }
+                $order->note = $orderNote;
+
+                $this->stdout("    > order changed $note.\n", Console::FG_GREEN);
                 $transaction->commit();
+                ChatHelper::push("Console: updated $note", $order->ordercode, 'GROUP_WS', 'SYSTEM', null);
                 $this->stdout("    > transaction committed.\n", Console::FG_GREEN);
             } catch (Exception $exception) {
                 $this->stdout("    > {$exception->getMessage()} \n", Console::FG_RED);
