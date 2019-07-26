@@ -5,6 +5,7 @@ namespace frontend\modules\payment\controllers;
 
 
 use common\components\gaSetting;
+use common\modelsMongo\ChatMongoWs;
 use frontend\modules\payment\models\Order;
 use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
@@ -423,6 +424,11 @@ class PaymentController extends BasePaymentController
         }
 
         gaSetting::gaPaymentProcess($payment);
+        foreach ($payment->getOrders() as $key => $order) {
+            ChatMongoWs::SendMessage('Create order: '.$order->ordercode.'' .
+                '<br>Amount: '.$order->total_final_amount_local.'<br>Created At: '.$order->created_at,
+                $order->ordercode,ChatMongoWs::TYPE_GROUP_WS);
+        }
         $time = sprintf('%.3f', microtime(true) - $start);
         Yii::info("action time : $time", __METHOD__);
         return $this->response(true, 'create success', $res);
@@ -504,6 +510,11 @@ class PaymentController extends BasePaymentController
                 $order = $paymentTransaction->order;
                 $order->total_paid_amount_local += $paymentTransaction->transaction_amount_local;
                 $order->save(false);
+                ChatMongoWs::SendMessage('Payment success Order: '.$order->ordercode.
+                    '<br>Token: '.$res->token.
+                    '<br>Merchant: '.$res->merchant
+                    ,$order->ordercode
+                    ,ChatMongoWs::TYPE_GROUP_WS);
             } else {
                 foreach ($paymentTransaction->childPaymentTransaction as $child) {
                     $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
@@ -514,6 +525,11 @@ class PaymentController extends BasePaymentController
                             $order->current_status = Order::STATUS_READY2PURCHASE;
                         }
                         $order->save(false);
+                        ChatMongoWs::SendMessage('Payment success Order: '.$order->ordercode.
+                            '<br>Token: '.$res->token.
+                            '<br>Merchant: '.$res->merchant
+                            ,$order->ordercode
+                            ,ChatMongoWs::TYPE_GROUP_WS);
                     }
                     $child->save(false);
                 }
@@ -521,7 +537,7 @@ class PaymentController extends BasePaymentController
 
 
         }
-        return $this->redirect($redirectUrl);
+        return $this->redirect($redirectUrl,200);
 
     }
 
@@ -574,12 +590,17 @@ class PaymentController extends BasePaymentController
                         $order->current_status = Order::STATUS_READY2PURCHASE;
                     }
                     $order->save(false);
+                    ChatMongoWs::SendMessage('Payment success Order: '.$order->ordercode.
+                        '<br>Token: '.$res->token.
+                        '<br>Merchant: '.$res->merchant
+                        ,$order->ordercode
+                        ,ChatMongoWs::TYPE_GROUP_WS);
                 }
                 $child->save(false);
             }
 
         }
-        return $this->redirect($redirectUrl);
+        return $this->redirect($redirectUrl,200);
 
     }
 }

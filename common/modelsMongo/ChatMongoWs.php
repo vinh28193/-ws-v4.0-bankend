@@ -187,26 +187,30 @@ class ChatMongoWs extends ActiveRecord
 
     }
     public static function SendMessage($message,$order_code,$type_chat = self::TYPE_WS_CUSTOMER,$source = self::REQUEST_SOURCE_BACK_END,$isSendmail = false){
-        /** @var User $user */
-        $user = Yii::$app->user->getIdentity();
-        if ($user){
-            $chat = new self();
-            $chat->success = true;
-            $chat->message = $message;
-            $chat->date = Yii::$app->getFormatter()->asDatetime('now');
-            $chat->user_id = $user->id;
-            $chat->user_email = $user->email;
-            $chat->user_name = $user->username;
-            $chat->user_app = null;
-            $chat->user_request_suorce = $source;
-            $chat->request_ip = Yii::$app->getRequest()->getUserIP();
-            $chat->user_avatars = $user->avatar ? $user->avatar : null;
-            $chat->Order_path = $order_code;
-            $chat->is_send_email_to_customer = $isSendmail;
-            $chat->type_chat = $type_chat;
-            $chat->is_customer_vew = $type_chat;
-            $chat->is_employee_vew = $type_chat;
-            return $chat->save();
+        try{
+            /** @var User $user */
+            $user = Yii::$app->user->getIdentity();
+            if ($user){
+                $chat = new self();
+                $chat->success = true;
+                $chat->message = $message;
+                $chat->date = Yii::$app->getFormatter()->asDatetime('now');
+                $chat->user_id = $user->id;
+                $chat->user_email = $user->email;
+                $chat->user_name = $user->username;
+                $chat->user_app = null;
+                $chat->user_request_suorce = $source;
+                $chat->request_ip = Yii::$app->getRequest()->getUserIP();
+                $chat->user_avatars = $user->avatar ? $user->avatar : null;
+                $chat->Order_path = $order_code;
+                $chat->is_send_email_to_customer = $isSendmail;
+                $chat->type_chat = $type_chat;
+                $chat->is_customer_vew = $type_chat;
+                $chat->is_employee_vew = $type_chat;
+                return $chat->save();
+            }
+        }catch (\Exception $exception){
+            Yii::error($exception);
         }
         return false;
     }
