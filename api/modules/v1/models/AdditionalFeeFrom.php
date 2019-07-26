@@ -249,7 +249,7 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 $this->getAdditionalFees()->remove('special_fee');
                 $this->getAdditionalFees()->withCondition($this, 'special_fee', $firstCourier['special_fee']);
             } elseif ($this->is_special === 'no' && $this->_additionalFees->has('special_fee')) {
-                $specialFees = $this->_additionalFees->get('special_fee');
+                $specialFees = $this->_additionalFees->get('special_fee',[],false);
                 $this->_additionalFees->remove('special_fee');
                 foreach ($specialFees as $specialFee) {
                     $specialFee['amount'] = 0;
