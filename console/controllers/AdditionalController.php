@@ -71,6 +71,7 @@ class AdditionalController extends Controller
 
     public function actionUpdatePurchaseFee()
     {
+        $start = microtime(true);
         $this->stdout("    > action start.\n", Console::FG_RED);
         $codes = $this->orderCode;
         if (is_string($codes)) {
@@ -158,7 +159,7 @@ class AdditionalController extends Controller
                 $now = Yii::$app->formatter->asDatetime('now');
                 $orderNote = $order->note;
                 $convert = $purchasePercent * 100;
-                $note = "purchase fee, applied rate {$convert}% for $for, changed from {$oldAmountValue}$ -> {$orderPurchaseAmount}$ ({$storeManager->showMoney($oldLocalValue)} -> {$storeManager->showMoney($orderPurchaseLocal)}) (rate:$rate)  at:{$now}";
+                $note = "purchase fee, applied rate {$convert}% for $for, changed from {$oldAmountValue}$ -> {$orderPurchaseAmount}$ ({$storeManager->showMoney($oldLocalValue)} -> {$storeManager->showMoney($orderPurchaseLocal)}) at:{$now}";
 
                 if ($orderNote === null) {
                     $orderNote = "Console: updated $note";
@@ -176,9 +177,8 @@ class AdditionalController extends Controller
                 $this->stdout("    > transaction roll back.\n", Console::FG_RED);
                 $transaction->rollBack();
             }
-
-
         }
+        $this->stdout("    > action end.\n", Console::FG_RED);
     }
 
     public function actionInternationalShippingFee()
