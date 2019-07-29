@@ -448,174 +448,103 @@ class PaymentController extends BasePaymentController
                 }
 
             }
-
-            gaSetting::gaPaymentProcess($payment);
-            foreach ($payment->getOrders() as $key => $order) {
-                ChatMongoWs::SendMessage('Create order: ' . $order->ordercode . '' .
-                    '<br>Amount: ' . $order->total_final_amount_local . '<br>Created At: ' . $order->created_at,
-                    $order->ordercode, ChatMongoWs::TYPE_GROUP_WS);
-            }
-            $time = sprintf('%.3f', microtime(true) - $start);
-            Yii::info("action time : $time", __METHOD__);
-            return $this->response(true, 'create success', $res);
         }
+        gaSetting::gaPaymentProcess($payment);
+        foreach ($payment->getOrders() as $key => $order) {
+            ChatMongoWs::SendMessage('Create order: ' . $order->ordercode . '' .
+                '<br>Amount: ' . $order->total_final_amount_local . '<br>Created At: ' . $order->created_at,
+                $order->ordercode, ChatMongoWs::TYPE_GROUP_WS);
+        }
+        $time = sprintf('%.3f', microtime(true) - $start);
+        Yii::info("action time : $time", __METHOD__);
+        return $this->response(true, 'create success', $res);
+
     }
 
-        public
-        function actionBilling()
-        {
-            $start = microtime(true);
-            $now = Yii::$app->getFormatter()->asDatetime('now');
-            $bodyParams = $this->request->bodyParams;
-            $orders = ArrayHelper::remove($bodyParams, 'orders', []);
-            if (empty($orders)) {
-                return $this->response(false, Yii::t('frontend', 'Empty orders'));
-            }
-            $payment = new Payment($bodyParams);
-            $payment->setOrders($orders);
-            if ($payment->payment_provider === null && $payment->payment_method === null) {
-                $payment->initDefaultMethod();
+    public
+    function actionBilling()
+    {
+        $start = microtime(true);
+        $now = Yii::$app->getFormatter()->asDatetime('now');
+        $bodyParams = $this->request->bodyParams;
+        $orders = ArrayHelper::remove($bodyParams, 'orders', []);
+        if (empty($orders)) {
+            return $this->response(false, Yii::t('frontend', 'Empty orders'));
+        }
+        $payment = new Payment($bodyParams);
+        $payment->setOrders($orders);
+        if ($payment->payment_provider === null && $payment->payment_method === null) {
+            $payment->initDefaultMethod();
+        } else {
+            $payment->getPaymentMethodProviderName();
+        }
+
+        $paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $payment->transaction_code]);
+        if ($paymentTransaction === null) {
+            return $this->response(false, Yii::t('frontend', 'Not found transaction for invoice {code}', [
+                'code' => $payment->transaction_code
+            ]));
+        }
+        $payment->return_url = PaymentService::createReturnUrl($payment->payment_provider);
+        $payment->cancel_url = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
+        if ($payment->type === 'order' && $paymentTransaction->order_code !== null) {
+            $payment->cancel_url = PaymentService::createBillingUrl($paymentTransaction->order_code);
+        }
+        $res = $payment->processPayment();
+        if ($res->success === false) {
+            return $this->response(false, $res->message);
+        }
+        $paymentTransaction->payment_method = $payment->payment_method;
+        $paymentTransaction->payment_provider = $payment->payment_provider;
+        $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
+        $paymentTransaction->third_party_transaction_code = $res->token;
+        $paymentTransaction->third_party_transaction_status = $res->status;
+        $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
+        foreach ($paymentTransaction->childPaymentTransaction as $childPaymentTransaction) {
+            $childPaymentTransaction->payment_method = $payment->payment_method;
+            $childPaymentTransaction->payment_provider = $payment->payment_provider;
+            $childPaymentTransaction->payment_bank_code = $payment->payment_bank_code;
+            $childPaymentTransaction->third_party_transaction_code = $res->token;
+            $childPaymentTransaction->third_party_transaction_status = $res->status;
+            $childPaymentTransaction->third_party_transaction_link = $res->checkoutUrl;
+            $childPaymentTransaction->save(false);
+        }
+        $paymentTransaction->save(false);
+        $time = sprintf('%.3f', microtime(true) - $start);
+        Yii::info("action time : $time", __METHOD__);
+        return $this->response(true, 'create success', $res);
+    }
+
+    public
+    function actionReturn($merchant)
+    {
+        $start = microtime(true);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $res = Payment::checkPayment((int)$merchant, $this->request);
+
+        /** @var $paymentTransaction PaymentTransaction */
+        $paymentTransaction = $res->paymentTransaction;
+        $redirectUrl = PaymentService::createSuccessUrl($paymentTransaction->transaction_code);
+        $failUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
+
+        if ($res->success === false) {
+            return $this->redirect($failUrl);
+        }
+
+        if ($res->checkoutUrl !== null) {
+            $redirectUrl = $res->checkoutUrl;
+        }
+        if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
+            if ($paymentTransaction->transaction_type === PaymentTransaction::TRANSACTION_continue_payment) {
+                $order = $paymentTransaction->order;
+                $order->total_paid_amount_local += $paymentTransaction->transaction_amount_local;
+                $order->save(false);
+                ChatMongoWs::SendMessage('Payment success Order: ' . $order->ordercode .
+                    '<br>Token: ' . $res->token .
+                    '<br>Merchant: ' . $res->merchant
+                    , $order->ordercode
+                    , ChatMongoWs::TYPE_GROUP_WS);
             } else {
-                $payment->getPaymentMethodProviderName();
-            }
-
-            $paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $payment->transaction_code]);
-            if ($paymentTransaction === null) {
-                return $this->response(false, Yii::t('frontend', 'Not found transaction for invoice {code}', [
-                    'code' => $payment->transaction_code
-                ]));
-            }
-            $payment->return_url = PaymentService::createReturnUrl($payment->payment_provider);
-            $payment->cancel_url = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
-            if ($payment->type === 'order' && $paymentTransaction->order_code !== null) {
-                $payment->cancel_url = PaymentService::createBillingUrl($paymentTransaction->order_code);
-            }
-            $res = $payment->processPayment();
-            if ($res->success === false) {
-                return $this->response(false, $res->message);
-            }
-            $paymentTransaction->payment_method = $payment->payment_method;
-            $paymentTransaction->payment_provider = $payment->payment_provider;
-            $paymentTransaction->payment_bank_code = $payment->payment_bank_code;
-            $paymentTransaction->third_party_transaction_code = $res->token;
-            $paymentTransaction->third_party_transaction_status = $res->status;
-            $paymentTransaction->third_party_transaction_link = $res->checkoutUrl;
-            foreach ($paymentTransaction->childPaymentTransaction as $childPaymentTransaction) {
-                $childPaymentTransaction->payment_method = $payment->payment_method;
-                $childPaymentTransaction->payment_provider = $payment->payment_provider;
-                $childPaymentTransaction->payment_bank_code = $payment->payment_bank_code;
-                $childPaymentTransaction->third_party_transaction_code = $res->token;
-                $childPaymentTransaction->third_party_transaction_status = $res->status;
-                $childPaymentTransaction->third_party_transaction_link = $res->checkoutUrl;
-                $childPaymentTransaction->save(false);
-            }
-            $paymentTransaction->save(false);
-            $time = sprintf('%.3f', microtime(true) - $start);
-            Yii::info("action time : $time", __METHOD__);
-            return $this->response(true, 'create success', $res);
-        }
-
-        public
-        function actionReturn($merchant)
-        {
-            $start = microtime(true);
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            $res = Payment::checkPayment((int)$merchant, $this->request);
-
-            /** @var $paymentTransaction PaymentTransaction */
-            $paymentTransaction = $res->paymentTransaction;
-            $redirectUrl = PaymentService::createSuccessUrl($paymentTransaction->transaction_code);
-            $failUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
-
-            if ($res->success === false) {
-                return $this->redirect($failUrl);
-            }
-
-            if ($res->checkoutUrl !== null) {
-                $redirectUrl = $res->checkoutUrl;
-            }
-            if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
-                if ($paymentTransaction->transaction_type === PaymentTransaction::TRANSACTION_continue_payment) {
-                    $order = $paymentTransaction->order;
-                    $order->total_paid_amount_local += $paymentTransaction->transaction_amount_local;
-                    $order->save(false);
-                    ChatMongoWs::SendMessage('Payment success Order: ' . $order->ordercode .
-                        '<br>Token: ' . $res->token .
-                        '<br>Merchant: ' . $res->merchant
-                        , $order->ordercode
-                        , ChatMongoWs::TYPE_GROUP_WS);
-                } else {
-                    foreach ($paymentTransaction->childPaymentTransaction as $child) {
-                        $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-
-                        if (($order = $child->order) !== null) {
-                            $order->total_paid_amount_local = $child->transaction_amount_local;
-                            if ($order->current_status == Order::STATUS_SUPPORTED) {
-                                $order->current_status = Order::STATUS_READY2PURCHASE;
-                            }
-                            $order->save(false);
-                            ChatMongoWs::SendMessage('Payment success Order: ' . $order->ordercode .
-                                '<br>Token: ' . $res->token .
-                                '<br>Merchant: ' . $res->merchant
-                                , $order->ordercode
-                                , ChatMongoWs::TYPE_GROUP_WS);
-                        }
-                        $child->save(false);
-                    }
-                }
-
-
-            }
-            if ($merchant == 48) {
-                return $this->redirect($redirectUrl, 200);
-            } else {
-                return $this->redirect($redirectUrl);
-            }
-        }
-
-
-        public
-        function actionCheckRecursive($merchant)
-        {
-            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            if (($token = Yii::$app->request->get('token')) === null) {
-                return false;
-            }
-            if ($merchant === 'nganluong32') {
-                $client = new NganLuongClient();
-                $res = $client->GetTransactionDetail($token);
-                return (string)$res['error_code'] === '00';
-            }
-            return false;
-        }
-
-        public
-        function actionFailed()
-        {
-
-        }
-
-        public
-        function actionReturnNicepay()
-        {
-            $merchant = 48;
-            $start = microtime(true);
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            $res = Payment::checkPayment((int)$merchant, $this->request);
-
-            /** @var $paymentTransaction PaymentTransaction */
-            $paymentTransaction = $res->paymentTransaction;
-            $redirectUrl = PaymentService::createSuccessUrl($paymentTransaction->transaction_code);
-            $failUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
-
-            if ($res->success === false) {
-                return $this->redirect($failUrl);
-            }
-
-            if ($res->checkoutUrl !== null) {
-                $redirectUrl = $res->checkoutUrl;
-            }
-            if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
                 foreach ($paymentTransaction->childPaymentTransaction as $child) {
                     $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
 
@@ -633,9 +562,80 @@ class PaymentController extends BasePaymentController
                     }
                     $child->save(false);
                 }
-
             }
-            return $this->redirect($redirectUrl, 200);
+
 
         }
+        if ($merchant == 48) {
+            return $this->redirect($redirectUrl, 200);
+        } else {
+            return $this->redirect($redirectUrl);
+        }
     }
+
+
+    public
+    function actionCheckRecursive($merchant)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if (($token = Yii::$app->request->get('token')) === null) {
+            return false;
+        }
+        if ($merchant === 'nganluong32') {
+            $client = new NganLuongClient();
+            $res = $client->GetTransactionDetail($token);
+            return (string)$res['error_code'] === '00';
+        }
+        return false;
+    }
+
+    public
+    function actionFailed()
+    {
+
+    }
+
+    public
+    function actionReturnNicepay()
+    {
+        $merchant = 48;
+        $start = microtime(true);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $res = Payment::checkPayment((int)$merchant, $this->request);
+
+        /** @var $paymentTransaction PaymentTransaction */
+        $paymentTransaction = $res->paymentTransaction;
+        $redirectUrl = PaymentService::createSuccessUrl($paymentTransaction->transaction_code);
+        $failUrl = PaymentService::createCancelUrl($paymentTransaction->transaction_code);
+
+        if ($res->success === false) {
+            return $this->redirect($failUrl);
+        }
+
+        if ($res->checkoutUrl !== null) {
+            $redirectUrl = $res->checkoutUrl;
+        }
+        if ($paymentTransaction->transaction_status === PaymentTransaction::TRANSACTION_STATUS_SUCCESS) {
+            foreach ($paymentTransaction->childPaymentTransaction as $child) {
+                $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+
+                if (($order = $child->order) !== null) {
+                    $order->total_paid_amount_local = $child->transaction_amount_local;
+                    if ($order->current_status == Order::STATUS_SUPPORTED) {
+                        $order->current_status = Order::STATUS_READY2PURCHASE;
+                    }
+                    $order->save(false);
+                    ChatMongoWs::SendMessage('Payment success Order: ' . $order->ordercode .
+                        '<br>Token: ' . $res->token .
+                        '<br>Merchant: ' . $res->merchant
+                        , $order->ordercode
+                        , ChatMongoWs::TYPE_GROUP_WS);
+                }
+                $child->save(false);
+            }
+
+        }
+        return $this->redirect($redirectUrl, 200);
+
+    }
+}
