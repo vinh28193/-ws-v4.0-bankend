@@ -180,7 +180,7 @@ class AdditionalController extends Controller
                     $orderNote .= ", Console: updated $note";
                 }
                 $order->note = $orderNote;
-
+                $order->save(false);
                 $this->stdout("    > order changed $note.\n", Console::FG_GREEN);
                 $transaction->commit();
                 ChatHelper::push("Console: updated $note", $order->ordercode, 'GROUP_WS', 'SYSTEM', null);
