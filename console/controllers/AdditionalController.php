@@ -93,7 +93,7 @@ class AdditionalController extends Controller
                 $this->stdout("    > old order detected .\n", Console::FG_GREEN);
                 $for = "old order (before change policy)";
                 $purchasePercent = 0.1;
-            }else if($order->customer_id === null && ($customer = $order->customer) !== null) {
+            } else if ($order->customer_id === null && ($customer = $order->customer) !== null) {
                 /** @var  $customer User */
                 $useLevel = $customer->getUserLevel();
                 $this->stdout("    > customer `$customer->id`  level `$useLevel` detected.\n", Console::FG_GREEN);
@@ -151,6 +151,18 @@ class AdditionalController extends Controller
                 }
                 if ($oldLocalValue === null) {
                     $oldLocalValue = 0;
+                }
+                /** @var  $orderPurFee TargetAdditionalFee */
+                $orderPurFee = TargetAdditionalFee::find()->where([
+                    'AND',
+                    ['name' => 'purchase_fee'],
+                    ['target' => 'order'],
+                    ['target_id' => $order->id]
+                ])->one();
+                if ($orderPurFee !== null) {
+                    $orderPurFee->amount = $orderPurchaseAmount;
+                    $orderPurFee->local_amount = $orderPurchaseAmount;
+                    $orderPurFee->save(false);
                 }
                 $order->total_weshop_fee_amount = $orderPurchaseAmount;
                 $order->total_weshop_fee_local = $orderPurchaseLocal;
@@ -310,6 +322,7 @@ class AdditionalController extends Controller
                 if ($oldValue === null) {
                     $oldValue = 0;
                 }
+
                 $order->total_intl_shipping_fee_local = $internationalShipping->local_amount;
                 $order->total_fee_amount_local = ($order->total_fee_amount_local - $oldValue) + $internationalShipping->local_amount;
                 $order->total_final_amount_local = ($order->total_final_amount_local - $oldValue) + $internationalShipping->local_amount;
