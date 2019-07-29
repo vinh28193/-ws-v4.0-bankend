@@ -189,7 +189,7 @@ class PaymentController extends BasePaymentController
             $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT;
             $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_CREATED;
             $paymentTransaction->transaction_code = $payment->transaction_code;
-            $paymentTransaction->parent_transaction_code = $parentTransaction instanceof PaymentTransaction ? $paymentTransaction->transaction_code : null;
+            $paymentTransaction->parent_transaction_code = $parentTransaction instanceof PaymentTransaction ? $parentTransaction->transaction_code : null;
             $paymentTransaction->transaction_customer_name = $payment->customer_name;
             $paymentTransaction->transaction_customer_email = $payment->customer_email;
             $paymentTransaction->transaction_customer_phone = $payment->customer_phone;
