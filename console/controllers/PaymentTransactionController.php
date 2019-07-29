@@ -18,6 +18,18 @@ use common\models\PaymentTransaction;
 class PaymentTransactionController extends Controller
 {
 
+    public function beforeAction($action)
+    {
+        if (parent::beforeAction($action)) {
+            if ($action->id === 'create-child') {
+                $this->stdout("    > action `create-child` killed, can not execute this action \n", Console::FG_RED);
+                return false;
+            }
+            return true;
+
+        }
+        return false;
+    }
 
     public $color = true;
 
@@ -33,6 +45,7 @@ class PaymentTransactionController extends Controller
         $db = PaymentTransaction::getDb();
         $this->stdout("    > open connect to dsn {$db->dsn} \n", Console::FG_GREEN);
         $this->stdout("    > query form day $formDayStart \n", Console::FG_GREEN);
+        $this->stdout("    > fetching in database \n", Console::FG_GREEN);
         $this->stdout("    > fetching in database \n", Console::FG_GREEN);
 
         $fetchQuery = new Query();
