@@ -161,7 +161,7 @@ class AdditionalController extends Controller
                 ])->one();
                 if ($orderPurFee !== null) {
                     $orderPurFee->amount = $orderPurchaseAmount;
-                    $orderPurFee->local_amount = $orderPurchaseAmount;
+                    $orderPurFee->local_amount = $orderPurchaseLocal;
                     $orderPurFee->save(false);
                 }
                 $order->total_weshop_fee_amount = $orderPurchaseAmount;
