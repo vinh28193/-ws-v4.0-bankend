@@ -45,6 +45,7 @@ class AdditionalController extends Controller
             if ($action->id === 'update-purchase-fee' || $action->id === 'international-shipping-fee') {
                 if ($this->orderCode === null) {
                     $this->stdout("    > action `{$action->id}` required parameter --orderCode (-bin).\n", Console::FG_RED);
+                    return false;
                 }
                 if (WeshopHelper::isSubText($this->orderCode, ',')) {
                     $this->orderCode = explode(',', $this->orderCode);
