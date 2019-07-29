@@ -29,7 +29,7 @@ class PaymentTransactionController extends Controller
         $today = $formatter->asDatetime('now');
         $formDayStart = $formatter->asDatetime($formDay);
         $this->stdout("    > action started \n", Console::FG_GREEN);
-        $this->stdout("    > today: $today \n");
+        $this->stdout("    > today: $today \n", Console::FG_GREEN);
         $db = PaymentTransaction::getDb();
         $this->stdout("    > open connect to dsn {$db->dsn} \n", Console::FG_GREEN);
         $this->stdout("    > query form day $formDayStart \n", Console::FG_GREEN);
@@ -54,6 +54,7 @@ class PaymentTransactionController extends Controller
         $totalCount = count($transactions);
         $this->stdout("    > fetched $totalCount records \n", Console::FG_GREEN);
         foreach ($transactions as $transaction) {
+            $this->stdout("    > process for transaction code {$transaction['transaction_code']} \n", Console::FG_GREEN);
             if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $transaction['transaction_code']])) === null) {
                 $this->stdout("    > not found transaction code {$transaction['transaction_code']} \n", Console::FG_RED);
                 continue;
@@ -91,7 +92,7 @@ class PaymentTransactionController extends Controller
                     $orderCodes = explode(',', $goodsNm);
                 }
             }
-            if(empty($orderCodes)){
+            if (empty($orderCodes)) {
                 $this->stdout("    > parse fail order codes for transaction code {$paymentTransaction->coupon_code} \n", Console::FG_RED);
             }
             foreach ($orderCodes as $code) {
