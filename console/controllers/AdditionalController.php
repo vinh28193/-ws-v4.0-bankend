@@ -85,30 +85,28 @@ class AdditionalController extends Controller
                 $this->stdout("    > aborted order code `$code`.\n", Console::FG_RED);
                 continue;
             }
-            /** @var  $customer User */
-            if ($order->customer_id === null || (($customer = $order->customer)) === null) {
-                $this->stdout("    > order `$code` not valid, cause customer is guest .\n", Console::FG_RED);
-                $this->stdout("    > aborted order code `$code`.\n", Console::FG_RED);
-                continue;
-            }
-            $useLevel = $customer->getUserLevel();
-            $this->stdout("    > customer `$customer->id`  level `$useLevel` detected.\n", Console::FG_GREEN);
+            $for = "guest";
             $purchasePercent = 0.12;
-            if ($useLevel === User::LEVEL_SLIVER) {
-                $purchasePercent = 0.08;
-            } elseif ($useLevel === User::LEVEL_GOLD) {
-                $purchasePercent = 0.05;
+            if (ArrayHelper::isIn($order->ordercode, $this->getBlackOrderCodeLists())) {
+                $this->stdout("    > old order detected .\n", Console::FG_GREEN);
+                $for = "old order (before change policy)";
+                $purchasePercent = 0.1;
+            }else if($order->customer_id === null && ($customer = $order->customer) !== null) {
+                /** @var  $customer User */
+                $useLevel = $customer->getUserLevel();
+                $this->stdout("    > customer `$customer->id`  level `$useLevel` detected.\n", Console::FG_GREEN);
+                $purchasePercent = 0.12;
+                if ($useLevel === User::LEVEL_SLIVER) {
+                    $purchasePercent = 0.08;
+                } elseif ($useLevel === User::LEVEL_GOLD) {
+                    $purchasePercent = 0.05;
+                }
+                $for = "customer `$useLevel`";
             }
-
             $storeManager = $this->getStoreManager();
 
             $storeManager->setStore($order->store_id);
-            /** @var  $exRate ExchangeRate */
-            $exRate = Yii::$app->exRate;
-            $exRate->usedIdentity = false;
-            $exRate->setUser($customer);
-            $rate = $exRate->load('USD', $storeManager->store->currency);
-            $storeManager->setExchangeRate($rate);
+            $storeManager->setExchangeRate($order->exchange_rate_fee);
             ActiveRecordUpdateLog::register('console update Purchase Fee', $order, 15);
             $this->stdout("    > $purchasePercent will be apply to order `$code` .\n", Console::FG_GREEN);
             $products = $order->products;
@@ -159,13 +157,13 @@ class AdditionalController extends Controller
 
                 $now = Yii::$app->formatter->asDatetime('now');
                 $orderNote = $order->note;
-                $convert = $purchasePercent*100;
-                $note = "purchase fee, applied rate {$convert}% for customer $useLevel, changed from {$oldAmountValue}$ -> {$orderPurchaseAmount}$ ({$storeManager->showMoney($oldLocalValue)} -> {$storeManager->showMoney($orderPurchaseLocal)}) (rate:$rate)  at:{$now}";
+                $convert = $purchasePercent * 100;
+                $note = "purchase fee, applied rate {$convert}% for $for, changed from {$oldAmountValue}$ -> {$orderPurchaseAmount}$ ({$storeManager->showMoney($oldLocalValue)} -> {$storeManager->showMoney($orderPurchaseLocal)}) (rate:$rate)  at:{$now}";
 
                 if ($orderNote === null) {
                     $orderNote = "Console: updated $note";
                 } else {
-                    $orderNote .=  ", Console: updated $note";
+                    $orderNote .= ", Console: updated $note";
                 }
                 $order->note = $orderNote;
 
@@ -345,4 +343,16 @@ class AdditionalController extends Controller
     {
         return Order::findOne(['ordercode' => $code]);
     }
+
+    public function getBlackOrderCodeLists()
+    {
+        return [
+            '171867', '170745', '149158', '126376', '117934', '900655', '865421', '835038',
+            '830340', '821982', '808948', '763754', '762007', '754847', '740648', '738552',
+            '736381', '735582', '734207', 'VN4867B4', 'ID4815B5', 'VN4767B2', 'VN4730B6',
+            'VN4693B5',
+        ];
+
+    }
+
 }
