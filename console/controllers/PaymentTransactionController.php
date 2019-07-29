@@ -119,11 +119,15 @@ class PaymentTransactionController extends Controller
                 $childPayment->id = null;
                 $childPayment->isNewRecord = true;
                 $childPayment->carts = $order->ordercode;
-                $childPayment->note = "Console: auth create payment transaction (time:$today )";
+                $childPayment->note = "Console: create payment transaction (time:$today )";
                 $childPayment->save(false);
 
                 $order->payment_transaction_code = $childPayment->transaction_code;
-
+                if($childPayment->transaction_status === 'SUCCESS'){
+                    $this->stdout("    > transaction code {$childPayment->transaction_code} is success \n", Console::FG_GREEN);
+                    $order->total_paid_amount_local =  $order->total_final_amount_local;
+                    $this->stdout("    > updated order code {$order->ordercode} is success (amount : {$order->total_paid_amount_local} ) \n", Console::FG_GREEN);
+                }
                 $order->save(false);
                 $this->stdout("    > created transaction code {$childPayment->coupon_code} applied for order {$order->ordercode}.\n", Console::FG_GREEN);
                 ChatMongoWs::SendMessage('Console: add Payment transaction code: ' . $childPayment->transaction_code . '' .
