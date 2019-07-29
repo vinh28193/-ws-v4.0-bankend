@@ -201,13 +201,22 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             $this->_additionalFees->storeId = $this->store_id;
             $this->_additionalFees->userId = $this->customer_id;
             $this->_additionalFees->removeAll();
+            $hasChange = false;
+
+            $oldUsAmount = 0;
             if (($target = $this->getTarget()) !== null && $target instanceof ActiveRecord) {
                 $this->_additionalFees->loadFormActiveRecord($this->getTarget(), $this->target_name);
+                if ($target instanceof Order) {
+                    $oldUsAmount = $target->total_price_amount_origin;
+                    $this->_additionalFees->setExRate($target->exchange_rate_fee);
+                } elseif ($target instanceof Product) {
+                    $oldUsAmount = $target->total_final_amount_origin;
+                    $this->_additionalFees->setExRate($target->order->exchange_rate_fee);
+                }
             } elseif ($target instanceof BaseProduct) {
-
                 $this->_additionalFees->fromArray($target->getAdditionalFees()->toArray());
             }
-            $hasChange = false;
+
             $usAmount = $this->us_amount;
             $this->shipping_quantity = ($this->shipping_quantity !== null && $this->shipping_quantity !== '' && (int)$this->shipping_quantity > 0) ? $this->shipping_quantity : 1;
             Yii::info($usAmount && $usAmount !== '', (int)$this->shipping_quantity);
@@ -238,18 +247,26 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
                 $this->_additionalFees->withCondition($this, 'custom_fee', floatval($this->custom_fee));
             }
 
-            if ($hasChange || $totalOrigin = $this->getTotalOrigin() > 0) {
+
+            if ($hasChange && $totalOrigin = $this->getTotalOrigin() > 0) {
+
+                if ($oldUsAmount > 0 && WeshopHelper::compareValue($totalOrigin, $oldUsAmount, 'float')) {
+                    if (($currentPurchaseFeeAmount = $this->_additionalFees->getTotalAdditionalFees('purchase_fee')[0]) > 0){
+                        $convertPercent = round($currentPurchaseFeeAmount / $oldUsAmount);
+                        Yii::info($convertPercent,'$convertPercent');
+                    }
+                }
                 $this->_additionalFees->remove('purchase_fee');
                 $this->_additionalFees->withCondition($this, 'purchase_fee', null);
             }
 
             if ($this->is_special === 'yes' && ($couriers = $this->getCalculateFee($this->_additionalFees->storeManager->store, true)) !== []) {
                 $firstCourier = $couriers[0];
-                Yii::info($couriers,'$couriers');
+                Yii::info($couriers, '$couriers');
                 $this->getAdditionalFees()->remove('special_fee');
                 $this->getAdditionalFees()->withCondition($this, 'special_fee', $firstCourier['special_fee']);
             } elseif ($this->is_special === 'no' && $this->_additionalFees->has('special_fee')) {
-                $specialFees = $this->_additionalFees->get('special_fee',[],false);
+                $specialFees = $this->_additionalFees->get('special_fee', [], false);
                 $this->_additionalFees->remove('special_fee');
                 foreach ($specialFees as $specialFee) {
                     $specialFee['amount'] = 0;
