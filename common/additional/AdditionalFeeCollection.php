@@ -191,6 +191,19 @@ class AdditionalFeeCollection extends ArrayCollection
         if ($config->type === StoreAdditionalFee::TYPE_LOCAL) {
             $amountLocal = $this->getStoreManager()->roundMoney($amount);
         }
+        return $this->createItemParam($config, $amount, $amountLocal, $discountAmount, $currency);
+    }
+
+    /**
+     * @param StoreAdditionalFee $config
+     * @param $amount
+     * @param $amountLocal
+     * @param int $discountAmount
+     * @param null $currency
+     * @return array
+     */
+    public function createItemParam($config, $amount, $amountLocal, $discountAmount = 0, $currency = null)
+    {
         return [
             'name' => $config->name,
             'label' => $config->label,

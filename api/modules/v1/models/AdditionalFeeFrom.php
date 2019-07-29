@@ -204,12 +204,16 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             $hasChange = false;
 
             $oldUsAmount = 0;
+            $orderCode = null;
             if (($target = $this->getTarget()) !== null && $target instanceof ActiveRecord) {
                 $this->_additionalFees->loadFormActiveRecord($this->getTarget(), $this->target_name);
                 if ($target instanceof Order) {
                     $oldUsAmount = $target->total_price_amount_origin;
+                    $orderCode = $target->ordercode;
                     $this->_additionalFees->setExRate($target->exchange_rate_fee);
+
                 } elseif ($target instanceof Product) {
+                    $orderCode = $target->order->ordercode;
                     $oldUsAmount = $target->total_final_amount_origin;
                     $this->_additionalFees->setExRate($target->order->exchange_rate_fee);
                 }
@@ -248,16 +252,26 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             }
 
 
-            if ($hasChange && $totalOrigin = $this->getTotalOrigin() > 0) {
+            if ($hasChange) {
 
-                if ($oldUsAmount > 0 && WeshopHelper::compareValue($totalOrigin, $oldUsAmount, 'float')) {
-                    if (($currentPurchaseFeeAmount = $this->_additionalFees->getTotalAdditionalFees('purchase_fee')[0]) > 0){
-                        $convertPercent = round($currentPurchaseFeeAmount / $oldUsAmount);
-                        Yii::info($convertPercent,'$convertPercent');
-                    }
-                }
+//                if ($oldUsAmount > 0 && WeshopHelper::compareValue($totalOrigin, $oldUsAmount, 'float')) {
+//                    if (($currentPurchaseFeeAmount = $this->_additionalFees->getTotalAdditionalFees('purchase_fee')[0]) > 0){
+//                        $convertPercent = round($currentPurchaseFeeAmount / $oldUsAmount);
+//                        Yii::info($convertPercent,'$convertPercent');
+//                    }
+//                }
                 $this->_additionalFees->remove('purchase_fee');
-                $this->_additionalFees->withCondition($this, 'purchase_fee', null);
+                if ($orderCode !== null && ArrayHelper::isIn($orderCode, $this->getBlackOrderCodeLists())) {
+                    $amount = 0.1 *  $this->_additionalFees->getTotalOrigin();
+                    $amountLocal = $this->_additionalFees->getStoreManager()->roundMoney($amount *  $this->_additionalFees->getStoreManager()->getExchangeRate());
+                    if (($config =  $this->_additionalFees->getStoreAdditionalFeeByKey('purchase_fee')) !== null) {
+                        $this->_additionalFees->set('purchase_fee', $this->_additionalFees->createItemParam($config, $amount, $amountLocal));
+                    }
+                } else {
+                    $this->_additionalFees->withCondition($this, 'purchase_fee', null);
+                }
+
+
             }
 
             if ($this->is_special === 'yes' && ($couriers = $this->getCalculateFee($this->_additionalFees->storeManager->store, true)) !== []) {
@@ -588,5 +602,16 @@ class AdditionalFeeFrom extends Model implements AdditionalFeeInterface
             return ArrayHelper::getValue($params, "warehouses.$current", false);
         }
         return null;
+    }
+
+    public function getBlackOrderCodeLists()
+    {
+        return [
+            '171867', '170745', '149158', '126376', '117934', '900655', '865421', '835038',
+            '830340', '821982', '808948', '763754', '762007', '754847', '740648', '738552',
+            '736381', '735582', '734207', 'VN4867B4', 'ID4815B5', 'VN4767B2', 'VN4730B6',
+            'VN4693B5',
+        ];
+
     }
 }
