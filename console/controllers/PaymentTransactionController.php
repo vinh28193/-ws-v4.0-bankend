@@ -132,4 +132,42 @@ class PaymentTransactionController extends Controller
             }
         }
     }
+
+    public function actionUpdateOrder()
+    {
+        $formatter = Yii::$app->formatter;
+        $today = $formatter->asDatetime('now');
+        $this->stdout("    > action started \n", Console::FG_GREEN);
+        $this->stdout("    > today: $today \n", Console::FG_GREEN);
+
+        $filters = PaymentTransaction::find()->where([
+            'AND',
+            ['IS NOT', 'order_code', new Expression('NULL')],
+            ['LIKE','note','Console: auth create payment transaction']
+        ])->all();
+        $totalFilter = count($filters);
+        $this->stdout("    > filter $totalFilter records \n", Console::FG_GREEN);
+
+        $success = 0;
+        foreach ($filters as $filter){
+            /** @var $filter PaymentTransaction */
+            $this->stdout("    > process for transaction code {$filter->transaction_code} \n", Console::FG_GREEN);
+
+            if(($order = $filter->order) === null){
+                $this->stdout("    > not found order for transaction {$filter->transaction_code} records \n", Console::FG_RED);
+                continue;
+            }
+            if($filter->transaction_status === 'SUCCESS'){
+                $this->stdout("    > transaction code {$filter->transaction_code} is success \n", Console::FG_GREEN);
+                $order->total_paid_amount_local = $filter->transaction_amount_local;
+                $order->save(false);
+                $this->stdout("    > updated order code {$order->ordercode} is success (amount : {$order->total_paid_amount_local} ) \n", Console::FG_GREEN);
+                $success ++;
+            }else {
+                $this->stdout("    > aborted, transaction code {$filter->transaction_code} is not success \n", Console::FG_GREEN);
+            }
+        }
+        $this->stdout("    > action complete, update $success/$totalFilter transaction to success \n", Console::FG_GREEN);
+
+    }
 }
