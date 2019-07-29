@@ -18,6 +18,9 @@ use common\models\PaymentTransaction;
 class PaymentTransactionController extends Controller
 {
 
+
+    public $color = true;
+
     public function actionCreateChild()
     {
         $start = microtime(true);
@@ -73,7 +76,6 @@ class PaymentTransactionController extends Controller
             $orderCodes = [];
 
             if (isset($requestContent['order_description']) && ($order_description = $requestContent['order_description']) !== null && $order_description !== '') {
-                $order_description = 'Thanh toan cho cac ma don: 327100,327289';
                 $order_description = explode('Thanh toan cho cac ma don:', $order_description);
                 if (isset($order_description[1])) {
                     $order_description = $order_description[1];
@@ -105,8 +107,11 @@ class PaymentTransactionController extends Controller
                 $childPayment->carts = $order->ordercode;
                 $childPayment->note = "Console: auth create payment transaction (time:$today )";
                 $childPayment->save(false);
+
                 $order->payment_transaction_code = $childPayment->transaction_code;
+
                 $order->save(false);
+                $this->stdout("    > created transaction code {$childPayment->coupon_code} applied for order {$order->ordercode}.\n", Console::FG_GREEN);
                 ChatMongoWs::SendMessage('Console: add Payment transaction code: ' . $childPayment->transaction_code . '' .
                     '<br>add at: ' . $today,
                     $order->ordercode, ChatMongoWs::TYPE_GROUP_WS);
