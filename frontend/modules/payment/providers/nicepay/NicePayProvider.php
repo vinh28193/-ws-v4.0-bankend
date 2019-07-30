@@ -347,7 +347,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                     $logPaymentGateway->url = $checkoutUrl;
                     $logPaymentGateway->save(false);
 
-                    return new PaymentResponse(true, Yii::t('frontend','Success'), 'nicepay', $payment->transaction_code, null,PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $response['tXid'], $response['resultCd'], $checkoutUrl);
+                    return new PaymentResponse(true, Yii::t('frontend','Success'), 'nicepay', $payment->transaction_code, null,PaymentResponse::TYPE_REDIRECT, PaymentResponse::METHOD_GET, $response['tXid'], $response['resultCd'], $checkoutUrl,$payment->return_url, $payment->cancel_url);
                 }
 
                 $logPaymentGateway->type = PaymentGatewayLogs::TYPE_CREATED_FAIL;

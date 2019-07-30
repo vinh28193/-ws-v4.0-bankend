@@ -157,10 +157,7 @@ class PaymentController extends BasePaymentController
         $payment->customer_district = $shippingForm->getBuyerDistrictName();
         $payment->customer_country = $this->storeManager->store->country_name;
 
-        if ($payment->transaction_code !== null) {
-            $payment->return_url = PaymentService::createReturnUrl($payment->transaction_code);
-            $payment->cancel_url = PaymentService::createCheckoutUrl(null, $payment->transaction_code);
-        }
+
 
         if ($payment->page !== Payment::PAGE_ADDITION) {
             $paymentTransaction = new PaymentTransaction();
@@ -208,6 +205,11 @@ class PaymentController extends BasePaymentController
             $paymentTransaction->payment_type = $payment->type;
             $paymentTransaction->save(false);
             /* @var $results PromotionResponse */
+        }
+
+        if ($payment->transaction_code !== null) {
+            $payment->return_url = PaymentService::createReturnUrl($payment->transaction_code);
+            $payment->cancel_url = PaymentService::createCheckoutUrl(null, $payment->transaction_code);
         }
         $payment->getPaymentMethodProviderName();
         $payment->checkPromotion();
