@@ -21,10 +21,10 @@ class PaymentTransactionController extends Controller
     public function beforeAction($action)
     {
         if (parent::beforeAction($action)) {
-            if ($action->id === 'create-child') {
-                $this->stdout("    > action `create-child` killed, can not execute this action \n", Console::FG_RED);
-                return false;
-            }
+//            if ($action->id === 'create-child') {
+//                $this->stdout("    > action `create-child` killed, can not execute this action \n", Console::FG_RED);
+//                return false;
+//            }
             return true;
 
         }
@@ -37,7 +37,7 @@ class PaymentTransactionController extends Controller
     {
         $start = microtime(true);
         $formatter = Yii::$app->formatter;
-        $formDay = 1563123600;
+        $formDay = 1564376400;
         $today = $formatter->asDatetime('now');
         $formDayStart = $formatter->asDatetime($formDay);
         $this->stdout("    > action started \n", Console::FG_GREEN);
@@ -62,7 +62,6 @@ class PaymentTransactionController extends Controller
         ]);
         $fetchQuery->groupBy(['pt.transaction_code']);
         $fetchQuery->having(['=', 'total_count', 1]);
-
         $transactions = $fetchQuery->all($db);
         $totalCount = count($transactions);
         $this->stdout("    > fetched $totalCount records \n", Console::FG_GREEN);
