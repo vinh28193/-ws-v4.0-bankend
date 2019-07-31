@@ -925,7 +925,7 @@ class Order extends DbOrder implements RuleOwnerAccessInterface
     public function searchExport($params)
     {
         $query = Order::find()
-            ->leftJoin('product',['order_id' => 'id'])
+            ->innerJoin('product','order_id = `order`.id')
             ->limit(-1)
             ->offset(-1);
         if (isset($params['id'])) {

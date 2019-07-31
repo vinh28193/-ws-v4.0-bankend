@@ -60,6 +60,9 @@ class PaymentTransactionController extends BaseApiController
         $note_update = ArrayHelper::getValue($form_update, 'note_update_payment');
         $link_image = ArrayHelper::getValue($form_update, 'link_image');
         if ($type == 'success') {
+            if(!$amount){
+                return $this->response(false, 'Amount invalid. (amount = '.$amount.')');
+            }
             $model = PaymentService::findChildTransaction($code, $order_code);
             if (!$model) {
                 return $this->response(false, 'Cannot found transaction code!');
@@ -71,7 +74,6 @@ class PaymentTransactionController extends BaseApiController
             try {
                 $order = Order::findOne(['ordercode' => $model->order_code]);
                 $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-                $amount = $amount ? $amount : $model->transaction_amount_local;
                 if ($model->transaction_type == PaymentTransaction::TRANSACTION_continue_payment || $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE || $model->transaction_type === PaymentTransaction::TRANSACTION_TYPE_PAYMENT) {
                     $order->total_paid_amount_local = $order->total_paid_amount_local + $amount;
                 } elseif ($model->transaction_type == PaymentTransaction::TRANSACTION_TYPE_REFUND) {
@@ -208,6 +210,9 @@ class PaymentTransactionController extends BaseApiController
                 ChatMongoWs::SendMessage('Added an addition, code: <b>' . $paymentTransaction->transaction_code . '</b><br>note: ' . $description . '</b>Link payment this addfee:' . $link, $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
                 return $this->response(true, "add payment " . $paymentTransaction->transaction_code . " order code $order_code success");
             } elseif ($type == PaymentTransaction::PAYMENT_TYPE_continue_payment) {
+                if($order->total_final_amount_local - $order->total_paid_amount_local < $amount || !$amount){
+                    return $this->response(false, "Amount must equal Remaining Amount");
+                }
                 $paymentTransaction = new PaymentTransaction();
                 $paymentTransaction->store_id = $order->store_id;
                 $paymentTransaction->customer_id = $order->customer_id;
@@ -236,6 +241,9 @@ class PaymentTransactionController extends BaseApiController
                 ChatMongoWs::SendMessage('Tạo giao dịch tiếp tục thanh toán: <b>' . $paymentTransaction->transaction_code . '</b><br>Ghi chú: ' . $description, $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
                 return $this->response(true, "add payment " . $paymentTransaction->transaction_code . " order code $order_code success");
             } elseif ($type == PaymentTransaction::PAYMENT_TYPE_REFUND) {
+                if($order->total_paid_amount_local < $amount || !$amount){
+                    return $this->response(false, "Amount must equal or less Remaining Amount");
+                }
                 $paymentTransaction = new PaymentTransaction();
                 $paymentTransaction->store_id = $order->store_id;
                 $paymentTransaction->customer_id = $order->customer_id;
