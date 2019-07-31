@@ -50,7 +50,7 @@ class gaSetting
 //            $request->setProductActionToCheckout();
             $request->setProductActionToClick();
             $request->setProductActionList('Detail product');
-            $request->setDocumentPath(Url::base(true) . Url::current());
+            $request->setDocumentPath( Url::current());
             $request->setDocumentTitle($product->item_name . " | " . $product->type . " page");
             $request->setEventCategory('Detail');
             $request->setEventAction('view');
@@ -94,7 +94,7 @@ class gaSetting
                     $request->addProduct($productData1);
                 }
             }
-            $request->setDocumentPath(Url::base(true) . Url::current());
+            $request->setDocumentPath(Url::current());
             $request->setDocumentTitle("Check out page");
 //            $request->setProductActionToPurchase();
 //            $request->setTrackingId(1667);
@@ -146,7 +146,7 @@ class gaSetting
                 $request->setProductActionToCheckout();
                 $request->setProductActionToClick();
                 $request->setDocumentTitle("Payment page");
-                $request->setDocumentPath(Url::base(true) . Url::current());
+                $request->setDocumentPath( Url::current());
                 $request->setEventCategory('Payment');
                 $request->setEventAction('processing');
                 $request->setEventLabel("Payment Processing");

@@ -562,4 +562,7 @@ class WeshopHelper
         };
         return $str;
     }
+    public static function toUrl($url_path){
+
+    }
 }
