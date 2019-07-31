@@ -87,6 +87,7 @@ class AdditionalController extends Controller
                 $this->stdout("    > aborted order code `$code`.\n", Console::FG_RED);
                 continue;
             }
+            $useLevel = User::LEVEL_NORMAL;
             $for = "guest";
             $purchasePercent = 0.12;
             if (ArrayHelper::isIn($order->ordercode, $this->getBlackOrderCodeLists())) {
@@ -164,6 +165,7 @@ class AdditionalController extends Controller
                     $orderPurFee->local_amount = $orderPurchaseLocal;
                     $orderPurFee->save(false);
                 }
+                $order->customer_type = $useLevel;
                 $order->total_weshop_fee_amount = $orderPurchaseAmount;
                 $order->total_weshop_fee_local = $orderPurchaseLocal;
                 $order->total_fee_amount_local = ($order->total_fee_amount_local - $oldLocalValue) + $orderPurchaseLocal;
