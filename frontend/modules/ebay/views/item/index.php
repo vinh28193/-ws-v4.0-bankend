@@ -5,8 +5,13 @@ use frontend\widgets\item\ItemDetailWidget;
 
 /* @var $this yii\web\View */
 /* @var $item \common\products\BaseProduct */
-
-$this->params = ['Home' => '/','eBay' => '/ebay.html', $item->item_name => 'javascript:void(0);'];
+$cate_param = \frontend\widgets\breadcrumb\BreadcrumbWidget::GenerateCategory(implode(',',$item->categories));
+if($cate_param){
+    $param = array_merge(['Home' => '/','eBay' => '/ebay.html'],$cate_param);
+    $param = array_merge($param,[$item->item_name => 'javascript:void(0);']);
+}else{
+    $param = ['Home' => '/','eBay' => '/ebay.html', $item->item_name => 'javascript:void(0);'];
+}
 $js = <<<JS
 $(document).ready(function () {
         $.ajax({
