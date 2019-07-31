@@ -93,7 +93,7 @@ class AdditionalController extends Controller
                 $this->stdout("    > old order detected .\n", Console::FG_GREEN);
                 $for = "old order (before change policy)";
                 $purchasePercent = 0.1;
-            } else if ($order->customer_id === null && ($customer = $order->customer) !== null) {
+            } else if ($order->customer_id !== null && ($customer = $order->customer) !== null) {
                 /** @var  $customer User */
                 $useLevel = $customer->getUserLevel();
                 $this->stdout("    > customer `$customer->id`  level `$useLevel` detected.\n", Console::FG_GREEN);
