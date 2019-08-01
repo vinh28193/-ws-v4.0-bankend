@@ -176,8 +176,11 @@ class AdditionalFeeServiceController extends BasePaymentController
             $calculator = new InternationalShippingCalculator();
             $calculator->action_log = strtolower($payment->page) .' calculated';
             $response = $calculator->CalculateFee($params, $userId, $store->country_code, $store->currency, $location);
+            if(!$response){
+                $time = sprintf('%.3f', microtime(true) - $start);
+                return $this->response(false, "Cannot calculator shipping fee.", $response);
+            }
             $response = array_combine(['success', 'couriers'], $response);
-
             $results[$uniq] = $response;
         }
         $time = sprintf('%.3f', microtime(true) - $start);

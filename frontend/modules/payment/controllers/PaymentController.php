@@ -206,9 +206,8 @@ class PaymentController extends BasePaymentController
             $paymentTransaction->save(false);
             /* @var $results PromotionResponse */
         }
-
         if ($payment->transaction_code !== null) {
-            $payment->return_url = PaymentService::createReturnUrl($payment->transaction_code);
+            $payment->return_url = PaymentService::createReturnUrl($payment->payment_provider);
             $payment->cancel_url = PaymentService::createCheckoutUrl(null, $payment->transaction_code);
         }
         $payment->getPaymentMethodProviderName();
