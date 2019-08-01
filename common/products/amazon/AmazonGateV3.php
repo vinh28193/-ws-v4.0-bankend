@@ -468,6 +468,9 @@ class AmazonGateV3 extends BaseGate
                                     $temp['value_current'] = $value_tem;
                                 }
                             }
+                            elseif (!($sku = ArrayHelper::getValue($value,'asin_id')) && !($v = ArrayHelper::getValue($value,'value'))){
+                                $temp['value_current'] = $value_tem;
+                            }
                         }
                         if (isset($value['asin_images']) && $value['asin_images']) {
                             $temp['images_mapping'][] = [
