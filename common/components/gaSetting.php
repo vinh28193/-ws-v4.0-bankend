@@ -49,7 +49,7 @@ class gaSetting
             $request->setProductActionToAdd();
 //            $request->setProductActionToCheckout();
             $request->setProductActionToClick();
-            $request->setProductActionList('Detail product');
+            $request->setProductActionList($product->type);
             $request->setDocumentPath( Url::current());
             $request->setDocumentTitle($product->item_name . " | " . $product->type . " page");
             $request->setEventCategory('Detail');
@@ -124,20 +124,6 @@ class gaSetting
                     ->setRevenue($order->total_final_amount_local)
                     ->setTax(0)
                     ->setShipping(0);
-                foreach ($order->products as $product) {
-                    $productData1 = [
-                        'sku' => strtolower($product->portal) == 'ebay' ? $product->parent_sku : $product->sku,
-                        'name' => $product->product_name,
-                        'brand' => $product->seller ? $product->seller->seller_name : 'N/A',
-                        'category' => $product->portal . '/' . ArrayHelper::getValue(Category::getAlias($product->category_id), Yii::$app->storeManager->isVN() ? 'name' : 'originName'),
-                        'variant' => $product->variations,
-                        'price' => $product->price_amount_local,
-                        'quantity' => $product->quantity_customer,
-                        'coupon_code' => '',
-                        'position' => strtolower($product->portal) == 'ebay' ? 1 : (strtolower($product->portal) == 'amazon' ? 2 : 0)
-                    ];
-                    $request->addProduct($productData1);
-                }
                 Yii::debug($order->ordercode,'Order code: ');
                 $request->setProductActionToDetail();
                 $request->setTransactionId($order->ordercode);
@@ -151,9 +137,28 @@ class gaSetting
                 $request->setEventAction('processing');
                 $request->setEventLabel("Payment Processing");
                 $request->setAsyncRequest(true);
+                foreach ($order->products as $product) {
+                    $productData1 = [
+                        'sku' => strtolower($product->portal) == 'ebay' ? $product->parent_sku : $product->sku,
+                        'name' => $product->product_name,
+                        'brand' => $product->seller ? $product->seller->seller_name : 'N/A',
+                        'category' => $product->portal . '/' . ArrayHelper::getValue(Category::getAlias($product->category_id), Yii::$app->storeManager->isVN() ? 'name' : 'originName'),
+                        'variant' => $product->variations,
+                        'price' => $product->price_amount_local,
+                        'quantity' => $product->quantity_customer,
+                        'coupon_code' => '',
+                        'position' => strtolower($product->portal) == 'ebay' ? 1 : (strtolower($product->portal) == 'amazon' ? 2 : 0)
+                    ];
+                    $request->addProduct($productData1);
+                    $request->setItemName($product->product_name . " | (Payment)");
+                    $request->setItemCode($product->parent_sku ? $product->sku.' ('.$product->parent_sku.')' : $product->sku);
+                    $request->setItemCategory($product->category_id);
+                    $request->setItemPrice($product->total_final_amount_local);
+                    $request->setItemQuantity($product->quantity_customer);
+                    $request->sendItem();
+                }
                 $request->sendPageview();
                 $request->sendTransaction();
-                $request->sendItem();
                 $request->sendEvent();
             }
             Yii::info("GA payment Done");
