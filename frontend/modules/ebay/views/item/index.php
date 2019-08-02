@@ -12,6 +12,7 @@ if($cate_param){
 }else{
     $param = ['Home' => '/','eBay' => '/ebay.html', $item->item_name => 'javascript:void(0);'];
 }
+$this->params = $param;
 $js = <<<JS
 $(document).ready(function () {
         $.ajax({
