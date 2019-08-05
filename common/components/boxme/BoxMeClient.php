@@ -351,7 +351,7 @@ class BoxMeClient
                 'label_code' => '',
                 'origin_country' => 'US',
                 'name' => $product->product_name ? $product->product_name : 'None',
-                'desciption' => '',
+                'desciption' => $product->note_boxme,
                 'weight' => WeshopHelper::roundNumber(($product->total_weight_temporary * 1000 / $product->quantity_customer)) > 0 ? WeshopHelper::roundNumber(($product->total_weight_temporary * 1000 / $product->quantity_customer)) : 0,
                 'amount' => WeshopHelper::roundNumber($product->total_final_amount_local),
                 'quantity' => $product->quantity_customer,
