@@ -144,7 +144,7 @@ class CartManager extends Component
                 $isMe = $filterKey['key']['products'];
                 $newProducts = [];
                 foreach ($products as $product) {
-                    if($this->isDetectedProduct($product,$isMe)){
+                    if ($this->isDetectedProduct($product, $isMe)) {
                         $product['quantity'] += 1;
                     }
                     $newProducts[] = $product;
@@ -469,7 +469,7 @@ class CartManager extends Component
             $value = $item['value'];
             $key = $item['key'];
             if (isset($param['typeUpdate'])) {
-                if ($param['typeUpdate']  == 'updateReceiverCart') {
+                if ($param['typeUpdate'] == 'updateReceiverCart') {
                     $key['receiver']['receiver_address'] = $param['receiver_address'];
                     $key['receiver']['receiver_country_id'] = $param['receiver_country_id'];
                     $key['receiver']['receiver_country_name'] = $param['receiver_country_name'];
@@ -482,7 +482,7 @@ class CartManager extends Component
                     $key['receiver']['receiver_province_id'] = $param['receiver_province_id'];
                     $key['receiver']['receiver_province_name'] = $param['receiver_province_name'];
                 }
-                if ($param['typeUpdate']  == 'updateBuyerCart') {
+                if ($param['typeUpdate'] == 'updateBuyerCart') {
                     $key['buyer']['buyer_address'] = $param['buyer_address'];
                     $key['buyer']['buyer_country_id'] = $param['buyer_country_id'];
                     $key['buyer']['buyer_country_name'] = $param['buyer_country_name'];
@@ -568,8 +568,8 @@ class CartManager extends Component
     public function isDetectedProduct($target, $source)
     {
         $lv1 = trim($target['id']) === ($source['id']);
-        $lv2 = isset($source['sku']);
-        $lv2 = $lv2 ? (!isset($target['sku']) ? false : $source['sku'] === $target['sku']) : true;
+        $lv2 = isset($source['sku']) && trim($source['sku']) !== '';
+        $lv2 = $lv2 ? ((!isset($target['sku']) || trim($source['sku']) === '') ? false : $source['sku'] === $target['sku']) : true;
         return $lv1 && $lv2;
     }
 
