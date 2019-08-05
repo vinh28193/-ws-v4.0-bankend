@@ -61,11 +61,9 @@ class CartWidget extends Widget
 
         $products = [];
         $totalUsFee = 0;
-        $purchaseFee = 0;
+
         foreach ($order['products'] as $product) {
-            if ($selected) {
-                $this->totalAmount += $product['total_final_amount_local'];
-            }
+            $purchaseFee = 0;
             $fees = [];
             foreach ($product['additionalFees'] as $name => $additionalFee) {
                 if ($name === 'product_price') {
@@ -82,6 +80,10 @@ class CartWidget extends Widget
                     }
                 }
                 $fees[$name] = $amount;
+            }
+            if ($selected) {
+                $this->totalAmount += $purchaseFee;
+                $this->totalAmount += $product['total_final_amount_local'];
             }
             $products[] = [
                 'sku' => $product['sku'],
@@ -101,7 +103,7 @@ class CartWidget extends Widget
                 'fees' => $fees
             ];
         }
-        $this->totalAmount += $purchaseFee;
+
         return [
             'key' => $key,
             'selected' => $selected,
