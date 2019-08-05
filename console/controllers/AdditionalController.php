@@ -217,17 +217,30 @@ class AdditionalController extends Controller
             $storeManager->setStore($order->store_id);
             /** @var  $exRate ExchangeRate */
             $exRate = Yii::$app->exRate;
-            if ($order->customer !== null) {
+            if (($user = $order->customer) !== null) {
                 $exRate->usedIdentity = false;
-                $exRate->setUser($order->customer);
+                $exRate->setUser($user);
                 $rate = $exRate->load('USD', $storeManager->store->currency);
                 $storeManager->setExchangeRate($rate);
             }
-            ActiveRecordUpdateLog::register('console update International Shipping Fee', $order, 15);
-            $pickUpWareHouse = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal');
-            $current = $order->store_id === 1 ? 'ws_vn' : 'ws_id';
-            $pickUpWareHouse = ArrayHelper::getValue($pickUpWareHouse, "warehouses.$current", false);
 
+            ActiveRecordUpdateLog::register('console update International Shipping Fee', $order, 15);
+            $pickUpWareHouse = null;
+
+            if ($user !== null && method_exists($user, 'getPickupWarehouse') && ($wh = call_user_func([$user, 'getPickupWarehouse'])) !== null) {
+                $pickUpWareHouse = $wh;
+            } elseif (($params = ArrayHelper::getValue(Yii::$app->params, 'pickupUSWHGlobal')) !== null) {
+                $current = $params['default'];
+
+                $current = $order->store_id !== null ? ($order->store_id === 1 ? (strpos($current, 'sandbox') !== false ? 'sandbox_vn' : 'ws_vn') : (strpos($current, 'sandbox') !== false ? 'sandbox_id' : 'ws_id')) : $current;
+
+                $pickUpWareHouse = ArrayHelper::getValue($params, "warehouses.$current", false);
+            }
+
+            if($pickUpWareHouse === null){
+                $this->stdout("    > not found pick up warehouse order code `$code`.\n", Console::FG_RED);
+                continue;
+            }
             $pickUpId = ArrayHelper::getValue($pickUpWareHouse, 'ref_pickup_id');
             $userId = ArrayHelper::getValue($pickUpWareHouse, 'ref_user_id');
 
@@ -350,6 +363,7 @@ class AdditionalController extends Controller
             }
         }
     }
+
 
     /**
      * @param $code
