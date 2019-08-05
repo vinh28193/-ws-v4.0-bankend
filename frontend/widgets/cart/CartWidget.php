@@ -61,7 +61,7 @@ class CartWidget extends Widget
 
         $products = [];
         $totalUsFee = 0;
-
+        $orderPurchaseFee = 0;
         foreach ($order['products'] as $product) {
             $purchaseFee = 0;
             $fees = [];
@@ -82,6 +82,7 @@ class CartWidget extends Widget
                 $fees[$name] = $amount;
             }
             if ($selected) {
+                $orderPurchaseFee += $purchaseFee;
                 $this->totalAmount += $purchaseFee;
                 $this->totalAmount += $product['total_final_amount_local'];
             }
@@ -108,7 +109,7 @@ class CartWidget extends Widget
             'key' => $key,
             'selected' => $selected,
             'portal' => $order['portal'],
-            'final_amount' => $order['total_final_amount_local'] + $purchaseFee,
+            'final_amount' => $order['total_final_amount_local'] + $orderPurchaseFee,
             'type' => $type,
             'ordercode' => $order['ordercode'],
             'seller' => $order['seller'],
@@ -125,7 +126,7 @@ class CartWidget extends Widget
         ]);
         if (empty($this->items)) {
             echo $this->render('empty');
-        }else {
+        } else {
             echo $this->renderItems();
         }
 
