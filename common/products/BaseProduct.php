@@ -128,7 +128,7 @@ class BaseProduct extends BaseObject implements AdditionalFeeInterface
         $additionalFee->removeAll(); // đảm bảo dữ liệu không bị đúp lên nhiều lần
         $additionalFee->withConditions($this, [
             'product_price' => $this->getSellPrice(),
-            'shipping_fee' => !$this->is_free_ship ? ($this->shipping_fee * $this->quantity) : 0,
+            'shipping_fee' => !$this->is_free_ship ? $this->shipping_fee  : 0,
             'tax_fee' => $this->us_tax_rate
         ], false);
         $additionalFee->withCondition($this, 'purchase_fee', null);
