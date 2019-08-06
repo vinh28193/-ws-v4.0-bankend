@@ -181,13 +181,10 @@ class AdditionalFeeCollection extends ArrayCollection
 //                $amount = 0;
 //            }
 //        }
-        else if ($config->name === 'product_price') {
-            $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
-        } else {
+         else if ($config->type !== StoreAdditionalFee::TYPE_ORIGIN) {
             $amount *= $additional->getShippingQuantity();
-            $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         }
-
+        $amountLocal = $this->getStoreManager()->roundMoney($amount * $this->getStoreManager()->getExchangeRate());
         if ($config->type === StoreAdditionalFee::TYPE_LOCAL) {
             $amountLocal = $this->getStoreManager()->roundMoney($amount);
         }
