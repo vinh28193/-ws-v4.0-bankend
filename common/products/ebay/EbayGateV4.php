@@ -59,7 +59,10 @@ class EbayGateV4 extends BaseGate
      */
     private function searchRequest($params)
     {
-        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.urlencode($params['keywords']).'&page_id='.urlencode($params['page']);
+        if($params['categoryId'] && !$params['keywords']){
+            $params['keywords'] = ' ';
+        }
+        $url = $this->baseUrl.'/'.$this->searchUrl.'?q='.urlencode($params['keywords']).'&page='.urlencode($params['page']);
         if(($filters = ArrayHelper::getValue($params,'aspectFilter')) && count($filters)){
             $value = '';
             $name = '';
