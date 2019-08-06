@@ -40,7 +40,7 @@ use Yii;
  * @property string $third_party_transaction_code mã giao dịch với bên thứ 3. VD: ngân lượng
  * @property string $third_party_transaction_link Link thanh toán bên thứ 3
  * @property string $third_party_transaction_status Trạng thái thanh toán của bên thứ 3
- * @property string $third_party_transaction_time thời gian giao dịch bên thứ 3
+ * @property int $third_party_transaction_time thời gian giao dịch bên thứ 3
  * @property string $before_transaction_amount_local Số tiền trước giao dịch
  * @property string $after_transaction_amount_local Số tiền sau giao dịch
  * @property int $created_at Created at (timestamp)
@@ -54,6 +54,7 @@ use Yii;
  * @property int $insurance_fee
  * @property string $link_image
  * @property int $updated_at
+ * @property string $total_amount_success số tiền đã thực hiện thanh toán, refund thành công
  */
 class PaymentTransaction extends \common\components\db\ActiveRecord
 {
@@ -73,7 +74,7 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
         return [
             [['store_id'], 'required'],
             [['store_id', 'customer_id', 'used_xu', 'bulk_point', 'shipping', 'support_id', 'third_party_transaction_time', 'created_at', 'international_shipping_fee', 'insurance_fee', 'updated_at'], 'integer'],
-            [['total_discount_amount', 'before_discount_amount_local', 'transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local'], 'number'],
+            [['total_discount_amount', 'before_discount_amount_local', 'transaction_amount_local', 'before_transaction_amount_local', 'after_transaction_amount_local', 'total_amount_success'], 'number'],
             [['transaction_description', 'note', 'third_party_transaction_link', 'link_image'], 'string'],
             [['transaction_code', 'transaction_type', 'payment_type', 'payment_bank_code', 'coupon_code', 'topup_transaction_code', 'parent_transaction_code', 'order_code', 'service_code'], 'string', 'max' => 32],
             [['transaction_status'], 'string', 'max' => 10],
@@ -136,6 +137,7 @@ class PaymentTransaction extends \common\components\db\ActiveRecord
             'insurance_fee' => Yii::t('db', 'Insurance Fee'),
             'link_image' => Yii::t('db', 'Link Image'),
             'updated_at' => Yii::t('db', 'Updated At'),
+            'total_amount_success' => Yii::t('db', 'Total Amount Success'),
         ];
     }
 }

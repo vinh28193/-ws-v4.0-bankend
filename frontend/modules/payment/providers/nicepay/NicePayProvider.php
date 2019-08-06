@@ -414,6 +414,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
 
             if (isset($response['status']) && $response['status'] == 0) {
                 $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                $transaction->total_amount_success = $amt;
                 $transaction->save(false);
                 $logCallback->response_content = $response;
                 $logCallback->save(false);
@@ -428,6 +429,7 @@ class NicePayProvider extends BaseObject implements PaymentProviderInterface
                 }
                 if (isset($response['resultCd']) && isset($response['resultMsg']) && $response['resultCd'] == '0000' && $response['resultMsg'] == 'paid') {
                     $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                    $transaction->total_amount_success = $amt;
                     $transaction->save(false);
                     $logCallback->response_content = $response;
                     $logCallback->save(false);

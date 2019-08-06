@@ -74,6 +74,7 @@ class PaymentTransactionController extends BaseApiController
             try {
                 $order = Order::findOne(['ordercode' => $model->order_code]);
                 $model->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                $model->total_amount_success = $amount;
                 if ($model->transaction_type == PaymentTransaction::TRANSACTION_continue_payment || $model->transaction_type == PaymentTransaction::TRANSACTION_ADDFEE || $model->transaction_type === PaymentTransaction::TRANSACTION_TYPE_PAYMENT) {
                     $order->total_paid_amount_local = $order->total_paid_amount_local + $amount;
                 } elseif ($model->transaction_type == PaymentTransaction::TRANSACTION_TYPE_REFUND) {
@@ -149,6 +150,7 @@ class PaymentTransactionController extends BaseApiController
             'order_code',
             'transaction_code',
             'transaction_amount_local',
+            'total_amount_success',
             'transaction_type',
             'transaction_status',
             'transaction_description',
@@ -293,6 +295,7 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction->transaction_type = PaymentTransaction::TRANSACTION_TYPE_REFUND_TRANSFER;
                 $paymentTransaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
                 $paymentTransaction->transaction_customer_name = $order->receiver_name;
+                $paymentTransaction->total_amount_success = $amount;
                 $paymentTransaction->transaction_customer_email = $order->receiver_email;
                 $paymentTransaction->transaction_customer_phone = $order->receiver_phone;
                 $paymentTransaction->transaction_customer_address = $order->receiver_address;
@@ -318,6 +321,7 @@ class PaymentTransactionController extends BaseApiController
                 $paymentTransaction_2->customer_id = $orderTo->customer_id;
                 $paymentTransaction_2->transaction_type = PaymentTransaction::TRANSACTION_TYPE_PAYMENT_TRANSFER;
                 $paymentTransaction_2->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                $paymentTransaction_2->total_amount_success = $amount;
                 $paymentTransaction_2->transaction_customer_name = $orderTo->receiver_name;
                 $paymentTransaction_2->transaction_customer_email = $orderTo->receiver_email;
                 $paymentTransaction_2->transaction_customer_phone = $orderTo->receiver_phone;

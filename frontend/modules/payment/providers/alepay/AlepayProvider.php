@@ -132,6 +132,7 @@ class AlepayProvider extends BaseObject implements PaymentProviderInterface
             }
             if ($success) {
                 $transaction->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
+                $transaction->total_amount_success = $transaction->transaction_amount_local;
                 $transaction->save(false);
             }
             $logCallback->response_content = $transactionInfo;
