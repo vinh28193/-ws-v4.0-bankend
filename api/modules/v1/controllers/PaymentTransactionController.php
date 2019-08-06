@@ -210,8 +210,8 @@ class PaymentTransactionController extends BaseApiController
                 ChatMongoWs::SendMessage('Added an addition, code: <b>' . $paymentTransaction->transaction_code . '</b><br>note: ' . $description . '</b>Link payment this addfee:' . $link, $paymentTransaction->order_code, ChatMongoWs::TYPE_GROUP_WS);
                 return $this->response(true, "add payment " . $paymentTransaction->transaction_code . " order code $order_code success");
             } elseif ($type == PaymentTransaction::PAYMENT_TYPE_continue_payment) {
-                if($order->total_final_amount_local - $order->total_paid_amount_local < $amount || !$amount){
-                    return $this->response(false, "Amount must equal Remaining Amount");
+                if(!$amount){
+                    return $this->response(false, "Amount must > 0");
                 }
                 $paymentTransaction = new PaymentTransaction();
                 $paymentTransaction->store_id = $order->store_id;
