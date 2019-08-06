@@ -548,7 +548,7 @@ class PaymentController extends BasePaymentController
             } else {
                 foreach ($paymentTransaction->childPaymentTransaction as $child) {
                     $child->transaction_status = PaymentTransaction::TRANSACTION_STATUS_SUCCESS;
-
+                    $child->total_amount_success = $child->transaction_amount_local < $paymentTransaction->total_amount_success ? $child->transaction_amount_local : $paymentTransaction->total_amount_success;
                     if (($order = $child->order) !== null) {
                         $order->total_paid_amount_local = $child->transaction_amount_local;
                         if ($order->current_status == Order::STATUS_SUPPORTED) {
