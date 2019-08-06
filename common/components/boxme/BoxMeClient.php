@@ -213,7 +213,7 @@ class BoxMeClient
             ];
             $desc = '';
             foreach ($order->products as $product){
-                $desc .= " | ".$product->note_boxme;
+                $desc .= " | ".$product->note_by_customer;
             }
             $temp['description'] = $desc;
             $param['packages'][] = $temp;
@@ -351,7 +351,7 @@ class BoxMeClient
                 'label_code' => '',
                 'origin_country' => 'US',
                 'name' => $product->product_name ? $product->product_name : 'None',
-                'desciption' => $product->note_boxme,
+                'desciption' => $product->note_by_customer,
                 'weight' => WeshopHelper::roundNumber(($product->total_weight_temporary * 1000 / $product->quantity_customer)) > 0 ? WeshopHelper::roundNumber(($product->total_weight_temporary * 1000 / $product->quantity_customer)) : 0,
                 'amount' => WeshopHelper::roundNumber($product->total_final_amount_local),
                 'quantity' => $product->quantity_customer,
