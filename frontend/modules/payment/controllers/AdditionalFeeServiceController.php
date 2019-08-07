@@ -54,7 +54,11 @@ class AdditionalFeeServiceController extends BasePaymentController
             }
         }
         $payment->setOrders($orders);
-        $shippingForm = new ShippingForm($bodyParams['shipping']);
+
+        $shippingForm = new ShippingForm();
+        $shippingForm->load($bodyParams['shipping'],'');
+        $shippingForm->validate();
+
         $shippingForm->ensureReceiver();
         $ship_to = [
             'contact_name' => 'ws calculator',
@@ -70,16 +74,16 @@ class AdditionalFeeServiceController extends BasePaymentController
             'zipcode' => $shippingForm->receiver_post_code,
         ];
         // lấy theo buyer
-        if ($shippingForm->other_receiver !== false) {
+        if ($shippingForm->other_receiver === ShippingForm::NO) {
             // nếu mà là địa chỉ chọn
             if ((int)$shippingForm->enable_buyer === 1) {
-                if ($shippingForm->buyer_name !== null) {
+                if (!WeshopHelper::isEmpty($shippingForm->buyer_name)) {
                     $ship_to['contact_name'] = $shippingForm->buyer_name;
                 }
-                if ($shippingForm->buyer_address !== null) {
+                if (!WeshopHelper::isEmpty($shippingForm->buyer_address)) {
                     $ship_to['address'] = $shippingForm->buyer_address;
                 }
-                if ($shippingForm->buyer_phone !== null) {
+                if (!WeshopHelper::isEmpty($shippingForm->buyer_phone)) {
                     $ship_to['phone'] = $shippingForm->buyer_phone;
                 }
                 $ship_to['province'] = $shippingForm->buyer_province_id;

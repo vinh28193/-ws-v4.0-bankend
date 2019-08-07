@@ -63,7 +63,6 @@
                 if ($item.data('wsItem')) {
                     return;
                 }
-                console.log(params);
                 params = $.extend({}, defaultParams, params || {});
                 options = $.extend({}, defaultOptions, options || {});
 
@@ -181,7 +180,6 @@
             currentVariations.push({name: name, value: value});
             if (currentVariations.length === data.params.variation_options.length) {
                 const activeVariation = findVariation(params.variation_mapping, currentVariations);
-                console.log(activeVariation);
                 if (checkOutOfStock(activeVariation)) {
                     $.when.apply(this, deferredArrays).always(function () {
                         var queryParams = data.options.queryParams;
@@ -327,7 +325,6 @@
                 markOutofStock(true);
                 return false;
             }
-            console.log(activeVariation.available_quantity);
             if (activeVariation.available_quantity === 0 || activeVariation.available_quantity === "0") {
                 // ws.notifyError(ws.t("Out of stock"));
                 markOutofStock(true);
@@ -368,7 +365,6 @@
         if (activeVariation.length === 0) {
             var optionTemp = [];
             $.each(data.params.variation_options, function (k, v) {
-                console.log(v)
                 if (v.option_link && v.value_current) {
                     optionTemp.push({
                         name: v.name,

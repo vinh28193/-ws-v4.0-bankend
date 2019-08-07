@@ -48,10 +48,14 @@ class PaymentController extends BasePaymentController
             return $this->response(false, Yii::t('frontend', 'Can not create payment invalid transaction code'));
         }
 
-        $shippingForm = new ShippingForm($shipping);
+        $shippingForm = new ShippingForm();
+        $shippingForm->load($shipping,'');
+
+        if(!$shippingForm->validate()){
+            return $this->response(false, $shippingForm->getFirstErrors());
+        }
         $shippingForm->ensureReceiver();
 
-        $orders = [];
         foreach ($orderParams as $orderParam) {
             $totalAmountLocal = ArrayHelper::remove($orderParam, 'totalAmountLocal', 0);
             if (isset($orderParam['totalFinalAmount'])) {
@@ -156,7 +160,6 @@ class PaymentController extends BasePaymentController
         $payment->customer_postcode = $shippingForm->buyer_post_code;
         $payment->customer_district = $shippingForm->getBuyerDistrictName();
         $payment->customer_country = $this->storeManager->store->country_name;
-
 
 
         if ($payment->page !== Payment::PAGE_ADDITION) {
