@@ -354,7 +354,6 @@ class BoxMeClient
 //		    die;
             return [false, 'Địa chỉ người nhận bị thiếu.'];
 		}
-        return false;
         $item = [];
         foreach ($order->products as $product){
             $item[] = [
