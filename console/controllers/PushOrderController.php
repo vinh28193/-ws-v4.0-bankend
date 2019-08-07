@@ -18,6 +18,7 @@ class PushOrderController extends Controller
         /** @var Order[] $orders */
         $qr = Order::find()
             ->where(['is not', 'tracking_codes', null])
+            ->andWhere(['ordercode' => '277084'])
             ->andWhere(['<>', 'tracking_codes', ''])
             ->andWhere(['or', ['order_boxme' => ''], ['is', 'order_boxme', null]])
             ->andWhere(['or', ['shipment_boxme' => ''], ['is', 'shipment_boxme', null]]);
