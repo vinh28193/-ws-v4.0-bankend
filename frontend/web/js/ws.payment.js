@@ -168,108 +168,6 @@ ws.payment = (function ($) {
                     }
                 });
             });
-
-            // $('#shippingform-buyer_province_id').change(function () {
-            //     var txt = '';
-            //     district_data.filter(function (d) {
-            //         if (d.province_id == $('#shippingform-buyer_province_id').val()) {
-            //             txt += '<option value="' + d.id + '">' + d.name + '</option>';
-            //         }
-            //     });
-            //     $('#shippingform-buyer_district_id').html(txt);
-            //     $('#shippingform-buyer_district_id').trigger('change');
-            //     // ws.payment.calculatorShipping();
-            // });
-            // $('#shippingform-receiver_province_id').change(function () {
-            //     var txt = '';
-            //     district_data.filter(function (d) {
-            //         if (d.province_id == $('#shippingform-receiver_province_id').val()) {
-            //             txt += '<option value="' + d.id + '">' + d.name + '</option>';
-            //         }
-            //     });
-            //     $('#shippingform-receiver_district_id').html(txt);
-            //     $('#shippingform-receiver_district_id').trigger('change');
-            //     // ws.payment.calculatorShipping();
-            // });
-            //
-            // $('#shippingform-buyer_district_id').change(function () {
-            //     if (store_id === 7) {
-            //         var district = $('#shippingform-buyer_district_id').val();
-            //         var zipcode = zipcode_data.filter(z => z.district_id === district);
-            //         if (zipcode && zipcode.length > 0) {
-            //             $('#shippingform-buyer_post_code').val(zipcode[0].zip_code);
-            //             ws.payment.calculatorShipping();
-            //         } else {
-            //             ws.notifyInfo('Cannot find zipcode from your district ');
-            //             $('#shippingform-buyer_post_code').val('');
-            //         }
-            //     } else {
-            //         ws.payment.calculatorShipping();
-            //     }
-            // });
-            //
-            // $('#shippingform-receiver_district_id').change(function () {
-            //     if (store_id === 7) {
-            //         var district = $('#shippingform-receiver_district_id').val();
-            //         var zipcode = zipcode_data.filter(z => z.district_id === district);
-            //         if (zipcode && zipcode.length > 0) {
-            //             $('#shippingform-receiver_post_code').val(zipcode[0].zip_code);
-            //             ws.payment.calculatorShipping();
-            //         } else {
-            //             ws.notifyInfo('Cannot find zipcode from your district ');
-            //             $('#shippingform-receiver_post_code').val('');
-            //         }
-            //     } else {
-            //         ws.payment.calculatorShipping();
-            //     }
-            // });
-            // $('#shippingform-buyer_post_code').keyup(function () {
-            //     var txt = '';
-            //     var count = 0;
-            //     var zipcode = $('#shippingform-buyer_post_code').val();
-            //     zipcode_data.filter(function (z) {
-            //         if (count < 20 && (z.zip_code.indexOf(zipcode) > -1 || !zipcode)) {
-            //             count++;
-            //             txt += "<option value='" + z.zip_code + "'>" + z.label + "</option>";
-            //         }
-            //     });
-            //     $('#buyer_post_code_list').html(txt);
-            // });
-            // $('#shippingform-receiver_post_code').keyup(function () {
-            //     var txt = '';
-            //     var count = 0;
-            //     var zipcode = $('#shippingform-receiver_post_code').val();
-            //     zipcode_data.filter(function (z) {
-            //         if (count < 20 && (z.zip_code.indexOf(zipcode) > -1 || !zipcode)) {
-            //             count++;
-            //             txt += "<option value='" + z.zip_code + "'>" + z.label + "</option>";
-            //         }
-            //     });
-            //     $('#receiver_post_code_list').html(txt);
-            // });
-            //
-            // $('#shippingform-buyer_post_code').change(function () {
-            //     var zipcode = zipcode_data.filter(z => z.zip_code === $('#shippingform-buyer_post_code').val());
-            //     if (zipcode && zipcode.length > 0) {
-            //         $('#shippingform-buyer_province_id').val(zipcode[0].province_id).trigger('change');
-            //         $('#shippingform-buyer_district_id').val(zipcode[0].district_id).trigger('change');
-            //     } else {
-            //         ws.notifyInfo('Zip code ' + $('#shippingform-buyer_post_code').val() + ' not support! Please change zip code');
-            //         $('#shippingform-buyer_post_code').val('');
-            //     }
-            // });
-            //
-            // $('#shippingform-receiver_post_code').change(function () {
-            //     var zipcode = zipcode_data.filter(z => z.zip_code === $('#shippingform-receiver_post_code').val());
-            //     if (zipcode && zipcode.length > 0) {
-            //         $('#shippingform-receiver_province_id').val(zipcode[0].province_id).trigger('change');
-            //         $('#shippingform-receiver_district_id').val(zipcode[0].district_id).trigger('change');
-            //         $('#shippingform-receiver_post_code').val(zipcode[0].zip_code);
-            //     } else {
-            //         ws.notifyInfo('Zip code ' + $('#shippingform-receiver_post_code').val() + ' not support! Please change zip code');
-            //         $('#shippingform-receiver_post_code').val('');
-            //     }
-            // });
         },
         set: function (name, value) {
             pub.payment[name] = value;
@@ -313,10 +211,10 @@ ws.payment = (function ($) {
         },
         calculatorShipping: function () {
             if (!pub.filterShippingAddress(false)) {
-                return;
+                return false;
             }
             if (pub.payment.page.toUpperCase() === 'ADDITION') {
-                return;
+                return false;
             }
             ws.ajax('/payment/courier/calculator', {
                 dataType: 'json',
@@ -571,60 +469,45 @@ ws.payment = (function ($) {
         },
         filterShippingAddress: function (isSafe = true) {
 
-
             var $form = $('#shippingForm');
 
-
-            // $form.yiiActiveForm('validate', true);
-            $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_name');
-            $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_phone');
-            $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_email');
             $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_province_id');
             $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_address');
             $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_post_code');
 
-            $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_name');
-            $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_phone');
-            $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_email');
             $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_province_id');
             $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_address');
             $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_post_code');
+
+
+            if(isSafe){
+                $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_name');
+                $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_phone');
+                $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_email');
+
+                $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_name');
+                $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_phone');
+                $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_email');
+            }
+
+            console.log($form.find('.is-invalid'));
             // return false if form still have some validation errors
 
-            if ($form.find('.is-invalid').length) {
+            if ($form.find('.is-invalid').length > 0) {
+
                 window.scrollTo(0, 0);
                 return false;
             }
 
-            // var formDataArray = $('#shippingForm').serializeArray();
-            // var values = formDataArray.reduce(function (result, item) {
-            //     result[item.name] = item.value;
-            //     return result;
-            // }, []);
-            // console.log(values);
-            // pub.shipping = values;
-            pub.shipping.customer_id = $('#shippingform-customer_id').val();
-            pub.shipping.enable_buyer = $('#shippingform-enable_buyer').val();
-            pub.shipping.buyer_address_id = $('[name="ShippingForm[buyer_address_id]"]').val();
-            pub.shipping.buyer_name = $('#shippingform-buyer_name').val();
-            pub.shipping.buyer_phone = $('#shippingform-buyer_phone').val();
-            pub.shipping.buyer_email = $('#shippingform-buyer_email').val();
-            pub.shipping.buyer_province_id = $('#shippingform-buyer_province_id').val();
-            pub.shipping.buyer_district_id = $('#shippingform-buyer_district_id').val();
-            pub.shipping.buyer_address = $('#shippingform-buyer_address').val();
-            pub.shipping.buyer_post_code = $('#shippingform-buyer_post_code').val();
-
-            pub.shipping.enable_receiver = $('#shippingform-enable_receiver').val();
-            pub.shipping.receiver_address_id = $('[name="ShippingForm[receiver_address_id]:checked').val();
-            pub.shipping.receiver_name = $('#shippingform-receiver_name').val();
-            pub.shipping.receiver_phone = $('#shippingform-receiver_phone').val();
-            pub.shipping.receiver_province_id = $('#shippingform-receiver_province_id').val();
-            pub.shipping.receiver_district_id = $('#shippingform-receiver_district_id').val();
-            pub.shipping.receiver_address = $('#shippingform-receiver_address').val();
-            pub.shipping.note_by_customer = $('#shippingform-note_by_customer').val();
-            pub.shipping.save_my_address = $('#shippingform-save_my_address:checked').val();
-            pub.shipping.receiver_post_code = $('#shippingform-receiver_post_code').val();
-            pub.shipping.other_receiver = $('#shippingform-other_receiver').is(':checked');
+            var values = {};
+            $.each($form.serializeArray(), function () {
+                var key = this.name;
+                if (key.indexOf('ShippingForm') !== -1) {
+                    key = key.replace(/ShippingForm\[/gi, '').replace(/\]/, '');
+                    values[key] = this.value;
+                }
+            });
+            pub.shipping = values;
             return true;
         },
     };
@@ -649,13 +532,13 @@ ws.payment = (function ($) {
 
         if (!isAdditionPage) {
             console.log(isAdditionPage);
-            if (!pub.filterShippingAddress()) {
+            if (!pub.filterShippingAddress(true)) {
                 return;
             }
-            if (!pub.validateInternationalShippingFee()) {
-                ws.notifyError(ws.t('Can not checkout with no courier assigner to your orders, please recheck your address'));
-                return;
-            }
+            // if (!pub.validateInternationalShippingFee()) {
+            //     ws.notifyError(ws.t('Can not checkout with no courier assigner to your orders, please recheck your address'));
+            //     return;
+            // }
             data.shipping = pub.shipping
         }
         ws.ajax(handleUrl, {
