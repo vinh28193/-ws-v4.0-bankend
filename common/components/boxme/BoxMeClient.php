@@ -331,23 +331,30 @@ class BoxMeClient
         }else{
             $user = null;
         }
-
-		if(!$order->receiver_name || !$order->receiver_email || !$order->receiver_address || !$order->receiver_phone || !$order->receiver_province_id || !$order->receiver_district_id){
-            return [false, 'Địa chỉ người nhận bị thiếu.'];
-		}
+//		if(!$order->receiver_name || !$order->receiver_email || !$order->receiver_address || !$order->receiver_phone || !$order->receiver_province_id || !$order->receiver_district_id){
+//		    print_r($order->getAttributes());
+////		    die;
+//            return [false, 'Địa chỉ người nhận bị thiếu.'];
+//		}
         $shipTo = [
-            'contact_name' => $order->receiver_name,
+            'contact_name' => $order->buyer_district_id == $order->receiver_district_id && !$order->receiver_name ? $order->buyer_name : $order->receiver_name,
             'company_name' => '',
-            'email' => $order->receiver_email,
-            'address' => $order->receiver_address,
+            'email' =>  $order->buyer_district_id == $order->receiver_district_id && !$order->receiver_email ? $order->buyer_email : $order->receiver_email,
+            'address' => $order->buyer_district_id == $order->receiver_district_id && !$order->receiver_address ? $order->buyer_address : $order->receiver_address,
             'address2' => $order->buyer_address,
-            'phone' => $order->receiver_phone,
+            'phone' => $order->buyer_district_id == $order->receiver_district_id && !$order->receiver_phone ? $order->buyer_phone : $order->receiver_phone,
             'phone2' => $order->buyer_phone,
-            'province' => $order->receiver_province_id,
-            'district' => $order->receiver_district_id,
+            'province' => $order->buyer_district_id == $order->receiver_district_id && !$order->receiver_province_id ? $order->buyer_province_id : $order->receiver_province_id,
+            'district' =>  $order->receiver_district_id,
             'country' => $country ? $country->country_code : 'VN',
             'zipcode' => $order->receiver_post_code,
         ];
+        if(!$shipTo['contact_name'] || !$shipTo['email'] || !$shipTo['address'] || !$shipTo['phone'] || !$shipTo['province'] || !$shipTo['district']){
+		    print_r($order->getAttributes());
+//		    die;
+            return [false, 'Địa chỉ người nhận bị thiếu.'];
+		}
+        return false;
         $item = [];
         foreach ($order->products as $product){
             $item[] = [
