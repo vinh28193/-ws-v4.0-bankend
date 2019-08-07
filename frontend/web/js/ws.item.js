@@ -63,6 +63,7 @@
                 if ($item.data('wsItem')) {
                     return;
                 }
+                console.log(params);
                 params = $.extend({}, defaultParams, params || {});
                 options = $.extend({}, defaultOptions, options || {});
 
@@ -367,6 +368,7 @@
         if (activeVariation.length === 0) {
             var optionTemp = [];
             $.each(data.params.variation_options, function (k, v) {
+                console.log(v)
                 if (v.option_link && v.value_current) {
                     optionTemp.push({
                         name: v.name,

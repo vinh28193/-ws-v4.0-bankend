@@ -260,6 +260,13 @@ class AmazonGateV3 extends BaseGate
         if (!$amazon || !$response) {
             return [false, 'Request Error'];
         }
+
+        $dataKeys = array_map(function ($key) {
+            return trim($key);
+        }, array_keys($amazon));
+
+        $amazon = array_combine($dataKeys, array_values($amazon));
+
         $rs = [];
 
         $start_price = isset($amazon['price']) && $amazon['price'] !== null ? explode('-', $amazon['price']) : [0];
@@ -290,7 +297,8 @@ class AmazonGateV3 extends BaseGate
         $rs['manufacturer_description'] = '';
         $rs['primary_images'] = $this->getItemImage($amazon['primary_images']);//$amazon['images'];
         $rs['technical_specific'] = $this->getTechnicalSpecific($amazon['product_information']);//$amazon['product_description'];
-        $rs['variation_options'] = $this->getOptionGroup($amazon['product_option'], $rs['item_name'], $rs['item_sku']);
+        $variation_options = $this->getOptionGroup($amazon['product_option'], $rs['item_name'], $rs['item_sku']);
+//        $rs['variation_options'] = $this->getOptionGroup($amazon['product_option'], $rs['item_name'], $rs['item_sku']);
         $rs['variation_mapping'] = [];
         $rs['relate_products'] = null;
         $rs['start_price'] = count($start_price) > 0 ? floatval(str_replace(',', '', trim($start_price[0]))) : 0;
@@ -324,6 +332,7 @@ class AmazonGateV3 extends BaseGate
             $rs['providers'][] = $prov;
             $rs['provider'] = new Provider($prov);
         }
+
         if (!$this->isEmpty($offers)) {
             foreach ($offers as $offer) {
                 if (in_array($offer['seller']['seller_name'], $this->sellerBlackLists)) {
@@ -358,6 +367,43 @@ class AmazonGateV3 extends BaseGate
         if ($this->store === AmazonProduct::STORE_JP) {
             $this->ensureJpPrice($rs);
         }
+        $findDefaultOptions = $variation_options;
+        $findDefaultNameOptions = ArrayHelper::getColumn($findDefaultOptions, 'name', false);
+        $mergeOptions = [];
+
+        foreach ($findDefaultNameOptions as $key) {
+            $f_key = "$key:";
+            $mergeOptionsValue = ArrayHelper::getValue($amazon, $f_key);
+            if ($mergeOptionsValue !== null) {
+                $mergeOptions[$key] = trim($mergeOptionsValue);
+            }
+
+        }
+        foreach ($mergeOptions as $key => $value) {
+            foreach ($variation_options as $index => $option) {
+                if ($option['name'] === $key) {
+                    if (!ArrayHelper::isIn($value, $option['values'])) {
+                        $option['values'][] = $value;
+                    }
+                    $skus = array_filter($option['sku'], function ($sku) use ($value) {
+                        return $sku['value_option'] === $value;
+                    });
+                    if (empty($skus)) {
+                        $skuAddon = [
+                            'asin_id' => $request->asin_id,
+                            'value_option' => $value,
+                            'link' => WeshopHelper::generateUrlDetail('amazon', $rs['item_name'], $request->asin_id)
+                        ];
+                        $option['sku'][] = $skuAddon;
+                        $option['value_current'] = $value;
+                    }
+
+                }
+                $variation_options[$index] = $option;
+            }
+        }
+
+        $rs['variation_options'] = $variation_options;
         return [true, $rs];
 
     }
@@ -454,6 +500,7 @@ class AmazonGateV3 extends BaseGate
                         } else if (isset($value['name'])) {
                             $value_tem = $value['name'];
                         }
+                        $value_tem = trim($value_tem);
                         if ($value_tem) {
                             $temp['values'][] = $value_tem;
                             if (isset($value['asin_id']) && $value['asin_id']) {
@@ -467,8 +514,7 @@ class AmazonGateV3 extends BaseGate
                                 } else if (ArrayHelper::keyExists('asin_url', $value) && !ArrayHelper::getValue($value, 'asin_url')) {
                                     $temp['value_current'] = $value_tem;
                                 }
-                            }
-                            elseif (!($sku = ArrayHelper::getValue($value,'asin_id')) && !($v = ArrayHelper::getValue($value,'value'))){
+                            } elseif (!($sku = ArrayHelper::getValue($value, 'asin_id')) && !($v = ArrayHelper::getValue($value, 'value'))) {
                                 $temp['value_current'] = $value_tem;
                             }
                         }
