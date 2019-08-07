@@ -331,6 +331,9 @@ class BoxMeClient
         }else{
             $user = null;
         }
+		if(!$order->receiver_name || !$order->receiver_email || !$order->receiver_address || !$order->receiver_phone || !$order->receiver_province_id || !$order->receiver_district_id){
+			return null;
+		}
         $shipTo = [
             'contact_name' => $order->receiver_name,
             'company_name' => '',
