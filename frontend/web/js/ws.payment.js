@@ -480,7 +480,7 @@ ws.payment = (function ($) {
             $form.yiiActiveForm('validateAttribute', 'shippingform-receiver_post_code');
 
 
-            if(isSafe){
+            if (isSafe) {
                 $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_name');
                 $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_phone');
                 $form.yiiActiveForm('validateAttribute', 'shippingform-buyer_email');
@@ -507,6 +507,20 @@ ws.payment = (function ($) {
                     values[key] = this.value;
                 }
             });
+            if (!('buyer_province_id' in values)) {
+                values['buyer_province_id'] = $form.find('#shippingform-buyer_province_id').val()
+            }
+            if (!('buyer_district_id' in values)) {
+                values['buyer_district_id'] = $form.find('#shippingform-buyer_district_id').val()
+            }
+
+            if (!('receiver_province_id' in values)) {
+                values['receiver_province_id'] = $form.find('#shippingform-receiver_province_id').val()
+            }
+
+            if (!('receiver_district_id' in values)) {
+                values['receiver_district_id'] = $form.find('#shippingform-receiver_district_id').val()
+            }
             pub.shipping = values;
             return true;
         },
