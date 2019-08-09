@@ -50,9 +50,9 @@ class PaymentController extends BasePaymentController
         }
 
         $shippingForm = new ShippingForm();
-        $shippingForm->load($shipping,'');
+        $shippingForm->load($shipping, '');
 
-        if(!$shippingForm->validate()){
+        if (!$shippingForm->validate()) {
             return $this->response(false, $shippingForm->getFirstErrors());
         }
         $shippingForm->ensureReceiver();
@@ -130,7 +130,7 @@ class PaymentController extends BasePaymentController
             }
 
         }
-        if ($shippingForm->other_receiver !== 'false') {
+        if ($shippingForm->other_receiver === ShippingForm::YES) {
             if ((int)$shippingForm->enable_receiver === ShippingForm::NO) {
                 $shippingParams['receiver_name'] = $shippingForm->receiver_name;
                 $shippingParams['receiver_address'] = $shippingForm->receiver_address;

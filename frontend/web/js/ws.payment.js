@@ -549,10 +549,10 @@ ws.payment = (function ($) {
             if (!pub.filterShippingAddress(true)) {
                 return;
             }
-            // if (!pub.validateInternationalShippingFee()) {
-            //     ws.notifyError(ws.t('Can not checkout with no courier assigner to your orders, please recheck your address'));
-            //     return;
-            // }
+            if (!pub.validateInternationalShippingFee()) {
+                ws.notifyError(ws.t('Can not checkout with no courier assigner to your orders, please recheck your address'));
+                return;
+            }
             data.shipping = pub.shipping
         }
         ws.ajax(handleUrl, {
