@@ -84,17 +84,19 @@ class PaymentTransactionController extends Controller
 //        $fetchQuery->groupBy(['pt.transaction_code']);
 //        $fetchQuery->having(['=', 'total_count', 1]);
 //        $transactions = $fetchQuery->all($db);
-        $transactions = $this->transactionCode;
-        if (is_string($transactions)) {
-            $transactions = [$transactions];
+        $transactionCodes = $this->transactionCode;
+        if (is_string($transactionCodes)) {
+            $transactionCodes = [$transactionCodes];
         }
 
-        $totalCount = count($transactions);
+        $totalCount = count($transactionCodes);
 //        $this->stdout("    > fetched $totalCount records \n", Console::FG_GREEN);
-        foreach ($transactions as $transaction) {
-            $this->stdout("    > process for transaction code $transaction \n", Console::FG_GREEN);
-            if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $transaction])) === null) {
-                $this->stdout("    > not found transaction code $transaction \n", Console::FG_RED);
+
+        foreach ($transactionCodes as $transactionCode) {
+
+            $this->stdout("    > process for transaction code {$transactionCode} \n", Console::FG_GREEN);
+            if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $transactionCode])) === null) {
+                $this->stdout("    > not found transaction code {$transactionCode} \n", Console::FG_RED);
                 continue;
             }
             /** @var  $inLog PaymentGatewayLogs */
@@ -104,7 +106,7 @@ class PaymentTransactionController extends Controller
                 ['type' => 'CREATED']
             ])->one();
             if ($inLog === null) {
-                $this->stdout("    > not found payment gateway log for transaction code $transaction \n", Console::FG_RED);
+                $this->stdout("    > not found payment gateway log for transaction code {$transactionCode} \n", Console::FG_RED);
                 continue;
             }
             $requestContent = $inLog->request_content;
