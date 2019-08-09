@@ -3,6 +3,7 @@
 
 namespace console\controllers;
 
+use common\helpers\WeshopHelper;
 use common\models\logs\PaymentGatewayLogs;
 use common\models\Order;
 use common\modelsMongo\ChatMongoWs;
@@ -18,20 +19,40 @@ use common\models\PaymentTransaction;
 class PaymentTransactionController extends Controller
 {
 
+    public $transactionCode;
+
+    public $color = true;
+
+    public function options($actionID)
+    {
+        return array_merge(parent::options($actionID), ['transactionCode']);
+    }
+
+    public function optionAliases()
+    {
+        return array_merge(parent::optionAliases(), [
+            'tc' => 'transactionCode',
+            'c' => 'color'
+        ]);
+    }
+
     public function beforeAction($action)
     {
         if (parent::beforeAction($action)) {
-//            if ($action->id === 'create-child') {
-//                $this->stdout("    > action `create-child` killed, can not execute this action \n", Console::FG_RED);
-//                return false;
-//            }
+           if ($action->id  === 'create-child') {
+                if ($this->transactionCode === null) {
+                    $this->stdout("    > action `{$action->id}` required parameter --transactionCode (-tc).\n", Console::FG_RED);
+                    return false;
+                }
+                if (WeshopHelper::isSubText($this->transactionCode, ',')) {
+                    $this->transactionCode = explode(',', $this->transactionCode);
+                }
+            }
             return true;
 
         }
         return false;
     }
-
-    public $color = true;
 
     public function actionCreateChild()
     {
@@ -42,29 +63,34 @@ class PaymentTransactionController extends Controller
         $formDayStart = $formatter->asDatetime($formDay);
         $this->stdout("    > action started \n", Console::FG_GREEN);
         $this->stdout("    > today: $today \n", Console::FG_GREEN);
-        $db = PaymentTransaction::getDb();
-        $this->stdout("    > open connect to dsn {$db->dsn} \n", Console::FG_GREEN);
-        $this->stdout("    > query form day $formDayStart \n", Console::FG_GREEN);
-        $this->stdout("    > fetching in database \n", Console::FG_GREEN);
-        $this->stdout("    > fetching in database \n", Console::FG_GREEN);
+//        $db = PaymentTransaction::getDb();
+//        $this->stdout("    > open connect to dsn {$db->dsn} \n", Console::FG_GREEN);
+//        $this->stdout("    > query form day $formDayStart \n", Console::FG_GREEN);
+//        $this->stdout("    > fetching in database \n", Console::FG_GREEN);
+//        $this->stdout("    > fetching in database \n", Console::FG_GREEN);
+//
+//        $fetchQuery = new Query();
+//        $fetchQuery->from(['pt' => PaymentTransaction::tableName()]);
+//        $fetchQuery->select([
+//            'created_at' => new Expression("DATE_FORMAT(FROM_UNIXTIME(`pt`.`created_at`), '%Y-%m-%d %T')"),
+//            'total_count' => new Expression("COUNT( `pt`.`transaction_code`)"),
+//            'transaction_code' => 'pt.transaction_code'
+//        ]);
+//        $fetchQuery->where([
+//            'AND',
+//            ['pt.transaction_type' => PaymentTransaction::TRANSACTION_TYPE_PAYMENT],
+//            ['>=', 'pt.created_at', $formDay]
+//        ]);
+//        $fetchQuery->groupBy(['pt.transaction_code']);
+//        $fetchQuery->having(['=', 'total_count', 1]);
+//        $transactions = $fetchQuery->all($db);
+        $transactions = $this->transactionCode;
+        if (is_string($transactions)) {
+            $transactions = [$transactions];
+        }
 
-        $fetchQuery = new Query();
-        $fetchQuery->from(['pt' => PaymentTransaction::tableName()]);
-        $fetchQuery->select([
-            'created_at' => new Expression("DATE_FORMAT(FROM_UNIXTIME(`pt`.`created_at`), '%Y-%m-%d %T')"),
-            'total_count' => new Expression("COUNT( `pt`.`transaction_code`)"),
-            'transaction_code' => 'pt.transaction_code'
-        ]);
-        $fetchQuery->where([
-            'AND',
-            ['pt.transaction_type' => PaymentTransaction::TRANSACTION_TYPE_PAYMENT],
-            ['>=', 'pt.created_at', $formDay]
-        ]);
-        $fetchQuery->groupBy(['pt.transaction_code']);
-        $fetchQuery->having(['=', 'total_count', 1]);
-        $transactions = $fetchQuery->all($db);
         $totalCount = count($transactions);
-        $this->stdout("    > fetched $totalCount records \n", Console::FG_GREEN);
+//        $this->stdout("    > fetched $totalCount records \n", Console::FG_GREEN);
         foreach ($transactions as $transaction) {
             $this->stdout("    > process for transaction code {$transaction['transaction_code']} \n", Console::FG_GREEN);
             if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $transaction['transaction_code']])) === null) {
