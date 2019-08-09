@@ -56,7 +56,7 @@ class PaymentController extends BasePaymentController
             return $this->response(false, $shippingForm->getFirstErrors());
         }
         $shippingForm->ensureReceiver();
-
+        $orders = [];
         foreach ($orderParams as $orderParam) {
             $totalAmountLocal = ArrayHelper::remove($orderParam, 'totalAmountLocal', 0);
             if (isset($orderParam['totalFinalAmount'])) {
@@ -75,6 +75,10 @@ class PaymentController extends BasePaymentController
                 $shippingForm->loadAddressFormOrder($order);
                 $orders[$order->ordercode] = $order;
             }
+        }
+
+        if(empty($orders)){
+            return $this->response(false, Yii::t('frontend', 'Can not create payment with empty orders'));
         }
 
         $payment->setOrders($orders);

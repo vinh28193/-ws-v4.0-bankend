@@ -36,11 +36,20 @@ class TestController extends FrontendController
 
     public function actionTestMe()
     {
-        echo PaymentService::createReturnUrl(42);
         echo "<pre>";
         $orders = \common\models\Order::find()->indexBy('ordercode')->limit(5)->all();
-        print_r(ArrayHelper::getValue($orders,'WSVN6517'));
+        print_r(ArrayHelper::getValue($orders, 'WSVN6517'));
         echo "</pre>";
+        die;
+    }
+
+    public function actionPasswordHash($password)
+    {
+        $hash = Yii::$app->security->generatePasswordHash($password);
+        echo $hash;
+        echo "</br>";
+        echo Yii::$app->security->validatePassword($password, $hash) ? "TRUE" : "FALSE";
+
         die;
     }
 
@@ -388,7 +397,7 @@ JSON;
         /** @var  $mailer yii\mail\BaseMailer */
         $mailer = Yii::$app->mandrillMailer;
         $mailer->viewPath = '@common/views/mail';
-        $mail = $mailer->compose(['html' => 'orderCreate-html'],[
+        $mail = $mailer->compose(['html' => 'orderCreate-html'], [
             'paymentTransaction' => $paymentTransaction,
             'storeManager' => $this->storeManager
         ]);
@@ -404,12 +413,12 @@ JSON;
     {
         $file = Yii::getAlias('@root/order-amazon-01jul-08jul.xlsx');
         $results = ExcelHelper::read($file);
-        foreach ($results as $name => $sheet){
+        foreach ($results as $name => $sheet) {
             $checkSheet = isset($sheet[0]) ? $sheet[0] : null;
             if ($checkSheet === null || !isset($checkSheet['PO Number'])) {
                 continue;
             }
-            foreach ($sheet as $index => $row){
+            foreach ($sheet as $index => $row) {
                 if (($conditions = ArrayHelper::getValue($row, 'PO Number')) === null) {
                     var_dump($row);
                 }
@@ -419,37 +428,43 @@ JSON;
 
         die;
     }
-    public function actionTestCreateOrderBoxme(){
+
+    public function actionTestCreateOrderBoxme()
+    {
         $orderid = Yii::$app->request->get('id');
         $order = Order::findOne($orderid);
-        if($order){
+        if ($order) {
             BoxMeClient::CreateOrder($order);
             die;
         }
         var_dump($order);
         die;
     }
-    public function actionTestCreateShipmentLiveBoxme(){
+
+    public function actionTestCreateShipmentLiveBoxme()
+    {
         $orderid = Yii::$app->request->get('id');
         $order = Order::findOne($orderid);
         $dataShipment = [];
-        if($order){
-            foreach ($order->products as $product){
+        if ($order) {
+            foreach ($order->products as $product) {
                 BoxMeClient::SyncProduct($product);
             }
-            BoxMeClient::CreateLiveShipment($order,"121jhj21jh21");
+            BoxMeClient::CreateLiveShipment($order, "121jhj21jh21");
             die;
         }
         var_dump($order);
         die;
     }
 
-    public function actionTestPayment(){
+    public function actionTestPayment()
+    {
         var_dump(PaymentService::findParentTransaction('PM15626393794D3'));
         die;
     }
 
-    public function actionUnicode(){
+    public function actionUnicode()
+    {
         $string = 'Đây là chuỗi';
         var_dump(WeshopHelper::vn2unicode($string));
         die;
