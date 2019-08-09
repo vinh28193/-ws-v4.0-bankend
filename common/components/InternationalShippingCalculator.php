@@ -97,7 +97,7 @@ class InternationalShippingCalculator extends BaseObject
         if (!$success && WeshopHelper::isEmpty($message) && isset($status->details) && is_string($status->details)) {
             $message = $status->details;
         }
-        $rs = !$success ? (WeshopHelper::isEmpty($message) ? ($data->count() > 0 ? Yii::t('frontend', 'Empty courier assigment') : Yii::t('frontend', 'Unknown error')) : $message) : $this->parserCalculateFeeResponse($data, $sellerContry);
+        $rs = !$success ? (WeshopHelper::isEmpty($message) ? ($data->count() > 0 ? Yii::t('frontend', 'Empty courier assigment') : Yii::t('frontend', 'Unknown error')) : $message) : $this->parserCalculateFeeResponse($data, $countryCode, $sellerContry);
 
         $formatter = Yii::$app->formatter;
         $log = new GrpcClientLog;
@@ -119,10 +119,11 @@ class InternationalShippingCalculator extends BaseObject
 
     /**
      * @param $data \Google\Protobuf\Internal\RepeatedField
-     * @param $location
+     * @param $countryCode
+     * @param null $location
      * @return array
      */
-    private function parserCalculateFeeResponse($data, $location = null)
+    private function parserCalculateFeeResponse($data, $countryCode, $location = null)
     {
         $results = [];
         Yii::info($this->getAdditionTime($location), $location);
@@ -144,8 +145,10 @@ class InternationalShippingCalculator extends BaseObject
             $courier['tax_fee'] = $iterator->getTax();
             $courier['total_fee'] = $iterator->getTotalFee();
             $courier['currency'] = $iterator->getCurrency();
-            $courier['min_delivery_time'] = ($location !== false && isset($location['min'])) ? ($iterator->getMinDeliveryTime() + $location['min']) : $iterator->getMinDeliveryTime();
-            $courier['max_delivery_time'] = ($location !== false && isset($location['max'])) ? ($iterator->getMaxDeliveryTime() + $location['max']) : $iterator->getMaxDeliveryTime();
+            $min_delivery = ($location !== false && isset($location['min'])) ? ($iterator->getMinDeliveryTime() + $location['min']) : $iterator->getMinDeliveryTime();
+            $max_delivery = ($location !== false && isset($location['max'])) ? ($iterator->getMaxDeliveryTime() + $location['max']) : $iterator->getMaxDeliveryTime();
+            $courier['min_delivery_time'] = $countryCode === 'ID' ? $this->ensureIdEstimateTime($min_delivery,25) : $min_delivery;
+            $courier['max_delivery_time'] = $countryCode === 'ID' ? $this->ensureIdEstimateTime($max_delivery,35) : $max_delivery;
             $results[] = $courier;
         }
         return $results;
@@ -173,5 +176,12 @@ class InternationalShippingCalculator extends BaseObject
                 return false;
         }
 
+    }
+
+    public function ensureIdEstimateTime($time, $max_time = 30)
+    {
+        $time = (int)$time;
+        $remove = $time%10;
+        return $max_time + $remove;
     }
 }
