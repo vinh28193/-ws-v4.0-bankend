@@ -92,9 +92,9 @@ class PaymentTransactionController extends Controller
         $totalCount = count($transactions);
 //        $this->stdout("    > fetched $totalCount records \n", Console::FG_GREEN);
         foreach ($transactions as $transaction) {
-            $this->stdout("    > process for transaction code {$transaction['transaction_code']} \n", Console::FG_GREEN);
-            if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $transaction['transaction_code']])) === null) {
-                $this->stdout("    > not found transaction code {$transaction['transaction_code']} \n", Console::FG_RED);
+            $this->stdout("    > process for transaction code $transaction \n", Console::FG_GREEN);
+            if (($paymentTransaction = PaymentTransaction::findOne(['transaction_code' => $transaction])) === null) {
+                $this->stdout("    > not found transaction code $transaction \n", Console::FG_RED);
                 continue;
             }
             /** @var  $inLog PaymentGatewayLogs */
@@ -104,7 +104,7 @@ class PaymentTransactionController extends Controller
                 ['type' => 'CREATED']
             ])->one();
             if ($inLog === null) {
-                $this->stdout("    > not found payment gateway log for transaction code {$transaction['transaction_code']} \n", Console::FG_RED);
+                $this->stdout("    > not found payment gateway log for transaction code $transaction \n", Console::FG_RED);
                 continue;
             }
             $requestContent = $inLog->request_content;
