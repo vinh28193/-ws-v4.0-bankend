@@ -116,4 +116,15 @@ class UtilityHelper
         }
         return ($value = WeshopHelper::strToUpperCase($value)) !== 'NULL' &&  $value !== 'NONE' && $value !== 'NOT FOUND';
     }
+
+    public static function removeEmoji($value)
+    {
+        $emojiRegexPath = Yii::getAlias('@common/helpers/emojiRegex.php');
+        if (!is_file($emojiRegexPath)) {
+            return $value;
+        }
+        $emojiRegexPath = require $emojiRegexPath;
+        return preg_replace($emojiRegexPath, '', $value);
+    }
+
 }

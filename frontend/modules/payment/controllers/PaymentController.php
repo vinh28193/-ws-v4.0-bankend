@@ -9,6 +9,7 @@ use common\modelsMongo\ChatMongoWs;
 use frontend\modules\payment\models\Order;
 use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
+use common\helpers\UtilityHelper;
 use common\models\Address;
 use common\models\db\TargetAdditionalFee;
 use common\models\PaymentTransaction;
@@ -302,6 +303,8 @@ class PaymentController extends BasePaymentController
                         $product->category_id = $category->id;
                         // 8. set seller id for product
                         $product->seller_id = $seller->id;
+
+                        $product->product_name = UtilityHelper::removeEmoji($product->product_name);
 
                         // save total product discount here
                         if (!$product->save(false)) {
