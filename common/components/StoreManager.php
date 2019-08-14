@@ -49,7 +49,7 @@ class StoreManager extends Component implements BootstrapInterface
      */
     public $defaultDomain;
 
-    public $moneyShowWith = self::MONEY_SHOW_MODE_CURRENCY;
+    public $moneyShowWith = self::MONEY_SHOW_MODE_SYMBOL;
     /**
      * @var Store;
      */
