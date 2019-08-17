@@ -38,7 +38,6 @@ class gaSetting
             'position' => strtolower($product->type) == 'ebay' ? 1 : (strtolower($product->type) == 'amazon' ? 2 : 0)
         ];
         $request->addProduct($productData1);
-        $request->setProductActionToDetail();
 //            $request->setTransactionId(1667);
             $request->setItemName($product->item_name);
             $request->setItemCode($product->item_sku);
@@ -50,6 +49,7 @@ class gaSetting
 //            $request->setProductActionToCheckout();
             $request->setProductActionToClick();
             $request->setProductActionList($product->type);
+            $request->setProductActionToDetail();
             $request->setDocumentPath( Url::current());
             $request->setDocumentTitle($product->item_name . " | " . $product->type . " page");
             $request->setEventCategory('Detail');
