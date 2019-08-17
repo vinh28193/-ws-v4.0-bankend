@@ -9,6 +9,7 @@ use common\modelsMongo\ChatMongoWs;
 use frontend\modules\payment\models\Order;
 use common\components\employee\Employee;
 use common\helpers\WeshopHelper;
+use common\helpers\UtilityHelper;
 use common\models\Address;
 use common\models\db\TargetAdditionalFee;
 use common\models\PaymentTransaction;
@@ -49,13 +50,13 @@ class PaymentController extends BasePaymentController
         }
 
         $shippingForm = new ShippingForm();
-        $shippingForm->load($shipping,'');
+        $shippingForm->load($shipping, '');
 
-        if(!$shippingForm->validate()){
+        if (!$shippingForm->validate()) {
             return $this->response(false, $shippingForm->getFirstErrors());
         }
         $shippingForm->ensureReceiver();
-
+        $orders = [];
         foreach ($orderParams as $orderParam) {
             $totalAmountLocal = ArrayHelper::remove($orderParam, 'totalAmountLocal', 0);
             if (isset($orderParam['totalFinalAmount'])) {
@@ -74,6 +75,10 @@ class PaymentController extends BasePaymentController
                 $shippingForm->loadAddressFormOrder($order);
                 $orders[$order->ordercode] = $order;
             }
+        }
+
+        if(empty($orders)){
+            return $this->response(false, Yii::t('frontend', 'Can not create payment with empty orders'));
         }
 
         $payment->setOrders($orders);
@@ -129,7 +134,7 @@ class PaymentController extends BasePaymentController
             }
 
         }
-        if ($shippingForm->other_receiver !== 'false') {
+        if ($shippingForm->other_receiver === ShippingForm::YES) {
             if ((int)$shippingForm->enable_receiver === ShippingForm::NO) {
                 $shippingParams['receiver_name'] = $shippingForm->receiver_name;
                 $shippingParams['receiver_address'] = $shippingForm->receiver_address;
@@ -302,6 +307,8 @@ class PaymentController extends BasePaymentController
                         $product->category_id = $category->id;
                         // 8. set seller id for product
                         $product->seller_id = $seller->id;
+
+                        $product->product_name = UtilityHelper::removeEmoji($product->product_name);
 
                         // save total product discount here
                         if (!$product->save(false)) {
