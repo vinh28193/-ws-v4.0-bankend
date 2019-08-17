@@ -25,6 +25,9 @@ $isID = $shippingForm->getStoreManager()->store->country_code === 'ID';
 $showStep = true;
 $activeStep = 2;
 $otherReceiver = Html::getInputId($shippingForm, 'other_receiver');
+$itemList['id'] = array();
+$itemList['value'] = 0;
+$itemListProduct = [];
 $js = <<< JS
     
     var showReceiver = function(element) {
@@ -540,7 +543,7 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
         </div>
     </div>
     <?php foreach ($payment->getOrders() as $order): ?>
-        <?php $refKey = $payment->page === Payment::PAGE_CHECKOUT ? $order->cartId : $order->ordercode; ?>
+        <?php $refKey = $payment->page === Payment::PAGE_CHECKOUT ? $order->cartId : $order->ordercode;?>
         <div class="card card-checkout card-order"
              data-key="<?= $refKey; ?>">
             <div class="card-body">
@@ -571,6 +574,16 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
                 <div class="row product-list">
                     <?php foreach ($order->products as $product): ?>
                         <?php
+                        $itemList['id'][] = $product->parent_sku;
+                        $itemList['value'] += $product->total_final_amount_local;
+                        $itemListProduct[] = [
+                                'id' => $product->parent_sku,
+                                'name' => $product->product_name,
+                                'category' => $product->category_id,
+                                'variant' => $product->sku,
+                                'price' => $product->total_final_amount_local,
+                                'position' => 0,
+                        ];
                         $productFees = ArrayHelper::index($product->productFees, null, 'name');
                         $purchaseFee = 0;
                         $purchaseFee = isset($productFees['purchase_fee']) ? $productFees['purchase_fee'][0]->local_amount : $purchaseFee;
@@ -738,6 +751,44 @@ $this->registerJs($zipJs, yii\web\View::POS_HEAD);
         </div>
     </div>
 </div>
+<?php
+$idRemarketing = json_encode($itemList['id']);
+$valueRemarketing = $itemList['value'];
+?>
+<script>
+    var checkoutProducts = <?= json_encode($itemListProduct) ?>;
+    window.addEventListener('load', function () {
+        try {
+            ga('set', 'dimension1', <?= $idRemarketing ?>); // Please make sure that Dimension 1 is set as the Custom Dimension for Product ID
+        } catch (e) {
+        }
+        try {
+            ga('set', 'dimension2', 'conversionintent'); // Please make sure that Dimension 2 is set as the Custom Dimension for Page Type
+        } catch (e) {
+        }
+        try {
+            ga('set', 'dimension3', <?= $valueRemarketing ?>); // Please make sure that Dimension 3 is set as the Custom Dimension for Total Value
+        } catch (e) {
+        }
+        ga('send', 'event', 'page', 'visit', 'conversionintent', {
+            'nonInteraction': 1
+        });
+        $.each(checkoutEcommerces.products,function (index,product) {
+            ga('ec:addProduct', {
+                'id': product.id,
+                'name': product.name,
+                'category': product.category,
+                'variant': product.variant,
+                'price': product.price,
+                'quantity': product.quantity,
+                'position': product.position
+            });
+        });
+        ga('ec:setAction','checkout', {
+            'step': 2
+        });
+        ga('send', 'pageview');
 
-
+    });
+</script>
 

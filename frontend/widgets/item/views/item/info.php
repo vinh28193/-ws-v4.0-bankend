@@ -33,11 +33,78 @@ $css = <<<CSS
     background: #fff;
     }
 CSS;
+$totalPrice_local = $item->getLocalizeTotalPrice();
+$currency_name = $storeManager->getCurrencyName(\common\components\StoreManager::MONEY_SHOW_MODE_CURRENCY);
 $this->registerCss($css);
 $js = <<<JS
 $(document).ready(function() {
     $('.la-question-circle').tooltip({'trigger':'hover'});
 });
+        
+        window.addEventListener('load', function () {
+            try {
+                ga('set', 'dimension1', '$item->item_id'); // Please make sure that Dimension 1 is set as the Custom Dimension for Product ID
+            } catch (e) {
+            }
+            try {
+                ga('set', 'dimension2', 'offerdetail'); // Please make sure that Dimension 2 is set as the Custom Dimension for Page Type
+            } catch (e) {
+            }
+            try {
+                ga('set', 'dimension3', $totalPrice_local); // Please make sure that Dimension 3 is set as the Custom Dimension for Total Value
+            } catch (e) {
+            }
+            ga('send', 'event', 'page', 'visit', 0, {
+                'nonInteraction': 1
+            });
+            ga('ec:addImpression', {
+                'id': ecommerceProduct.id,
+                'name': ecommerceProduct.name,
+                'category': ecommerceProduct.category,
+                'variant': ecommerceProduct.variant,
+                'price': ecommerceProduct.price,
+                'quantity': ecommerceProduct.quantity,
+                'position': ecommerceProduct.position,
+                'list': ecommerceProduct.list
+            });
+            ga('ec:addProduct', {
+                'id': ecommerceProduct.id,
+                'name': ecommerceProduct.name,
+                'category': ecommerceProduct.category,
+                'variant': ecommerceProduct.variant,
+                'price': ecommerceProduct.price,
+                'quantity': ecommerceProduct.quantity,
+                'position': ecommerceProduct.position
+            });
+            ga('ec:setAction', 'detail');
+            ga('send', 'pageview');
+        });
+        fbq('track', 'ViewContent', {
+            content_ids: ['$item->item_id'],
+            content_type: 'product',
+            value: $totalPrice_local,
+            currency: '$currency_name'
+        });
+        
+        $('.addcart-button').click(function () {
+            fbq('track', 'AddToCart', {
+                content_ids: ['$item->item_id'],
+                content_type: 'product',
+                value:$totalPrice_local,
+                currency: '$currency_name'
+            });
+            ga('ec:addProduct', {
+                'id': ecommerceProduct.id,
+                'name': ecommerceProduct.name,
+                'category': ecommerceProduct.category,
+                'variant': ecommerceProduct.variant,
+                'price': ecommerceProduct.price,
+                'quantity': ecommerceProduct.quantity,
+                'position': ecommerceProduct.position
+            });
+            ga('ec:setAction', 'add');
+            ga('send', 'event', 'detail view', 'click', 'addToCart');
+        });
 JS;
 $this->registerJs($js);
 
@@ -50,6 +117,18 @@ $internal_shipping_fee = $internal_shipping_fees[1] ? $storeManager->showMoney($
 $userCookies = new UserCookies();
 $userCookies->setUser();
 ?>
+<script>
+    var ecommerceProduct = {
+        id: <?= $item->item_id ?>,
+        name: <?= $item->item_name ?>,
+        category: <?= $item->category_id ?>,
+        variant: <?= $item->item_sku ?>,
+        price: <?= $totalPrice_local ?>,
+        quantity: 1,
+        position: 0,
+        list: '<?= $item->type ?>',
+    };
+</script>
 <div class="product-full-info">
     <div id="checkcate" style="display: none"><?= $item->category_id ?></div>
     <div class="title">
@@ -253,16 +332,16 @@ JS;
             <div class="btn-group-detail">
                 <?php if ($item->checkInstallment() && false){?>
                     <div class="btn-group-primary w-50">
-                        <button class="btn btn-amazon text-uppercase" style="<?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? '' : '' ?>" id="buyNowBtn"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
+                        <button class="btn btn-amazon text-uppercase addcart-button" style="<?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? '' : '' ?>" id="buyNowBtn"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
                     </div>
                     <div class="btn-group-secondary w-50">
-                        <button class="btn btn-danger text-uppercase" style="<?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? '' : 'display:none;' ?>"  id="installmentBtn"><i class="la la-credit-card"></i> <?= Yii::t('frontend','Installment') ?></button>
-                        <button class="btn btn-outline-info text-uppercase" style="<?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? '' : 'display:none;' ?>" id="addToCart"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
+                        <button class="btn btn-danger text-uppercase addcart-button" style="<?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? '' : 'display:none;' ?>"  id="installmentBtn"><i class="la la-credit-card"></i> <?= Yii::t('frontend','Installment') ?></button>
+                        <button class="btn btn-outline-info text-uppercase addcart-button" style="<?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? '' : 'display:none;' ?>" id="addToCart"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
                     </div>
                 <?php }else{ ?>
                     <div class="btn-group-secondary">
-                        <button class="btn btn-amazon text-uppercase" id="buyNowBtn" style="display: <?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? 'block' : 'none' ?>; float: left;margin-right: 5px;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
-                        <button class="btn btn-outline-info text-uppercase" id="addToCart" style="width: auto; display: <?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? 'block' : 'none' ?>; margin-left: 5px;"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
+                        <button class="btn btn-amazon text-uppercase addcart-button" id="buyNowBtn" style="display: <?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? 'block' : 'none' ?>; float: left;margin-right: 5px;"><i class="la la-shopping-cart"></i> <?= Yii::t('frontend','Buy now') ?></button>
+                        <button class="btn btn-outline-info text-uppercase addcart-button" id="addToCart" style="width: auto; display: <?= ($item->getLocalizeTotalPrice() > 0 && $current_provider && $instockQuanty > 0) ? 'block' : 'none' ?>; margin-left: 5px;"><i class="la la-cart-plus"></i> <?= Yii::t('frontend','Cart') ?></button>
                     </div>
                 <?php } ?>
             </div>
@@ -339,8 +418,8 @@ JS;
                                         </div>
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0)"  class="btn btn-amazon shortcut-payment"  data-role="buynow" data-seller="<?=$provider->prov_id;?>" style="border-radius: 0px"><?= Yii::t('frontend','Buy now') ?></a>
-                                    <a href="javascript:void(0)"  class="btn btn-outline-info shortcut-payment" data-role="shopping" data-seller="<?=$provider->prov_id;?>" style="border-radius: 0px"><?= Yii::t('frontend','Cart') ?></a>
+                                    <a href="javascript:void(0)"  class="btn btn-amazon shortcut-payment addcart-button"  data-role="buynow" data-seller="<?=$provider->prov_id;?>" style="border-radius: 0px"><?= Yii::t('frontend','Buy now') ?></a>
+                                    <a href="javascript:void(0)"  class="btn btn-outline-info shortcut-payment addcart-button" data-role="shopping" data-seller="<?=$provider->prov_id;?>" style="border-radius: 0px"><?= Yii::t('frontend','Cart') ?></a>
                                 </td>
                             </tr>
                         <?php }

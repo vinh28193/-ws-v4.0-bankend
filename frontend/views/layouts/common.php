@@ -40,6 +40,15 @@ AddressAsset::register($this);
     <!-- End Google Tag Manager -->
 </head>
 <body>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?= \common\components\gaSetting::getGa()->trackingId ?>"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '<?= \common\components\gaSetting::getGa()->trackingId ?>');
+</script>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PF5JM3"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
